@@ -9,6 +9,66 @@ function lab_migration_mail($key, &$message, $params)
   $language = $message['language'];
   switch ($key)
   {
+    case 'solution_proposal_approved':
+
+      /* initializing data */
+      $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE id = %d LIMIT 1", $params['solution_proposal_approved']['proposal_id']);
+      $proposal_data = db_fetch_object($proposal_q);
+
+      if ($proposal_data->solution_display == 1) {
+      	$solution_display = 'Yes';
+      } else {
+      	$solution_display = 'No';
+      }
+
+      $experiment_q = db_query("SELECT * FROM {lab_migration_experiment} WHERE proposal_id = %d ORDER BY number", $params['solution_proposal_approved']['proposal_id'], 1);
+      $experiment_list = '
+      	';
+      while ($experiment_data = db_fetch_object($experiment_q)) {
+      	$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+      	';
+      }
+
+      $user_data = user_load($params['solution_proposal_approved']['user_id']);
+ 
+      $message['subject'] = t('[!site_name] Lab Migration Solution Proposal Approval', array('!site_name' => variable_get('site_name', '')), $language->language);
+      $message['body'] = t('
+Dear !user_name,
+
+Your following Lab migration solution proposal has been approved:
+
+Full Name : ' . $proposal_data->solution_provider_name_title . ' ' . $proposal_data->solution_provider_name . '
+Email : ' . $user_data->mail . '
+Contact No. : ' . $proposal_data->solution_provider_contact_ph . '
+Department/Branch : ' . $proposal_data->solution_provider_department . '
+University/Institute : ' . $proposal_data->solution_provider_university . '
+
+Display solution on website : ' . $solution_display . '
+
+List of experiments : ' . $experiment_list . '
+
+
+Best Wishes,
+
+!site_name', array('!site_name' => variable_get('site_name', ''), '!user_name' => $user_data->name), $language->language);
+      break;
+      
+      case 'solution_proposal_disapproved':
+      $user_data = user_load($params['solution_proposal_disapproved']['user_id']);
+
+      $message['subject'] = t('[!site_name] Lab Migration Solution Disapproval', array('!site_name' => variable_get('site_name', '')), $language->language);
+      $message['body'] = t('
+Dear !user_name,
+
+Your Lab migration solution proposal has been disapproved.
+
+Reason: ' . $params['solution_proposal_disapproved']['message'] . '
+
+Best Wishes,
+
+!site_name', array('!site_name' => variable_get('site_name', ''), '!user_name' => $user_data->name), $language->language);
+      break;
+
     case 'proposal_received':
 
       /* initializing data */

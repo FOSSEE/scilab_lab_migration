@@ -464,7 +464,8 @@ Reason for dis-approval:
       /****** sending email when everything done ******/
       if ($email_subject)
       {
-        $email_to = variable_get('lab_migration_emails', '') . ', ' . $user->mail;
+        /*$email_to = variable_get('lab_migration_emails', '') . ', ' . $user->mail; */
+        $email_to = "contact@scilab.in" . ', ' . $user->mail;
         $param['standard']['subject'] = $email_subject;
         $param['standard']['body'] = $email_body;
         if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))

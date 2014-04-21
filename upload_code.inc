@@ -312,7 +312,6 @@ function lab_migration_upload_code_form_validate($form, &$form_state)
           $allowed_extensions_str = variable_get('lab_migration_xcos_extensions', '');
           break;
         }
-
         $allowed_extensions = explode(',' , $allowed_extensions_str);
         $temp_extension = end(explode('.', strtolower($_FILES['files']['name'][$file_form_name])));
         if (!in_array($temp_extension, $allowed_extensions))
@@ -517,7 +516,7 @@ function _list_of_dependency_files()
     $temp_caption = '';
     if ($dependency_files_data->caption)
       $temp_caption .= ' (' . $dependency_files_data->caption . ')';
-    $dependency_files[$dependency_files_data->id] = l($dependency_files_data->filename . $temp_caption, 'lab_migration/download/dependency/' . $dependency_files_data->id);
+    $dependency_files[$dependency_files_data->id] = l($dependency_files_data->filename . $temp_caption, 'lab_migration/download/dependency/' . $dependency_files_data->id, array('attributes' => array('class' => $dependency_files_data->proposal_id)));
     $dependency_files_class[$dependency_files_data->id] = $dependency_files_data->proposal_id;
   }
   return array($dependency_files, $dependency_files_class);

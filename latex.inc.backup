@@ -113,20 +113,18 @@ function _latex_generate_files($lab_id, $full_lab = FALSE)
         $dependency_q = db_query("SELECT * FROM {lab_migration_dependency_files} WHERE id = %d LIMIT 1", $dependency_files_data->dependency_id);
         if ($dependency_data = db_fetch_object($dependency_q))
         {
-		if(substr($dependency_data->filename, -3) != "wav") {
-		  $latex_filedata .= $experiment_data->number . $sep;
-		  $latex_filedata .= $experiment_data->title . $sep;
-		  $latex_filedata .= $solution_data->code_number . $sep;
-		  $latex_filedata .= $solution_data->caption . $sep;
-		  $latex_filedata .= $dependency_data->filename . $sep;
-		  $latex_filedata .= $dependency_data->filepath . $sep;
-		  $latex_filedata .= 'D' . $sep;
-		  $latex_filedata .= $dependency_data->caption . $sep;
-		  $latex_filedata .= $dependency_data->id;
-		  $latex_filedata .= $eol;
+						  $latex_filedata .= $experiment_data->number . $sep;
+						  $latex_filedata .= $experiment_data->title . $sep;
+						  $latex_filedata .= $solution_data->code_number . $sep;
+						  $latex_filedata .= $solution_data->caption . $sep;
+						  $latex_filedata .= $dependency_data->filename . $sep;
+						  $latex_filedata .= $dependency_data->filepath . $sep;
+						  $latex_filedata .= 'D' . $sep;
+						  $latex_filedata .= $dependency_data->caption . $sep;
+						  $latex_filedata .= $dependency_data->id;
+						  $latex_filedata .= $eol;
 
-		  $depedency_list[$dependency_data->id] = "D";
-		}
+						  $depedency_list[$dependency_data->id] = "D";
         }
       }
     }

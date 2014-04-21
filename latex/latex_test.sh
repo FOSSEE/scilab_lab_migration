@@ -25,7 +25,17 @@ fi
 
 IFS_old="$IFS"
 IFS=# read col1 col2 col3 col4 < $Contrib_details;
-IFS=# read colB1 colB2 colB3 colB4 colB5 colB6 < $Bk_details
+IFS=# read colB1 colB2 colB3 colB4 colB5 colB6 < $Bk_details;
+col1=${col1/&/\\&};
+col2=${col2/&/\\&};
+col3=${col3/&/\\&};
+col4=${col4/&/\\&};
+colB1=${colB1/&/\\&};
+colB2=${colB2/&/\\&};
+colB3=${colB3/&/\\&};
+colB4=${colB4/&/\\&};
+colB5=${colB5/&/\\&};
+colB6=${colB6/&/\\&};
 echo \\title\{Scilab Manual \for "\\\\"$colB1"\\\\"by $colB2 $colB3""\\\\$colB4""\\\\$colB5"\\footnote{Funded by a grant from the National Mission on Education through ICT, http://spoken-tutorial.org/NMEICT-Intro. This Scilab Manual and Scilab codes written in it can be downloaded from the \"Migrated Labs\" section at the website http://scilab.in}}" >>$CURDIR/TEX
 
 echo \\author\{ Solutions provided by \\\\$col1 $col2\\\\$col3\\\\$col4\\\\ }>>$CURDIR/TEX
@@ -73,7 +83,10 @@ k=1;
 sort -t '.' -k 1,1n -k 2,2n -k 3,3n  -k 4,4n $Data_all > database_sort
 
 while IFS=# read col1 col2 col3 col4 col5 col6 col7 col8 col9; do
-
+col2=${col2/&/\\&};
+col3=${col3/&/\\&};
+col4=${col4/&/\\&};
+col8=${col8/&/\\&};
 chap_diff=$(($col1 - $j))
 if [ $chap_diff -eq 1 ]; then
 	echo \\chapter{$col2}>>$CURDIR/TEX
@@ -144,6 +157,7 @@ i=1;
 echo \\chapter*{Appendix} >>$CURDIR/TEX
 
 while IFS=# read col1 col2 col3 col4; do
+col3=${col3/&/\\&};
 echo \\curlable{AP~$i} >> $CURDIR/TEX;
 echo \\begin{code} >> $CURDIR/TEX;
 echo \\label{AP:$col4} >> $CURDIR/TEX

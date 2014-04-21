@@ -70,11 +70,12 @@ function lab_migration_upload_dependency_form_validate($form, &$form_state)
   global $user;
 
   /* get approved proposal details */
-  $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE uid = %d ORDER BY id DESC LIMIT 1", $user->uid);
+  $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE uid = %d OR solution_provider_uid = %d ORDER BY id DESC LIMIT 1", $user->uid, $user->uid);
+  //var_dump("SELECT * FROM {lab_migration_proposal} WHERE uid = ".$user->uid." ORDER BY id DESC LIMIT 1"); die;
   $proposal_data = db_fetch_object($proposal_q);
   if (!$proposal_data)
   {
-  	form_set_error('', t('Invalid'));
+  	form_set_error('', t('Invalid1'));
   }
 
   if (!lab_migration_check_name($form_state['values']['depfile1_caption']))

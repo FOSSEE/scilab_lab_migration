@@ -43,7 +43,7 @@ function lab_migration_proposal_form($form_state)
   $form['name_title'] = array(
     '#type' => 'select',
     '#title' => t('Title'),
-    '#options' => array('Mr' => 'Mr', 'Ms' => 'Ms', 'Mrs' => 'Mrs', 'Dr' => 'Dr', 'Prof' => 'Prof'),
+    '#options' => array('Dr' => 'Dr', 'Prof' => 'Prof'),
     '#required' => TRUE,
   );
   $form['name'] = array(

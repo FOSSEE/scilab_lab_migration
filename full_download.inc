@@ -147,6 +147,8 @@ function lab_migration_download_full_lab()
   if ($zip_file_count > 0)
   {
     /* download zip file */
+    ob_clean();
+    //flush();
     header('Content-Type: application/zip');
     header('Content-disposition: attachment; filename="' . $lab_data->lab_title . '.zip"');
     header('Content-Length: ' . filesize($zip_filename));

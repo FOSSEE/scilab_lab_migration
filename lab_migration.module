@@ -308,6 +308,22 @@ function lab_migration_menu()
     'file' => 'full_download.inc',
   );
 
+ /* COMPLETED LAB MIGRATIONS */                                                
+  $items['lab_migration/completed_labs'] = array(                               
+    'title' => 'Completed Labs',                                                
+    'page callback' => 'lab_migration_completed_labs_all',                      
+    'access arguments' => array('lab migration download code'),
+    'file' => 'lab_details.inc',                                             
+  );  
+
+  /* LABS IN PROGRESS */
+  $items['lab_migration/labs_progress'] = array(
+    'title' => 'Labs in Progress',
+    'page callback' => 'lab_migration_labs_progress_all',
+    'access arguments' => array('lab migration download code'),
+    'file' => 'lab_details.inc',
+  );
+
   /* DOWNLOAD FOR EVERYONE */
   $items['lab_migration_run'] = array(
     'title' => 'Download Codes',

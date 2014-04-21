@@ -195,7 +195,7 @@ function lab_migration_solution_proposal_approval_form_submit($form, &$form_stat
     /* sending email */
     $email_to = $user_data->mail;
     $param['solution_proposal_approved']['proposal_id'] = $proposal_id;
-    $param['solution_proposal_approved']['user_id'] = $proposal_data->uid;
+    $param['solution_proposal_approved']['user_id'] = $proposal_data->solution_provider_uid;
     if (!drupal_mail('lab_migration', 'solution_proposal_approved', $email_to , language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
       drupal_set_message('Error sending email message.', 'error');
 
@@ -212,7 +212,7 @@ function lab_migration_solution_proposal_approval_form_submit($form, &$form_stat
     /* sending email */
     $email_to = $user_data->mail;
     $param['solution_proposal_disapproved']['proposal_id'] = $proposal_id;
-    $param['solution_proposal_disapproved']['user_id'] = $proposal_data->uid;
+    $param['solution_proposal_disapproved']['user_id'] = $proposal_data->solution_provider_uid;
     $param['solution_proposal_disapproved']['message'] = $form_state['values']['message'];
     if (!drupal_mail('lab_migration', 'solution_proposal_disapproved', $email_to , language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
       drupal_set_message('Error sending email message.', 'error');

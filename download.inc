@@ -69,6 +69,8 @@ function lab_migration_download_solution()
     header('Content-Type: application/zip');
     header('Content-disposition: attachment; filename="CODE' . $solution_data->code_number . '.zip"');
     header('Content-Length: ' . filesize($zip_filename));
+    ob_clean();
+    //flush();
     readfile($zip_filename);
     unlink($zip_filename);
   } else {
@@ -121,6 +123,8 @@ function lab_migration_download_experiment()
     header('Content-Type: application/zip');
     header('Content-disposition: attachment; filename="EXP' . $experiment_data->number . '.zip"');
     header('Content-Length: ' . filesize($zip_filename));
+    ob_clean();
+    //flush();
     readfile($zip_filename);
     unlink($zip_filename);
   } else {
@@ -131,6 +135,7 @@ function lab_migration_download_experiment()
 
 function lab_migration_download_lab()
 {
+  global $user;
   $lab_id = arg(3);
   $root_path = lab_migration_path();
 
@@ -174,12 +179,28 @@ function lab_migration_download_lab()
 
   if ($zip_file_count > 0)
   {
-    /* download zip file */
-    header('Content-Type: application/zip');
-    header('Content-disposition: attachment; filename="' . $lab_data->lab_title . '.zip"');
-    header('Content-Length: ' . filesize($zip_filename));
-    readfile($zip_filename);
-    unlink($zip_filename);
+     if($user->uid) {
+    	/* download zip file */
+    	header('Content-Type: application/zip');
+    	header('Content-disposition: attachment; filename="' . $lab_data->lab_title . '.zip"');
+    	header('Content-Length: ' . filesize($zip_filename));
+    	ob_clean();
+    	//flush();
+    	readfile($zip_filename);
+    	unlink($zip_filename);
+     } else {
+	header('Content-Type: application/zip');
+        header('Content-disposition: attachment; filename="' . $lab_data->lab_title . '.zip"');
+        header('Content-Length: ' . filesize($zip_filename));
+        header("Content-Transfer-Encoding: binary");
+	header('Expires: 0');
+	header('Pragma: no-cache');
+	ob_end_flush();
+	ob_clean();
+	flush();
+        readfile($zip_filename);
+        unlink($zip_filename);
+     }
   } else {
     drupal_set_message("There are no solutions in this Lab to download", 'error');
     drupal_goto('lab_migration_run');

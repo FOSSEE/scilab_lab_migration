@@ -261,6 +261,9 @@ function lab_migration_proposal_approval_form_submit($form, &$form_state)
     $email_to = $user_data->mail;
     $param['proposal_approved']['proposal_id'] = $proposal_id;
     $param['proposal_approved']['user_id'] = $proposal_data->uid;
+    // echo "To: ".$email_to." From: ".variable_get('lab_migration_from_email', NULL)."<br>";
+    // echo "<pre>";
+    // var_dump($param); die;
     if (!drupal_mail('lab_migration', 'proposal_approved', $email_to , language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
       drupal_set_message('Error sending email message.', 'error');
 
