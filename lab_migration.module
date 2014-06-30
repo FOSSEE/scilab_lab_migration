@@ -450,7 +450,7 @@ function lab_migration_path() {
 function lab_migration_get_proposal() {
 	global $user;
 
-  $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE solution_provider_uid = %d AND solution_status = 2 ORDER BY id DESC LIMIT 1", $user->uid);
+  $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE solution_provider_uid = %d AND solution_status = 2 ORDER BY id ASC LIMIT 1", $user->uid);
   $proposal_data = db_fetch_object($proposal_q);
   if (!$proposal_data)
   {
