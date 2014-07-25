@@ -47,6 +47,7 @@ Display solution on website : ' . $solution_display . '
 
 List of experiments : ' . $experiment_list . '
 
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
 
 Best Wishes,
 
@@ -119,6 +120,8 @@ List of experiments : ' . $experiment_list . '
 
 Your proposal is under review and you will soon receive an email from us regarding the same.
 
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
+
 Best Wishes,
 
 !site_name', array('!site_name' => variable_get('site_name', ''), '!user_name' => $user_data->name), $language->language);
@@ -174,6 +177,8 @@ Solution Provided By : ' . $solution_provider_user . '
 
 List of experiments : ' . $experiment_list . '
 
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
+
 Best Wishes,
 
 !site_name', array('!site_name' => variable_get('site_name', ''), '!user_name' => $user_data->name), $language->language);
@@ -226,6 +231,8 @@ Display solution on website : ' . $solution_display . '
 Solution Provided By : ' . $solution_provider_user . '
 
 List of experiments : ' . $experiment_list . '
+
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
 
 Best Wishes,
 
@@ -289,6 +296,8 @@ http://scilab.in/lab_migration_run/' . $proposal_data->id . '
 
 Now you should be able to propose a new Lab migration...
 
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
+
 Best Wishes,
 
 !site_name', array('!site_name' => variable_get('site_name', ''), '!user_name' => $user_data->name), $language->language);
@@ -336,6 +345,8 @@ List of experiments : ' . $experiment_list . '
 
 Your proposal is under review and you will soon receive an email from us regarding the same.
 
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
+
 Best Wishes,
 
 !site_name', array('!site_name' => variable_get('site_name', ''), '!user_name' => $user_data->name), $language->language);
@@ -376,6 +387,8 @@ Your following solution has been approved:
 Solution number : ' . $solution_data->code_number . '
 Caption : ' .  $solution_data->caption . '
 
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
+
 Best Wishes,
 
 !site_name', array('!site_name' => variable_get('site_name', ''), '!user_name' => $user_data->name), $language->language);
@@ -394,6 +407,8 @@ Solution number : ' . $params['solution_disapproved']['solution_number'] . '
 Caption : ' . $params['solution_disapproved']['solution_caption'] . '
 
 Reason for dis-approval : ' . $params['solution_disapproved']['message'] . '
+
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
 
 Best Wishes,
 
@@ -414,6 +429,8 @@ Title of the Experiment : ' . $params['solution_deleted_user']['experiment_title
 Solution number : ' . $params['solution_deleted_user']['solution_number'] . '
 Caption : ' . $params['solution_deleted_user']['solution_caption'] . '
 
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
+
 Best Wishes,
 
 !site_name', array('!site_name' => variable_get('site_name', ''), '!user_name' => $user_data->name), $language->language);
@@ -429,6 +446,8 @@ Dear !user_name,
 
 You have uploaded following dependency files :
     ' . $dependency_files . '
+
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
 
 Best Wishes,
 
