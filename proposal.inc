@@ -122,8 +122,9 @@ function lab_migration_proposal_form($form_state)
 		'#title' => t('Do you want to display the solution on the www.scilab.in website'),
 		'#options' => array('1' => 'Yes', '2' => 'No'),
 		'#required' => TRUE,
-		'#default_value' => '1',
+		'#default_value' => '2',
 		'#description' => 'If yes, solutions will be made available to everyone for downloading.',
+        '#disabled' => TRUE,
   );
 
   $form['submit'] = array(
