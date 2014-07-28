@@ -149,13 +149,38 @@ function lab_migration_upload_code_form($form_state)
     '#description' => t(''),
     '#required' => TRUE,
   );
+  $form['os_used'] = array(
+    '#type' => 'select',
+    '#title' => t('Operating System used'),
+    '#options' => array(
+      0 => '--- Please select ---',
+      'Linux' => 'Linux',
+      'Windows' => 'Windows',
+      'Mac' => 'Mac'
+    ),
+    '#required' => TRUE,
+  );
+  $form['scilab_version'] = array(
+    '#type' => 'select',
+    '#title' => t('Scilab version used'),
+    '#options' => array(
+      0 => '--- Please select ---',
+      '5.4.1' => '5.4.1',
+      '5.3.3' => '5.3.3',
+      'Older' => 'Older Version'
+    ),
+    '#required' => TRUE,
+  );
+  $form['toolbox_used'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Toolbox used (If any)'),
+  );
   $form['code_warning'] = array(
     '#type' => 'item',
     '#title' => t('You should upload all the files (main or source files, result files, executable file if any)'),
     '#prefix' => '<div style="color:red">',
     '#suffix' => '</div>',
   );
-
   $form['sourcefile'] = array(
     '#type' => 'fieldset',
     '#title' => t('Main or Source Files'),
@@ -277,6 +302,12 @@ function lab_migration_upload_code_form_validate($form, &$form_state)
 
   if (!lab_migration_check_name($form_state['values']['code_caption']))
     form_set_error('code_caption', t('Caption can contain only alphabets, numbers and spaces.'));
+
+  if(!$form_state['values']['os_used'])
+    form_set_error('os_used', t('Please select the operating system used.'));
+
+  if(!$form_state['values']['scilab_version'])
+    form_set_error('scilab_version', t('Please select the scilab version used.'));
 
   if (isset($_FILES['files']))
   {
@@ -412,14 +443,17 @@ function lab_migration_upload_code_form_submit($form, &$form_state) {
     mkdir($root_path . $dest_path);
 
   /* creating solution database entry */
-  db_query("INSERT INTO {lab_migration_solution} (experiment_id, approver_uid, code_number, caption, approval_date, approval_status, timestamp) VALUES (%d, %d, '%s', '%s', %d, %d, %d)",
+  db_query("INSERT INTO {lab_migration_solution} (experiment_id, approver_uid, code_number, caption, approval_date, approval_status, timestamp, os_used, scilab_version, toolbox_used) VALUES (%d, %d, '%s', '%s', %d, %d, %d, '%s', '%s', '%s')",
     $experiment_id,
     0,
     $experiment_data->number . '.' . $form_state['values']['code_number'],
     $form_state['values']['code_caption'],
     0,
     0,
-    time()
+    time(),
+    $form_state['values']['os_used'],
+    $form_state['values']['scilab_version'],
+    $form_state['values']['toolbox_used']
   );
   $solution_id = db_last_insert_id('lab_migration_solution', 'id');
 
