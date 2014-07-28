@@ -711,7 +711,7 @@ function lab_migration_proposal_edit_form_submit($form, &$form_state)
     return;
   }
 
-  if ($form_state['values']['solution_display'] == 1) {
+  if ($form_state['values']['open_solution'] == 1) {
     db_query("UPDATE {lab_migration_proposal} SET solution_provider_uid = %d, solution_status = %d, solution_provider_name_title = '', 	solution_provider_name = '', solution_provider_contact_ph = '', solution_provider_department 	= '', solution_provider_university = '' WHERE id = %d", 0, 0, $proposal_id);
   }
 
@@ -723,14 +723,13 @@ function lab_migration_proposal_edit_form_submit($form, &$form_state)
   }
 
   /* update proposal */
-  $result = db_query("UPDATE {lab_migration_proposal} SET name_title = '%s', name = '%s', contact_ph = '%s', department = '%s', university = '%s', lab_title = '%s', solution_provider_uid = %d, solution_display = %d WHERE id = %d",
+  $result = db_query("UPDATE {lab_migration_proposal} SET name_title = '%s', name = '%s', contact_ph = '%s', department = '%s', university = '%s', lab_title = '%s', solution_display = %d WHERE id = %d",
     $form_state['values']['name_title'],
     $form_state['values']['name'],
     $form_state['values']['contact_ph'],
     $form_state['values']['department'],
     $form_state['values']['university'],
     $form_state['values']['lab_title'],
-    $solution_provider_uid,
     $solution_display,
     $proposal_id);
   if (!$result)
