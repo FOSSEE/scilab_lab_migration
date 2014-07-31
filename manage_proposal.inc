@@ -540,7 +540,7 @@ function lab_migration_proposal_edit_form($form_state)
   $form['email_id'] = array(
     '#type' => 'item',
     '#title' => t('Email'),
-    '#value' => $user->mail,
+    '#value' => $user_data->mail,
   );
   $form['contact_ph'] = array(
     '#type' => 'textfield',
