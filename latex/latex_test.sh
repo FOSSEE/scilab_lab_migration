@@ -87,6 +87,12 @@ col2=${col2/&/\\&};
 col3=${col3/&/\\&};
 col4=${col4/&/\\&};
 col8=${col8/&/\\&};
+##################
+col7=${col7/&/\\&};
+col8=${col8/&/\\&};
+col9=${col9/&/\\&};
+#################
+
 chap_diff=$(($col1 - $j))
 if [ $chap_diff -eq 1 ]; then
 	echo \\chapter{$col2}>>$CURDIR/TEX
@@ -135,9 +141,10 @@ then
 echo $col6 > $CURDIR/Figure_files
 	if  grep -c ".jpg\|.JPEG\|.png\|.jpeg\|.JPG" $CURDIR/Figure_files 
 	then
+		 
 		 echo \\curlable{Fig~$col3} >> $CURDIR/TEX
 		 echo \\begin{figure} >> $CURDIR/TEX
-		 echo \\includegraphics[width=5in]{../$col6}  >> $CURDIR/TEX
+		 echo \\includegraphics[scale=0.5]{../$col6}  >> $CURDIR/TEX
 		 echo \\caption{$col4} >> $CURDIR/TEX
 		 echo \\end{figure} >> $CURDIR/TEX
 		 echo >> $CURDIR/TEX
@@ -158,16 +165,34 @@ echo \\chapter*{Appendix} >>$CURDIR/TEX
 
 while IFS=# read col1 col2 col3 col4; do
 col3=${col3/&/\\&};
-echo \\curlable{AP~$i} >> $CURDIR/TEX;
-echo \\begin{code} >> $CURDIR/TEX;
-echo \\label{AP:$col4} >> $CURDIR/TEX
-echo \\tcaption {$col3}{$col3} >> $CURDIR/TEX
-echo \\lstinputlisting{../$col2}  >> $CURDIR/TEX
-echo \\end{code} >> $CURDIR/TEX
-echo >> $CURDIR/TEX
+echo \\curlable{AP~$i}>> $CURDIR/TEX;
+echo $col2 > $CURDIR/image_files
+	if grep -c ".jpg\|.JPEG\|.png\|.jpeg\|.JPG" $CURDIR/image_files
+	then
+	       	 echo \\begin{figure} >> $CURDIR/TEX
+                 echo \\label{AP:$col4} >> $CURDIR/TEX           
+                 echo \\includegraphics[scale=0.3]{../$col2}  >> $CURDIR/TEX
+                 echo \\tcaption {$col3}{$col3} >> $CURDIR/TEX          
+                 echo \\end{figure} >> $CURDIR/TEX
+                 echo >> $CURDIR/TEX
+        
+
+	else
+		echo \\begin{code} >> $CURDIR/TEX;
+                echo \\label{AP:$col4} >> $CURDIR/TEX
+                echo \\lstinputlisting{../$col2}  >> $CURDIR/TEX
+                echo \\tcaption {$col3}{$col3} >> $CURDIR/TEX
+                echo \\end{code} >> $CURDIR/TEX
+                echo >> $CURDIR/TEX
+
+	
+	fi
+
+
+
 let "i+=1"
 done < $Dep_dat
-
+rm -f image_files
 fi
 
 cat Initial_body  TEX  > TEX_final.tex

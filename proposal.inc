@@ -1,239 +1,340 @@
 <?php
 // $Id$
-
 /*
-	Approval Status :
-	0 - Pending
-	1 - Approved
-	2 - Dis-Approved
-	3 - Solved
-  Solution Status :
-	0 - Pending
-	1 - Approved
-	2 - Dis-Approved
-  Solution Display :
-  0 - No
-  1 - Yes
+Approval Status :
+0 - Pending
+1 - Approved
+2 - Dis-Approved
+3 - Solved
+Solution Status :
+0 - Pending
+1 - Approved
+2 - Dis-Approved
+Solution Display :
+0 - No
+1 - Yes
 
-  Tables :
-  lab_migration_solution : approval_status
-  	0 - Pending
-  	1 - Approved
-  	2 - Disapproved (delete it)
+Tables :
+lab_migration_solution : approval_status
+0 - Pending
+1 - Approved
+2 - Disapproved (delete it)
 */
-
 function lab_migration_proposal_form($form_state)
 {
-  global $user;
-
-  /************************ start approve book details ************************/
-  $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE uid = %d ORDER BY id DESC LIMIT 1", $user->uid);
-  $proposal_data = db_fetch_object($proposal_q);
-  if ($proposal_data)
-  {
-		if ($proposal_data->approval_status == 0 || $proposal_data->approval_status == 1) {
+	global $user;
+	/************************ start approve book details ************************/
+	$query = db_select('lab_migration_proposal');
+	$query->fields('lab_migration_proposal');
+	$query->condition('uid', $user->uid);
+	$query->orderBy('id', 'DESC');
+	$query->range(0, 1);
+	$proposal_q = $query->execute();
+	$proposal_data = $proposal_q->fetchObject();
+	if ($proposal_data)
+	{
+		if ($proposal_data->approval_status == 0 || $proposal_data->approval_status == 1)
+		{
 			drupal_set_message(t('We have already received your proposal.'), 'status');
 			drupal_goto('');
 			return;
-		}
-  }
-
-  $form['#attributes'] = array('enctype' => "multipart/form-data");
-
-  $form['name_title'] = array(
-    '#type' => 'select',
-    '#title' => t('Title'),
-    '#options' => array('Dr' => 'Dr', 'Prof' => 'Prof'),
-    '#required' => TRUE,
-  );
-  $form['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Name of the Proposer'),
-    '#size' => 30,
-    '#maxlength' => 50,
-    '#required' => TRUE,
-  );
-  $form['email_id'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Email'),
-    '#size' => 30,
-    '#value' => $user->mail,
-    '#disabled' => TRUE,
-  );
-  $form['contact_ph'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Contact No.'),
-    '#size' => 30,
-    '#maxlength' => 15,
-    '#required' => TRUE,
-  );
-  $form['department'] = array(
-    '#type' => 'select',
-    '#title' => t('Department/Branch'),
-    '#options' => array('' => 'Please select...',
-                        'Computer Engineering' => 'Computer Engineering',
-    										'Electrical Engineering' => 'Electrical Engineering',
-                        'Electronics Engineering' => 'Electronics Engineering',
-                        'Chemical Engineering' => 'Chemical Engineering',
-                        'Instrumentation Engineering' => 'Instrumentation Engineering',
-                        'Mechanical Engineering' => 'Mechanical Engineering',
-                        'Civil Engineering' => 'Civil Engineering',
-                        'Physics' => 'Physics',
-                        'Mathematics' => 'Mathematics',
-                        'Others' => 'Others'),
-    '#required' => TRUE,
-  );
-  $form['university'] = array(
-    '#type' => 'textfield',
-    '#title' => t('University/Institute'),
-    '#size' => 30,
-    '#maxlength' => 50,
-    '#required' => TRUE,
-  );
-  $form['lab_title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Title of the Lab'),
-    '#size' => 50,
-    '#required' => TRUE,
-  );
-
-  $first_experiemnt = TRUE;
-  for ($counter = 1; $counter <= 15; $counter++) {
+		} //$proposal_data->approval_status == 0 || $proposal_data->approval_status == 1
+	} //$proposal_data
+	$form['#attributes'] = array(
+		'enctype' => "multipart/form-data"
+	);
+	$form['name_title'] = array(
+		'#type' => 'select',
+		'#title' => t('Title'),
+		'#options' => array(
+			'Dr' => 'Dr',
+			'Prof' => 'Prof'
+		),
+		'#required' => TRUE
+	);
+	$form['name'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Name of the Proposer'),
+		'#size' => 30,
+		'#maxlength' => 50,
+		'#required' => TRUE
+	);
+	$form['email_id'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Email'),
+		'#size' => 30,
+		'#value' => $user->mail,
+		'#disabled' => TRUE
+	);
+	$form['contact_ph'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Contact No.'),
+		'#size' => 30,
+		'#maxlength' => 15,
+		'#required' => TRUE
+	);
+	$form['department'] = array(
+		'#type' => 'select',
+		'#title' => t('Department/Branch'),
+		'#options' => array(
+			'' => 'Please select...',
+			'Computer Engineering' => 'Computer Engineering',
+			'Electrical Engineering' => 'Electrical Engineering',
+			'Electronics Engineering' => 'Electronics Engineering',
+			'Chemical Engineering' => 'Chemical Engineering',
+			'Instrumentation Engineering' => 'Instrumentation Engineering',
+			'Mechanical Engineering' => 'Mechanical Engineering',
+			'Civil Engineering' => 'Civil Engineering',
+			'Physics' => 'Physics',
+			'Mathematics' => 'Mathematics',
+			'Others' => 'Others'
+		),
+		'#required' => TRUE
+	);
+	$form['university'] = array(
+		'#type' => 'textfield',
+		'#title' => t('University/ Institute'),
+		'#size' => 80,
+		'#maxlength' => 200,
+		'#required' => TRUE,
+		'#attributes' => array(
+			'placeholder' => 'Insert full name of your institute/ university.... '
+		)
+	);
+	$form['city'] = array(
+		'#type' => 'textfield',
+		'#title' => t('City/ Village'),
+		'#size' => 80,
+		'#maxlength' => 150,
+		'#required' => TRUE,
+		'#attributes' => array(
+			'placeholder' => 'Insert location of your institute/ university....'
+		)
+	);
+	$form['pincode'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Pincode'),
+		'#size' => 30,
+		'#maxlength' => 6,
+		'#required' => TRUE,
+		'#attributes' => array(
+			'placeholder' => 'Insert pincode of your city/ village....'
+		)
+	);
+	$form['all_state'] = array(
+		'#type' => 'select',
+		'#title' => t('State'),
+		'#options' => array(
+			'0' => 'Please select...',
+			'Andhra Pradesh' => t('Andhra Pradesh'),
+			'Arunachal Pradesh' => 'Arunachal Pradesh',
+			'Assam' => 'Assam',
+			'Bihar' => 'Bihar',
+			'Chhattisgarh' => 'Chhattisgarh',
+			'Goa' => 'Goa',
+			'Gujarat' => 'Gujarat',
+			'Haryana' => 'Haryana',
+			'Himachal Pradesh' => 'Himachal Pradesh',
+			'Jammu & Kashmir' => 'Jammu & Kashmir',
+			'Jharkhand' => 'Jharkhand',
+			'Karnataka' => 'Karnataka',
+			'Kerala' => 'Kerala',
+			'Madhya Pradesh' => 'Madhya Pradesh',
+			'Maharashtra' => 'Maharashtra',
+			'Manipur' => 'Manipur',
+			'Meghalaya' => 'Meghalaya',
+			'Mizoram' => 'Mizoram',
+			'Nagaland' => 'Nagaland',
+			'Odisha' => 'Odisha',
+			'Punjab' => 'Punjab',
+			'Rajasthan' => 'Rajasthan',
+			'Sikkim' => 'Sikkim',
+			'Tamil Nadu' => 'Tamil Nadu',
+			'Telangana' => 'Telangana',
+			'Tripura' => 'Tripura',
+			'Uttarakhand' => 'Uttarakhand',
+			'Uttar Pradesh' => 'Uttar Pradesh',
+			'West Bengal' => 'West Bengal',
+			'Andaman & Nicobar' => 'Andaman & Nicobar',
+			'Chandigarh' => 'Chandigarh',
+			'Dadra and Nagar Haveli' => 'Dadra and Nagar Haveli',
+			'Daman & Diu' => 'Daman & Diu',
+			'Delhi' => 'Delhi',
+			'Lakshadweep' => 'Lakshadweep',
+			'Puducherry' => 'Puducherry',
+			'Others' => 'Others'
+		),
+		'#required' => TRUE,
+		'#tree' => TRUE,
+		'#validated' => TRUE
+	);
+	$form['lab_title'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Title of the Lab'),
+		'#size' => 50,
+		'#required' => TRUE
+	);
+	$first_experiemnt = TRUE;
+	for ($counter = 1; $counter <= 15; $counter++)
+	{
 		$form['lab_experiment-' . $counter] = array(
 			'#type' => 'textfield',
 			'#title' => t('Title of the Experiment ') . $counter,
 			'#size' => 50,
-			'#required' => $first_experiemnt,
-			);
-			$first_experiemnt = FALSE;
-	}
-
-  $form['solution_provider_uid'] = array(
-	  '#type' => 'radios',
+			'#required' => $first_experiemnt
+		);
+		$first_experiemnt = FALSE;
+	} //$counter = 1; $counter <= 15; $counter++
+	$form['solution_provider_uid'] = array(
+		'#type' => 'radios',
 		'#title' => t('Do you want to provide the solution'),
-		'#options' => array('1' => 'Yes', '2' => 'No'),
-		'#required' => TRUE,
-		'#default_value' => '1',
-		'#description' => 'If you dont want to provide the solution then it will be opened for the community, anyone may come forward and provide the solution.',
-  );
-
-  $form['solution_display'] = array(
-	  '#type' => 'radios',
-		'#title' => t('Do you want to display the solution on the www.scilab.in website'),
-		'#options' => array('1' => 'Yes', '2' => 'No'),
+		'#options' => array(
+			'1' => 'Yes',
+			'2' => 'No'
+		),
 		'#required' => TRUE,
 		'#default_value' => '2',
-		'#description' => 'If yes, solutions will be made available to everyone for downloading.',
-        '#disabled' => TRUE,
-  );
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Submit')
-  );
-  return $form;
+		'#description' => 'If you dont want to provide the solution then it will be opened for the community, anyone may come forward and provide the solution.'
+	);
+	/*$form['solution_display'] = array(
+	'#type' => 'radios',
+	'#title' => t('Do you want to display the solution on the www.scilab.in website'),
+	'#options' => array('1' => 'Yes', '2' => 'No'),
+	'#required' => TRUE,
+	'#default_value' => '2',
+	'#description' => 'If yes, solutions will be made available to everyone for downloading.',
+	'#disabled' => FALSE,
+	);*/
+	$form['solution_display'] = array(
+		'#type' => 'hidden',
+		//  '#title' => t('Do you want to display the solution on the www.scilab.in website'),
+		// '#options' => array('1' => 'Yes', '2' => 'No'),
+		// '#required' => TRUE,
+		'#default_value' => '2'
+		//  '#description' => 'If yes, solutions will be made available to everyone for downloading.',
+		//   '#disabled' => FALSE,
+	);
+	$form['submit'] = array(
+		'#type' => 'submit',
+		'#value' => t('Submit')
+	);
+	return $form;
 }
-
 function lab_migration_proposal_form_validate($form, &$form_state)
 {
-  if (!preg_match('/^[0-9\ \+]{0,15}$/', $form_state['values']['contact_ph']))
-    form_set_error('contact_ph', t('Invalid contact phone number'));
-  return;
+	if (!preg_match('/^[0-9\ \+]{0,15}$/', $form_state['values']['contact_ph']))
+		form_set_error('contact_ph', t('Invalid contact phone number'));
+	return;
 }
-
 function lab_migration_proposal_form_submit($form, &$form_state)
 {
-  global $user;
-
-  if (!$user->uid) {
+	global $user;
+	if (!$user->uid)
+	{
 		drupal_set_message('It is mandatory to login on this website to access the proposal form', 'error');
 		return;
-  }
-
-  $solution_provider_uid = 0;
-  $solution_status = 0;
-  $solution_provider_name_title = '';
-  $solution_provider_name = '';
-  $solution_provider_contact_ph = '';
-  $solution_provider_department = '';
-  $solution_provider_university = '';
-  if ($form_state['values']['solution_provider_uid'] == "1") {
-  	$solution_provider_uid = $user->uid;
-  	$solution_status = 1;
+	} //!$user->uid
+	$solution_provider_uid = 0;
+	$solution_status = 0;
+	$solution_provider_name_title = '';
+	$solution_provider_name = '';
+	$solution_provider_contact_ph = '';
+	$solution_provider_department = '';
+	$solution_provider_university = '';
+	if ($form_state['values']['solution_provider_uid'] == "1")
+	{
+		$solution_provider_uid = $user->uid;
+		$solution_status = 2;
 		$solution_provider_name_title = $form_state['values']['name_title'];
 		$solution_provider_name = $form_state['values']['name'];
 		$solution_provider_contact_ph = $form_state['values']['contact_ph'];
 		$solution_provider_department = $form_state['values']['department'];
 		$solution_provider_university = $form_state['values']['university'];
-  } else {
-  	$solution_provider_uid = 0;
-  }
-
-  $solution_display = 0;
-  if ($form_state['values']['solution_display'] == "1")
-  	$solution_display = 1;
-  else
-  	$solution_display = 0;
-
-  /* inserting the user proposal */
-  $result = db_query("INSERT INTO {lab_migration_proposal} 
-    (uid, approver_uid, name_title, name, contact_ph, department, university, lab_title, approval_status, solution_status, solution_provider_uid, solution_display, creation_date, approval_date, solution_date, solution_provider_name_title, solution_provider_name, solution_provider_contact_ph, solution_provider_department, solution_provider_university) VALUES
-    (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, %d, 0, 0, '%s', '%s', '%s', '%s', '%s')",
-    $user->uid,
-    0,
-    $form_state['values']['name_title'],
-    $form_state['values']['name'],
-    $form_state['values']['contact_ph'],
-    $form_state['values']['department'],
-    $form_state['values']['university'],
-    $form_state['values']['lab_title'],
-    0,
-    $solution_status,
-    $solution_provider_uid,
-    $solution_display,
-    time(),
-    $solution_provider_name_title,
-    $solution_provider_name,
-    $solution_provider_contact_ph,
-    $solution_provider_department,
-    $solution_provider_university
-  );
-  if (!$result)
-  {
-    drupal_set_message(t('Error receiving your proposal. Please try again.'), 'error');
-    return;
-  }
-  /* proposal id */
-  $proposal_id = db_last_insert_id('lab_migration_proposal', 'id');
-
-  /* adding experiments */
-  $number = 1;
-  for ($counter = 1; $counter <= 15; $counter++) {
-  	$experiment_field_name = 'lab_experiment-' . $counter;
-  	if (strlen(trim($form_state['values'][$experiment_field_name])) >= 1) {
-			$result = db_query("INSERT INTO {lab_migration_experiment} (proposal_id, number, title) VALUES (%d, %d, '%s')", $proposal_id, $number, trim($form_state['values'][$experiment_field_name]));
+	} //$form_state['values']['solution_provider_uid'] == "1"
+	else
+	{
+		$solution_provider_uid = 0;
+	}
+	$solution_display = 0;
+	if ($form_state['values']['solution_display'] == "1")
+		$solution_display = 1;
+	else
+		$solution_display = 0;
+	/* inserting the user proposal */
+	$v = $form_state["values"];
+	$result = "INSERT INTO {lab_migration_proposal} 
+    (uid, approver_uid, name_title, name, contact_ph, department, university, city, pincode, state, lab_title, approval_status, solution_status, solution_provider_uid, solution_display, creation_date, approval_date, solution_date, solution_provider_name_title, solution_provider_name, solution_provider_contact_ph, solution_provider_department, solution_provider_university) VALUES
+    (:uid, :approver_uid, :name_title, :name, :contact_ph, :department, :university, :city, :pincode, :state, :lab_title, :approval_status, :solution_status, :solution_provider_uid, :solution_display, :creation_date, :approval_date, :solution_date, :solution_provider_name_title, :solution_provider_name, :solution_provider_contact_ph, :solution_provider_department, :solution_provider_university)";
+	$args = array(
+		":uid" => $user->uid,
+		":approver_uid" => 0,
+		":name_title" => $v['name_title'],
+		":name" => $v['name'],
+		":contact_ph" => $v['contact_ph'],
+		":department" => $v['department'],
+		":university" => $v['university'],
+		":city" => $v['city'],
+		":pincode" => $v['pincode'],
+		":state" => $v['all_state'],
+		":lab_title" => $v['lab_title'],
+		":approval_status" => 0,
+		":solution_status" => $solution_status,
+		":solution_provider_uid" => $solution_provider_uid,
+		":solution_display" => $solution_display,
+		":creation_date" => time(),
+		":approval_date" => 0,
+		":solution_date" => 0,
+		":solution_provider_name_title" => $solution_provider_name_title,
+		":solution_provider_name" => $solution_provider_name,
+		":solution_provider_contact_ph" => $solution_provider_contact_ph,
+		":solution_provider_department" => $solution_provider_department,
+		":solution_provider_university" => $solution_provider_university
+	);
+	$proposal_id = db_query($result, $args, array(
+		'return' => Database::RETURN_INSERT_ID
+	));
+	if (!$proposal_id)
+	{
+		drupal_set_message(t('Error receiving your proposal. Please try again.'), 'error');
+		return;
+	} //!$proposal_id
+	/* proposal id */
+	//$proposal_id = db_last_insert_id('lab_migration_proposal', 'id');
+	/* adding experiments */
+	$number = 1;
+	for ($counter = 1; $counter <= 15; $counter++)
+	{
+		$experiment_field_name = 'lab_experiment-' . $counter;
+		if (strlen(trim($form_state['values'][$experiment_field_name])) >= 1)
+		{
+			$query = "INSERT INTO {lab_migration_experiment} (proposal_id, number, title) VALUES (:proposal_id, :number, :experiment_field_name)";
+			$args = array(
+				":proposal_id" => $proposal_id,
+				":number" => $number,
+				":experiment_field_name" => trim($form_state['values'][$experiment_field_name])
+			);
+			$result = db_query($query, $args);
 			if (!$result)
 			{
 				drupal_set_message(t('Could not insert Title of the Experiment : ') . trim($form_state['values'][$experiment_field_name]), 'error');
-			} else {
+			} //!$result
+			else
+			{
 				$number++;
 			}
-  	}
-	}
-
-  /* sending email */
-  $email_to = $user->mail;
-  $param['proposal_received']['proposal_id'] = $proposal_id;
-  $param['proposal_received']['user_id'] = $user->uid;
-  if (!drupal_mail('lab_migration', 'proposal_received', $email_to , language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
-    drupal_set_message('Error sending email message.', 'error');
-
-  /* sending email */
-  $email_to = variable_get('lab_migration_emails', '');
-  if (!drupal_mail('lab_migration', 'proposal_received', $email_to , language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
-    drupal_set_message('Error sending email message.', 'error');
-
-  drupal_set_message(t('We have received you Lab migration proposal. We will get back to you soon.'), 'status');
-  drupal_goto('');
+		} //strlen(trim($form_state['values'][$experiment_field_name])) >= 1
+	} //$counter = 1; $counter <= 15; $counter++
+	/* sending email */
+	$email_to = $user->mail;
+	$param['proposal_received']['proposal_id'] = $proposal_id;
+	$param['proposal_received']['user_id'] = $user->uid;
+	var_dump($param);
+	if (!drupal_mail('lab_migration', 'proposal_received', $email_to, user_preferred_language($user), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+		drupal_set_message('Error sending email message.', 'error');
+	/* sending email */
+	$email_to = variable_get('lab_migration_emails', '');
+	if (!drupal_mail('lab_migration', 'proposal_received', $email_to, user_preferred_language($user), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+		drupal_set_message('Error sending email message.', 'error');
+	drupal_set_message(t('We have received you Lab migration proposal. We will get back to you soon.'), 'status');
+	drupal_goto('');
 }
-

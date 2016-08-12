@@ -1,6 +1,7 @@
-name = Lab Migration
-description = IIT Bombay Lab Migration project
+name = "Lab Migration"
+description = "IIT Bombay Lab Migration project"
 package = IITB
-version = VERSION
-core = 6.x
-dependencies[] = ahah_helper
+version = "7.1"
+core = "7.x"
+
+;scripts[] = js/jquery-1.4.1.min.js
