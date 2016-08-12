@@ -1,2 +1,2 @@
-Lab Migration project for IIT Bombay written in Drupal 6
+Lab Migration project for FOSSEE, IIT Bombay written in Drupal 7
 
