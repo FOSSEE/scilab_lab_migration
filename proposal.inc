@@ -20,7 +20,8 @@ lab_migration_solution : approval_status
 1 - Approved
 2 - Disapproved (delete it)
 */
-function lab_migration_proposal_form($form_state)
+/* lab migration proposal form */
+function lab_migration_proposal_form($form, &$form_state)
 {
 	global $user;
 	/************************ start approve book details ************************/
@@ -76,19 +77,7 @@ function lab_migration_proposal_form($form_state)
 	$form['department'] = array(
 		'#type' => 'select',
 		'#title' => t('Department/Branch'),
-		'#options' => array(
-			'' => 'Please select...',
-			'Computer Engineering' => 'Computer Engineering',
-			'Electrical Engineering' => 'Electrical Engineering',
-			'Electronics Engineering' => 'Electronics Engineering',
-			'Chemical Engineering' => 'Chemical Engineering',
-			'Instrumentation Engineering' => 'Instrumentation Engineering',
-			'Mechanical Engineering' => 'Mechanical Engineering',
-			'Civil Engineering' => 'Civil Engineering',
-			'Physics' => 'Physics',
-			'Mathematics' => 'Mathematics',
-			'Others' => 'Others'
-		),
+		'#options' => _lm_list_of_departments(),
 		'#required' => TRUE
 	);
 	$form['university'] = array(
@@ -99,17 +88,16 @@ function lab_migration_proposal_form($form_state)
 		'#required' => TRUE,
 		'#attributes' => array(
 			'placeholder' => 'Insert full name of your institute/ university.... '
-		)
+		),
+		'#description' => 'Please insert full name of your institute/ university.'
 	);
 	$form['city'] = array(
-		'#type' => 'textfield',
+		'#type' => 'select',
 		'#title' => t('City/ Village'),
-		'#size' => 80,
+		'#options' => _lm_list_of_cities(),
 		'#maxlength' => 150,
 		'#required' => TRUE,
-		'#attributes' => array(
-			'placeholder' => 'Insert location of your institute/ university....'
-		)
+		'#description' => 'Please select location of your institute/ university.'
 	);
 	$form['pincode'] = array(
 		'#type' => 'textfield',
@@ -119,54 +107,17 @@ function lab_migration_proposal_form($form_state)
 		'#required' => TRUE,
 		'#attributes' => array(
 			'placeholder' => 'Insert pincode of your city/ village....'
-		)
+		),
+		'#description' => 'Please insert pincode of your institute/ university.'
 	);
 	$form['all_state'] = array(
 		'#type' => 'select',
 		'#title' => t('State'),
-		'#options' => array(
-			'0' => 'Please select...',
-			'Andhra Pradesh' => t('Andhra Pradesh'),
-			'Arunachal Pradesh' => 'Arunachal Pradesh',
-			'Assam' => 'Assam',
-			'Bihar' => 'Bihar',
-			'Chhattisgarh' => 'Chhattisgarh',
-			'Goa' => 'Goa',
-			'Gujarat' => 'Gujarat',
-			'Haryana' => 'Haryana',
-			'Himachal Pradesh' => 'Himachal Pradesh',
-			'Jammu & Kashmir' => 'Jammu & Kashmir',
-			'Jharkhand' => 'Jharkhand',
-			'Karnataka' => 'Karnataka',
-			'Kerala' => 'Kerala',
-			'Madhya Pradesh' => 'Madhya Pradesh',
-			'Maharashtra' => 'Maharashtra',
-			'Manipur' => 'Manipur',
-			'Meghalaya' => 'Meghalaya',
-			'Mizoram' => 'Mizoram',
-			'Nagaland' => 'Nagaland',
-			'Odisha' => 'Odisha',
-			'Punjab' => 'Punjab',
-			'Rajasthan' => 'Rajasthan',
-			'Sikkim' => 'Sikkim',
-			'Tamil Nadu' => 'Tamil Nadu',
-			'Telangana' => 'Telangana',
-			'Tripura' => 'Tripura',
-			'Uttarakhand' => 'Uttarakhand',
-			'Uttar Pradesh' => 'Uttar Pradesh',
-			'West Bengal' => 'West Bengal',
-			'Andaman & Nicobar' => 'Andaman & Nicobar',
-			'Chandigarh' => 'Chandigarh',
-			'Dadra and Nagar Haveli' => 'Dadra and Nagar Haveli',
-			'Daman & Diu' => 'Daman & Diu',
-			'Delhi' => 'Delhi',
-			'Lakshadweep' => 'Lakshadweep',
-			'Puducherry' => 'Puducherry',
-			'Others' => 'Others'
-		),
+		'#options' => _lm_list_of_states(),
 		'#required' => TRUE,
 		'#tree' => TRUE,
-		'#validated' => TRUE
+		'#validated' => TRUE,
+		'#description' => 'Please select state of your institute/ university.'
 	);
 	$form['lab_title'] = array(
 		'#type' => 'textfield',
@@ -194,26 +145,29 @@ function lab_migration_proposal_form($form_state)
 		),
 		'#required' => TRUE,
 		'#default_value' => '2',
-		'#description' => 'If you dont want to provide the solution then it will be opened for the community, anyone may come forward and provide the solution.'
+		'#description' => 'If you dont want to provide the solution then it will be opened for the community. Anyone may come forward and provide the solution.'
+	);
+	$form['solution_display'] = array(
+		'#type' => 'radios',
+		'#title' => t('Do you want to display the solution on the www.scilab.in website'),
+		'#options' => array(
+			'1' => 'Yes',
+			'2' => 'No'
+		),
+		'#required' => TRUE,
+		'#default_value' => '1',
+		'#description' => 'If yes, solutions will be made available to everyone for downloading.',
+		'#disabled' => FALSE
 	);
 	/*$form['solution_display'] = array(
-	'#type' => 'radios',
-	'#title' => t('Do you want to display the solution on the www.scilab.in website'),
-	'#options' => array('1' => 'Yes', '2' => 'No'),
-	'#required' => TRUE,
-	'#default_value' => '2',
-	'#description' => 'If yes, solutions will be made available to everyone for downloading.',
-	'#disabled' => FALSE,
+	'#type' => 'hidden',
+	//  '#title' => t('Do you want to display the solution on the www.scilab.in website'),
+	// '#options' => array('1' => 'Yes', '2' => 'No'),
+	// '#required' => TRUE,
+	'#default_value' => '1'
+	//  '#description' => 'If yes, solutions will be made available to everyone for downloading.',
+	//   '#disabled' => FALSE,
 	);*/
-	$form['solution_display'] = array(
-		'#type' => 'hidden',
-		//  '#title' => t('Do you want to display the solution on the www.scilab.in website'),
-		// '#options' => array('1' => 'Yes', '2' => 'No'),
-		// '#required' => TRUE,
-		'#default_value' => '2'
-		//  '#description' => 'If yes, solutions will be made available to everyone for downloading.',
-		//   '#disabled' => FALSE,
-	);
 	$form['submit'] = array(
 		'#type' => 'submit',
 		'#value' => t('Submit')
@@ -223,8 +177,13 @@ function lab_migration_proposal_form($form_state)
 function lab_migration_proposal_form_validate($form, &$form_state)
 {
 	if (!preg_match('/^[0-9\ \+]{0,15}$/', $form_state['values']['contact_ph']))
+	{
 		form_set_error('contact_ph', t('Invalid contact phone number'));
-	return;
+	} //!preg_match('/^[0-9\ \+]{0,15}$/', $form_state['values']['contact_ph'])
+	else
+	{
+		return;
+	}
 }
 function lab_migration_proposal_form_submit($form, &$form_state)
 {
@@ -234,6 +193,7 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 		drupal_set_message('It is mandatory to login on this website to access the proposal form', 'error');
 		return;
 	} //!$user->uid
+	$form_state['values']['name'] = _lm_sentence_case($form_state['values']['name']);
 	$solution_provider_uid = 0;
 	$solution_status = 0;
 	$solution_provider_name_title = '';
