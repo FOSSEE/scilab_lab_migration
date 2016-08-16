@@ -465,19 +465,24 @@ Best Wishes,
 				'body' => t('
 Dear !user_name,
 
-We have received your proposal for solution for following Lab migration :
+We have received your proposal for solution for the following lab:
 
-Full Name : ' . $proposal_data->name_title . ' ' . $proposal_data->name . '
-Email : ' . $user_data->mail . '
-Contact No. : ' . $proposal_data->contact_ph . '
-Department/Branch : ' . $proposal_data->department . '
-University/Institute : ' . $proposal_data->university . '
+Faculty name : '. $proposal_data->name_title . ' ' . $proposal_data->name . '
+Lab : '. $proposal_data->lab_title .'
+Department : '. $proposal_data->department .'
+University/Institute : '. $proposal_data->university .'
+
+The solution provider’s details are given below
+
+Solution provider name: '. $proposal_data->solution_provider_name_title .' '. $proposal_data->solution_provider_name . '
+Department: '. $proposal_data->solution_provider_department .'
+University/Institute:
 
 Display solution on website : ' . $solution_display . '
 
-Solution Provided By : ' . $solution_provider_user . '
+List of experiments : ' . 
 
-List of experiments : ' . $experiment_list . '
+$experiment_list . '
 
 Your proposal is under review and you will soon receive an email from us regarding the same.
 
@@ -485,10 +490,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
-					'!site_name' => variable_get('site_name', ''),
-					'!user_name' => $user_data->name
-				), array(
+Scilab Team', array(
 					'language' => $language->language
 				))
 			);
