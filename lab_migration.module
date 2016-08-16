@@ -750,6 +750,59 @@ function lab_migration_get_category_name($category_id)
 	} //$category_id
 	return $category_data;
 }
+function _lm_sentence_case($string)
+{
+	$sentences = preg_split('/([.?!]+)/', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+	$new_string = '';
+	foreach ($sentences as $key => $sentence)
+	{
+		$new_string .= ($key & 1) == 0 ? ucfirst(strtolower(trim($sentence))) : $sentence . ' ';
+	} //$sentences as $key => $sentence
+	return trim($new_string);
+}
+function _lm_list_of_cities()
+{
+	$city = array();
+	$query = db_select('list_cities_of_india');
+	$query->fields('list_cities_of_india');
+	$query->orderBy('city', 'ASC');
+	$city_list = $query->execute();
+	while ($city_list_data = $city_list->fetchObject())
+	{
+		$city[$city_list_data->city] = $city_list_data->city;
+	} //$city_list_data = $city_list->fetchObject()
+	return $city;
+}
+function _lm_list_of_departments()
+{
+	
+	$query = db_select('list_of_departments');
+	$query->fields('list_of_departments');
+	$query->orderBy('id', 'DESC');
+	$department_list = $query->execute();
+	while ($department_list_data = $department_list->fetchObject())
+	{
+		$department[$department_list_data->department] = $department_list_data->department;
+	} //$department_list_data = $department_list->fetchObject()
+	return $department;
+}
+function _lm_list_of_states()
+{
+	$states = array(
+		0 => '-Select-'
+	);
+	$query = db_select('list_states_of_india');
+	$query->fields('list_states_of_india');
+	
+	//$query->orderBy('', '');
+	$states_list = $query->execute();
+	while ($states_list_data = $states_list->fetchObject())
+	{
+		$states[$states_list_data->state] = $states_list_data->state;
+	} //$states_list_data = $states_list->fetchObject()
+	return $states;
+}
+
 /*function lab_migration_init() {
 
 drupal_add_js(drupal_get_path('module', 'lab_migration') . '/js/lab_migration_ajax.js', array ('scope' => 'footer'));
