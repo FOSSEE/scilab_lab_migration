@@ -1,16 +1,15 @@
 <?php
 // $Id$
+/* function to display list of lab migration solve labs */
 function lab_migration_proposal_open()
 {
 	global $user;
 	/* get open proposal list */
 	$proposal_rows = array();
-	//$proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE approval_status = 1 AND solution_provider_uid = 0");
-	$query = db_select('lab_migration_proposal');
-	$query->fields('lab_migration_proposal');
-	$query->condition('approval_status', 1);
-	$query->condition('solution_provider_uid', 0);
-	$proposal_q = $query->execute();
+	$proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE approval_status = 1 AND solution_provider_uid = 0");
+	$num_of_results = $proposal_q->rowCount();
+	if($num_of_results != 0)
+	{
 	while ($proposal_data = $proposal_q->fetchObject())
 	{
 		$proposal_rows[] = array(
@@ -26,6 +25,10 @@ function lab_migration_proposal_open()
 		'header' => $proposal_header,
 		'rows' => $proposal_rows
 	));
+	} else
+	{
+	$return_html = "<br><br>No labs are available to solve";
+	}//$proposal_q
 	//$return_html = theme_table($proposal_header, $proposal_rows);
 	return $return_html;
 }
