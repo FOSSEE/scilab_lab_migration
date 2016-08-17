@@ -204,6 +204,8 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 		return;
 	} //!$user->uid
 	$form_state['values']['name'] = _lm_sentence_case($form_state['values']['name']);
+	$form_state['values']['lab_title'] = _lm_sentence_case($form_state['values']['lab_title']);
+	$form_state['values']['university'] = _lm_sentence_case($form_state['values']['university']);
 	$solution_provider_uid = 0;
 	$solution_status = 0;
 	$solution_provider_name_title = '';
@@ -216,10 +218,10 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 		$solution_provider_uid = $user->uid;
 		$solution_status = 2;
 		$solution_provider_name_title = $form_state['values']['name_title'];
-		$solution_provider_name = $form_state['values']['name'];
+		$solution_provider_name = _lm_sentence_case($form_state['values']['name']);
 		$solution_provider_contact_ph = $form_state['values']['contact_ph'];
 		$solution_provider_department = $form_state['values']['department'];
-		$solution_provider_university = $form_state['values']['university'];
+		$solution_provider_university = _lm_sentence_case($form_state['values']['university']);
 	} //$form_state['values']['solution_provider_uid'] == "1"
 	else
 	{
@@ -277,6 +279,7 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 		$experiment_field_name = 'lab_experiment-' . $counter;
 		if (strlen(trim($form_state['values'][$experiment_field_name])) >= 1)
 		{
+			$form_state['values'][$experiment_field_name] = _lm_sentence_case($form_state['values'][$experiment_field_name]);
 			$query = "INSERT INTO {lab_migration_experiment} (proposal_id, number, title) VALUES (:proposal_id, :number, :experiment_field_name)";
 			$args = array(
 				":proposal_id" => $proposal_id,
