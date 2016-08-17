@@ -65,7 +65,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -90,7 +90,7 @@ Reason: ' . $params['solution_proposal_disapproved']['message'] . '
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -171,7 +171,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -251,7 +251,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -329,7 +329,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -417,7 +417,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -489,6 +489,9 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 Best Wishes,
 
 Scilab Team', array(
+                                        '!site_name' => variable_get('site_name', ''),
+                                        '!user_name' => $user_data->name
+                                ),array(
 					'language' => $language->language
 				))
 			);
@@ -520,7 +523,7 @@ The solution is under review. You will be notified when it has been approved.
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -555,7 +558,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -585,7 +588,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -615,7 +618,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -642,7 +645,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
