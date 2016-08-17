@@ -76,7 +76,7 @@ function lab_migration_settings_form_validate($form, &$form_state)
 	return;
 }
 function lab_migration_settings_form_submit($form, &$form_state)
-{ 
+{
 	variable_set('lab_migration_minimum_exp_limit', $form_state['values']['minimum_exp_limit']);
 	variable_set('lab_migration_emails', $form_state['values']['emails']);
 	variable_set('lab_migration_from_email', $form_state['values']['from_email']);
