@@ -128,12 +128,22 @@ function lab_migration_proposal_form($form, &$form_state)
 	$first_experiemnt = TRUE;
 	for ($counter = 1; $counter <= 15; $counter++)
 	{
-		$form['lab_experiment-' . $counter] = array(
-			'#type' => 'textfield',
-			'#title' => t('Title of the Experiment ') . $counter,
-			'#size' => 50,
-			'#required' => $first_experiemnt
-		);
+		if($counter<= variable_get('lab_migration_minimum_exp_limit', '')){
+			$form['lab_experiment-' . $counter] = array(
+				'#type' => 'textfield',
+				'#title' => t('Title of the Experiment ') . $counter,
+				'#size' => 50,
+				'#required' => TRUE
+			);
+		}else
+		{
+			$form['lab_experiment-' . $counter] = array(
+					'#type' => 'textfield',
+					'#title' => t('Title of the Experiment ') . $counter,
+					'#size' => 50,
+					'#required' => False
+				);
+		}
 		$first_experiemnt = FALSE;
 	} //$counter = 1; $counter <= 15; $counter++
 	$form['solution_provider_uid'] = array(
