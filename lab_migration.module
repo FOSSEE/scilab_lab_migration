@@ -752,13 +752,13 @@ function lab_migration_get_category_name($category_id)
 }
 function _lm_sentence_case($string)
 {
-	$sentences = preg_split('/([.?!]+)/', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-	$new_string = '';
-	foreach ($sentences as $key => $sentence)
-	{
-		$new_string .= ($key & 1) == 0 ? ucfirst(strtolower(trim($sentence))) : $sentence . ' ';
-	} //$sentences as $key => $sentence
-	return trim($new_string);
+	$string =ucwords(strtolower($string));
+	foreach (array('-', '\'') as $delimiter) {
+		if (strpos($string, $delimiter)!==false) {
+		$string =implode($delimiter, array_map('ucfirst', explode($delimiter, $string)));
+		}
+	}
+	return $string;
 }
 function _lm_list_of_cities()
 {
@@ -775,7 +775,6 @@ function _lm_list_of_cities()
 }
 function _lm_list_of_departments()
 {
-	
 	$query = db_select('list_of_departments');
 	$query->fields('list_of_departments');
 	$query->orderBy('id', 'DESC');
