@@ -163,7 +163,9 @@ Display solution on website : ' . $solution_display . '
 
 Solution Provided By : ' . $solution_provider_user . '
 
-List of experiments : ' . $experiment_list . '
+List of experiments : ' . 
+
+$experiment_list . '
 
 Your proposal is under review and you will soon receive an email from us regarding the same.
 
