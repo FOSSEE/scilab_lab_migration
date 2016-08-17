@@ -785,6 +785,26 @@ function _lm_list_of_departments()
 	} //$department_list_data = $department_list->fetchObject()
 	return $department;
 }
+function _lm_list_of_category($category_id=NULL){
+			if($category_id==NULL){
+			$query = db_select('list_of_category');
+				$query->fields('list_of_category');
+				$query->orderBy('id', 'ASC');
+				$category_list = $query->execute();
+			}else{
+			$query = db_select('list_of_category');
+				$query->fields('list_of_category');
+				$query->condition('category_id', $category_id);
+				$query->orderBy('id', 'ASC');
+				$category_list = $query->execute();
+			}
+			while ($category_list_data = $category_list->fetchObject())
+			{
+				$category[$category_list_data->category_id] = $category_list_data->category_name;
+			}
+			return $category;
+}
+
 function _lm_list_of_states()
 {
 	$states = array(
