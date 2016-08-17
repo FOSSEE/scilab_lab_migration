@@ -750,6 +750,78 @@ function lab_migration_get_category_name($category_id)
 	} //$category_id
 	return $category_data;
 }
+function _lm_sentence_case($string)
+{
+	$string =ucwords(strtolower($string));
+	foreach (array('-', '\'') as $delimiter) {
+		if (strpos($string, $delimiter)!==false) {
+		$string =implode($delimiter, array_map('ucfirst', explode($delimiter, $string)));
+		}
+	}
+	return $string;
+}
+function _lm_list_of_cities()
+{
+	$city = array();
+	$query = db_select('list_cities_of_india');
+	$query->fields('list_cities_of_india');
+	$query->orderBy('city', 'ASC');
+	$city_list = $query->execute();
+	while ($city_list_data = $city_list->fetchObject())
+	{
+		$city[$city_list_data->city] = $city_list_data->city;
+	} //$city_list_data = $city_list->fetchObject()
+	return $city;
+}
+function _lm_list_of_departments()
+{
+	$query = db_select('list_of_departments');
+	$query->fields('list_of_departments');
+	$query->orderBy('id', 'DESC');
+	$department_list = $query->execute();
+	while ($department_list_data = $department_list->fetchObject())
+	{
+		$department[$department_list_data->department] = $department_list_data->department;
+	} //$department_list_data = $department_list->fetchObject()
+	return $department;
+}
+function _lm_list_of_category($category_id=NULL){
+			if($category_id==NULL){
+			$query = db_select('list_of_category');
+				$query->fields('list_of_category');
+				$query->orderBy('id', 'ASC');
+				$category_list = $query->execute();
+			}else{
+			$query = db_select('list_of_category');
+				$query->fields('list_of_category');
+				$query->condition('category_id', $category_id);
+				$query->orderBy('id', 'ASC');
+				$category_list = $query->execute();
+			}
+			while ($category_list_data = $category_list->fetchObject())
+			{
+				$category[$category_list_data->category_id] = $category_list_data->category_name;
+			}
+			return $category;
+}
+
+function _lm_list_of_states()
+{
+	$states = array(
+		0 => '-Select-'
+	);
+	$query = db_select('list_states_of_india');
+	$query->fields('list_states_of_india');
+	
+	//$query->orderBy('', '');
+	$states_list = $query->execute();
+	while ($states_list_data = $states_list->fetchObject())
+	{
+		$states[$states_list_data->state] = $states_list_data->state;
+	} //$states_list_data = $states_list->fetchObject()
+	return $states;
+}
+
 /*function lab_migration_init() {
 
 drupal_add_js(drupal_get_path('module', 'lab_migration') . '/js/lab_migration_ajax.js', array ('scope' => 'footer'));

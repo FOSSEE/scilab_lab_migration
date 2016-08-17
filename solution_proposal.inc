@@ -1,16 +1,15 @@
 <?php
 // $Id$
+/* function to display list of lab migration solve labs */
 function lab_migration_proposal_open()
 {
 	global $user;
 	/* get open proposal list */
 	$proposal_rows = array();
-	//$proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE approval_status = 1 AND solution_provider_uid = 0");
-	$query = db_select('lab_migration_proposal');
-	$query->fields('lab_migration_proposal');
-	$query->condition('approval_status', 1);
-	$query->condition('solution_provider_uid', 0);
-	$proposal_q = $query->execute();
+	$proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE approval_status = 1 AND solution_provider_uid = 0");
+	$num_of_results = $proposal_q->rowCount();
+	if($num_of_results != 0)
+	{
 	while ($proposal_data = $proposal_q->fetchObject())
 	{
 		$proposal_rows[] = array(
@@ -20,12 +19,16 @@ function lab_migration_proposal_open()
 	} //$proposal_data = $proposal_q->fetchObject()
 	$proposal_header = array(
 		'Title of the Lab',
-		'Actions'
+		''
 	);
 	$return_html = theme('table', array(
 		'header' => $proposal_header,
 		'rows' => $proposal_rows
 	));
+	} else
+	{
+	$return_html = "<br><br>No labs are available to solve";
+	}//$proposal_q
 	//$return_html = theme_table($proposal_header, $proposal_rows);
 	return $return_html;
 }
@@ -87,7 +90,11 @@ function lab_migration_solution_proposal_form($form,&$form_state)
 		'#title' => t('Name of the Solution Provider'),
 		'#size' => 30,
 		'#maxlength' => 50,
-		'#required' => TRUE
+		'#required' => TRUE,
+		'#attributes' => array(
+			'placeholder' => 'Insert your full name'
+		),
+		'#description' => 'Please insert your full name.'
 	);
 	$form['solution_provider_email_id'] = array(
 		'#type' => 'textfield',
@@ -106,27 +113,19 @@ function lab_migration_solution_proposal_form($form,&$form_state)
 	$form['solution_provider_department'] = array(
 		'#type' => 'select',
 		'#title' => t('Department/Branch'),
-		'#options' => array(
-			'' => 'Please select...',
-			'Computer Engineering' => 'Computer Engineering',
-			'Electrical Engineering' => 'Electrical Engineering',
-			'Electronics Engineering' => 'Electronics Engineering',
-			'Chemical Engineering' => 'Chemical Engineering',
-			'Instrumentation Engineering' => 'Instrumentation Engineering',
-			'Mechanical Engineering' => 'Mechanical Engineering',
-			'Civil Engineering' => 'Civil Engineering',
-			'Physics' => 'Physics',
-			'Mathematics' => 'Mathematics',
-			'Others' => 'Others'
-		),
+		'#options' => _lm_list_of_departments(),
 		'#required' => TRUE
 	);
 	$form['solution_provider_university'] = array(
 		'#type' => 'textfield',
 		'#title' => t('University/Institute'),
-		'#size' => 30,
-		'#maxlength' => 50,
-		'#required' => TRUE
+		'#size' => 50,
+		'#maxlength' => 255,
+		'#required' => TRUE,
+		'#attributes' => array(
+			'placeholder' => 'Insert full name of your institute/ university.... '
+		),
+		'#description' => 'Please insert full name of your institute/ university.'
 	);
 	$form['submit'] = array(
 		'#type' => 'submit',
@@ -181,23 +180,23 @@ function lab_migration_solution_proposal_form_submit($form_state, &$form_state)
 	$args = array(
 		":uid" => $user->uid,
 		":solution_provider_name_title" => $form_state['values']['solution_provider_name_title'],
-		":solution_provider_contact_name" => $form_state['values']['solution_provider_name'],
+		":solution_provider_contact_name" => _lm_sentence_case($form_state['values']['solution_provider_name']),
 		":solution_provider_contact_ph" => $form_state['values']['solution_provider_contact_ph'],
 		":solution_provider_department" => $form_state['values']['solution_provider_department'],
-		":solution_provider_university" => $form_state['values']['solution_provider_university'],
+		":solution_provider_university" => _lm_sentence_case($form_state['values']['solution_provider_university']),
 		":proposal_id" => $proposal_id
 	);
 	$result = db_query($query, $args);
 	drupal_set_message("We have received your application. We will get back to you soon.", 'status');
 	/* sending email */
 	$email_to = $user->mail;
-	$param['solution_proposal_received']['proposal_id'] = $proposal_id;
-	$param['solution_proposal_received']['user_id'] = $user->uid;
-	if (!drupal_mail('lab_migration', 'solution_proposal_received', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+	$params['solution_proposal_received']['proposal_id'] = $proposal_id;
+	$params['solution_proposal_received']['user_id'] = $user->uid;
+	if (!drupal_mail('lab_migration', 'solution_proposal_received', $email_to, language_default(), $params, variable_get('lab_migration_from_email', NULL), TRUE))
 		drupal_set_message('Error sending email message.', 'error');
 	/* sending email */
 	$email_to = variable_get('lab_migration_emails', '');
-	if (!drupal_mail('lab_migration', 'solution_proposal_received', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+	if (!drupal_mail('lab_migration', 'solution_proposal_received', $email_to, language_default(), $params, variable_get('lab_migration_from_email', NULL), TRUE))
 		drupal_set_message('Error sending email message.', 'error');
 	drupal_goto('lab_migration/open_proposal');
 }

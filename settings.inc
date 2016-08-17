@@ -2,6 +2,15 @@
 // $Id$
 function lab_migration_settings_form($form, &$form_state)
 {
+	$form['minimum_exp_limit'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Lab migration minimum experiment limit'),
+		'#description' => t('insert only number not more than 15'),
+		'#size' => 2,
+		'#maxlength' => 5,
+		'#required' => TRUE,
+		'#default_value' => variable_get('lab_migration_minimum_exp_limit', '')
+	);
 	$form['emails'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Notification emails'),
@@ -68,6 +77,7 @@ function lab_migration_settings_form_validate($form, &$form_state)
 }
 function lab_migration_settings_form_submit($form, &$form_state)
 {
+	variable_set('lab_migration_minimum_exp_limit', $form_state['values']['minimum_exp_limit']);
 	variable_set('lab_migration_emails', $form_state['values']['emails']);
 	variable_set('lab_migration_from_email', $form_state['values']['from_email']);
 	variable_set('lab_migration_source_extensions', $form_state['values']['source']);

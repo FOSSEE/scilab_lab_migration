@@ -36,7 +36,7 @@ function lab_migration_mail($key, &$message, $params)
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>'. $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['solution_proposal_approved']['user_id']);
@@ -59,13 +59,13 @@ University/Institute : ' . $proposal_data->solution_provider_university . '
 
 Display solution on website : ' . $solution_display . '
 
-List of experiments : ' . $experiment_list . '
+List of experiments : '. '<p>' . $experiment_list . '</p>' . '
 
 Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -90,7 +90,7 @@ Reason: ' . $params['solution_proposal_disapproved']['message'] . '
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -138,7 +138,7 @@ Best Wishes,
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>' . $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_received']['user_id']);
@@ -163,7 +163,7 @@ Display solution on website : ' . $solution_display . '
 
 Solution Provided By : ' . $solution_provider_user . '
 
-List of experiments : ' . $experiment_list . '
+List of experiments : ' . '<p>' . $experiment_list . '</p>' . '
 
 Your proposal is under review and you will soon receive an email from us regarding the same.
 
@@ -171,7 +171,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -218,7 +218,7 @@ Best Wishes,
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>' . $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_disapproved']['user_id']);
@@ -245,13 +245,13 @@ Display solution on website : ' . $solution_display . '
 
 Solution Provided By : ' . $solution_provider_user . '
 
-List of experiments : ' . $experiment_list . '
+List of experiments : ' . '<p>' . $experiment_list . '</p>' . '
 
 Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -298,7 +298,7 @@ Best Wishes,
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>' . $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_approved']['user_id']);
@@ -323,13 +323,13 @@ Display solution on website : ' . $solution_display . '
 
 Solution Provided By : ' . $solution_provider_user . '
 
-List of experiments : ' . $experiment_list . '
+List of experiments : ' . '<p>' . $experiment_list . '</p>' . '
 
 Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -380,7 +380,7 @@ Best Wishes,
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>' . $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_completed']['user_id']);
@@ -405,7 +405,7 @@ Display solution on website : ' . $solution_display . '
 
 Solution Provided By : ' . $solution_provider_user . '
 
-List of experiments : ' . $experiment_list . '
+List of experiments : ' . '<p>' . $experiment_list . '</p>' . '
 
 Your Lab solution is now available at following link to download.
 
@@ -417,7 +417,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -452,7 +452,7 @@ Best Wishes,
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>' . $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['solution_proposal_received']['user_id']);
@@ -465,19 +465,22 @@ Best Wishes,
 				'body' => t('
 Dear !user_name,
 
-We have received your proposal for solution for following Lab migration :
+We have received your proposal for solution for the following lab:
 
-Full Name : ' . $proposal_data->name_title . ' ' . $proposal_data->name . '
-Email : ' . $user_data->mail . '
-Contact No. : ' . $proposal_data->contact_ph . '
-Department/Branch : ' . $proposal_data->department . '
-University/Institute : ' . $proposal_data->university . '
+Faculty name : '. $proposal_data->name_title . ' ' . $proposal_data->name . '
+Lab : '. $proposal_data->lab_title .'
+Department : '. $proposal_data->department .'
+University/Institute : '. $proposal_data->university .'
+
+The solution provider’s details are given below
+
+Solution provider name: '. $proposal_data->solution_provider_name_title .' '. $proposal_data->solution_provider_name . '
+Department: '. $proposal_data->solution_provider_department .'
+University/Institute:
 
 Display solution on website : ' . $solution_display . '
 
-Solution Provided By : ' . $solution_provider_user . '
-
-List of experiments : ' . $experiment_list . '
+List of experiments : ' . '<p>' . $experiment_list . '</p>' .'
 
 Your proposal is under review and you will soon receive an email from us regarding the same.
 
@@ -485,10 +488,10 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
-					'!site_name' => variable_get('site_name', ''),
-					'!user_name' => $user_data->name
-				), array(
+Scilab Team', array(
+                                        '!site_name' => variable_get('site_name', ''),
+                                        '!user_name' => $user_data->name
+                                ),array(
 					'language' => $language->language
 				))
 			);
@@ -520,7 +523,7 @@ The solution is under review. You will be notified when it has been approved.
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -555,7 +558,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -585,7 +588,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -615,7 +618,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(
@@ -642,7 +645,7 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 
 Best Wishes,
 
-!site_name', array(
+Scilab Team', array(
 					'!site_name' => variable_get('site_name', ''),
 					'!user_name' => $user_data->name
 				), array(

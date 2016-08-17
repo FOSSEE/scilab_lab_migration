@@ -1117,7 +1117,7 @@ function lab_migration_proposal_edit_form_submit($form, &$form_state)
 /******************************************************************************/
 /**************************** CATEGORY EDIT FORM ******************************/
 /******************************************************************************/
-function lab_migration_category_edit_form($form_state)
+function lab_migration_category_edit_form($form,&$form_state)
 {
 	/* get current proposal */
 	$proposal_id = (int) arg(4);
@@ -1178,22 +1178,7 @@ function lab_migration_category_edit_form($form_state)
 	$form['category'] = array(
 		'#type' => 'select',
 		'#title' => t('Category'),
-		'#options' => array(
-			0 => 'Please select',
-			1 => 'Fluid Mechanics',
-			2 => 'Control Theory & Control Systems',
-			3 => 'Chemical Engineering',
-			4 => 'Thermodynamics',
-			5 => 'Mechanical Engineering',
-			6 => 'Signal Processing',
-			7 => 'Digital Communications',
-			8 => 'Electrical Technology',
-			9 => 'Mathematics & Pure Science',
-			10 => 'Analog Electronics',
-			11 => 'Digital Electronics',
-			12 => 'Computer Programming',
-			13 => 'Others'
-		),
+		'#options' =>  _lm_list_of_category(),
 		'#required' => TRUE,
 		'#default_value' => $proposal_data->category
 	);
