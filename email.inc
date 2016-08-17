@@ -36,7 +36,7 @@ function lab_migration_mail($key, &$message, $params)
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>'. $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['solution_proposal_approved']['user_id']);
@@ -59,7 +59,7 @@ University/Institute : ' . $proposal_data->solution_provider_university . '
 
 Display solution on website : ' . $solution_display . '
 
-List of experiments : ' . $experiment_list . '
+List of experiments : '. '<p>' . $experiment_list . '</p>' . '
 
 Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
 
@@ -138,7 +138,7 @@ Best Wishes,
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>' . $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_received']['user_id']);
@@ -163,9 +163,7 @@ Display solution on website : ' . $solution_display . '
 
 Solution Provided By : ' . $solution_provider_user . '
 
-List of experiments : ' . 
-
-$experiment_list . '
+List of experiments : ' . '<p>' . $experiment_list . '</p>' . '
 
 Your proposal is under review and you will soon receive an email from us regarding the same.
 
@@ -220,7 +218,7 @@ Best Wishes,
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>' . $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_disapproved']['user_id']);
@@ -247,7 +245,7 @@ Display solution on website : ' . $solution_display . '
 
 Solution Provided By : ' . $solution_provider_user . '
 
-List of experiments : ' . $experiment_list . '
+List of experiments : ' . '<p>' . $experiment_list . '</p>' . '
 
 Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
 
@@ -300,7 +298,7 @@ Best Wishes,
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>' . $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_approved']['user_id']);
@@ -325,7 +323,7 @@ Display solution on website : ' . $solution_display . '
 
 Solution Provided By : ' . $solution_provider_user . '
 
-List of experiments : ' . $experiment_list . '
+List of experiments : ' . '<p>' . $experiment_list . '</p>' . '
 
 Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
 
@@ -382,7 +380,7 @@ Best Wishes,
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>' . $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_completed']['user_id']);
@@ -407,7 +405,7 @@ Display solution on website : ' . $solution_display . '
 
 Solution Provided By : ' . $solution_provider_user . '
 
-List of experiments : ' . $experiment_list . '
+List of experiments : ' . '<p>' . $experiment_list . '</p>' . '
 
 Your Lab solution is now available at following link to download.
 
@@ -454,7 +452,7 @@ Best Wishes,
       	';
 			while ($experiment_data = $experiment_q->fetchObject())
 			{
-				$experiment_list .= $experiment_data->number . ' ' . $experiment_data->title . '
+				$experiment_list .= '<br><br><br>' . $experiment_data->number . ') ' . $experiment_data->title . '
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['solution_proposal_received']['user_id']);
@@ -482,9 +480,7 @@ University/Institute:
 
 Display solution on website : ' . $solution_display . '
 
-List of experiments : ' . 
-
-$experiment_list . '
+List of experiments : ' . '<p>' . $experiment_list . '</p>' .'
 
 Your proposal is under review and you will soon receive an email from us regarding the same.
 
