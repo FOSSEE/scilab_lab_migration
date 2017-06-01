@@ -1,0 +1,669 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"file_validate",
+				"file_validate_extensions\tfile_validate_extensions"
+			],
+			[
+				"file_val",
+				"file_validate_extensions\tfile_validate_extensions"
+			],
+			[
+				"ere",
+				"ereg_replace"
+			],
+			[
+				"lab",
+				"lab_migration_journal_extensions"
+			],
+			[
+				"labm",
+				"lab_migration_journal_extensions"
+			],
+			[
+				"form",
+				"form"
+			],
+			[
+				"exp",
+				"experiment_no"
+			],
+			[
+				"check",
+				"checkbox_option"
+			],
+			[
+				"dep",
+				"dep_experiment_files"
+			],
+			[
+				"lab_migra",
+				"lab_migration_dependency_files"
+			],
+			[
+				"pro",
+				"proposal_id"
+			],
+			[
+				"existing",
+				"existing_depfile"
+			],
+			[
+				"lab_migration",
+				"lab_migration_journal_extension"
+			],
+			[
+				"extensions",
+				"extensions"
+			],
+			[
+				"var_",
+				"var_export"
+			],
+			[
+				"error",
+				"error_log"
+			],
+			[
+				"prop",
+				"proposal_solved"
+			],
+			[
+				"erro",
+				"error_log"
+			],
+			[
+				"quey",
+				"query1"
+			],
+			[
+				"depend",
+				"dependency_q"
+			],
+			[
+				"proposal",
+				"proposal_id"
+			],
+			[
+				"field",
+				"fields"
+			],
+			[
+				"Depenc",
+				"Dependency"
+			],
+			[
+				"db_que",
+				"db_query"
+			],
+			[
+				"array",
+				"array"
+			],
+			[
+				"db_query",
+				"msql_db_query"
+			],
+			[
+				"arr",
+				"array"
+			],
+			[
+				"fon",
+				"font-size"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "To Do\nAjax callback to show checkboxes on lab selection. and then complete dependency submission.\nUpload journal validate and submit function. \nLocking of code interface on user submission.\n\n\t$form['existing_depfile']['lab_select'] = array(\n\t\t'#type' => 'select',\n\t\t'#title' => t('Use Already Existing Dependency Files'),\n\t\t'#collapsible' => FALSE,\n\t\t'#collapsed' => FALSE,\n\t\t'#tree' => TRUE,\n\t\t'#required' => FALSE,\n\t\t'#empty_option' => t('-Select-'),\n\t\t'#empty_value' => 0,\n\t\t'#options' => $option_list,\n    '#ajax' => array(\n      'wrapper' => \"existing-depfile-wrapper\",\n      'callback' => \"dependency_files_checkboxes\",\n      'method' => 'append',\n      'effect' => 'fade,'\n      ),\n\t);\n\n  $form['existing_depfile']['checkboxes'] = array(\n    '#prefix' => \"<div id='dep-checkboxes'>\",\n    '#suffix' => \"</div>\",\n    '#description' => t('Dependency files shown on the basis of selected lab.'),\n  );",
+			"settings":
+			{
+				"buffer_size": 903,
+				"line_ending": "Unix",
+				"name": "To Do"
+			}
+		},
+		{
+			"file": "proposal.inc",
+			"settings":
+			{
+				"buffer_size": 10885,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "journal.inc",
+			"settings":
+			{
+				"buffer_size": 2294,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "upload_code.inc",
+			"settings":
+			{
+				"buffer_size": 28439,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "lab_migration.install",
+			"settings":
+			{
+				"buffer_size": 11763,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "run.inc",
+			"settings":
+			{
+				"buffer_size": 19956,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "instal",
+		"selected_items":
+		[
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"waka",
+				"WakaTime: Open Dashboard"
+			]
+		],
+		"width": 566.0
+	},
+	"console":
+	{
+		"height": 323.0,
+		"history":
+		[
+			"install",
+			"Install ",
+			"exit",
+			"reload ",
+			"Package Install Package",
+			"Package Control: Install Package",
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/lab_migration.sublime-project",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/settings.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/download.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/dependency.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/solution_proposal.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/manage_solution_proposal.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/journal.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/code_approval.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/manage_proposal.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/notes.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/lab_migration.module",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/lab_migration.install",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/email.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/upload_code.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/lab_details.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/lab_migration.info",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/full_download.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/.gitignore",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/proposal.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/run.inc",
+		"/var/www/test-site/scilab_in_2015/sites/all/modules/lab_migration/bulk_upload_code.inc",
+		"/home/prince/scilab_lab_migration/bulk_approval.inc",
+		"/home/prince/scilab_lab_migration/README.txt",
+		"/var/www/test-site/drupal-7.54/sites/all/modules/form_example/form_example.module",
+		"/var/www/test-site/drupal-7.54/sites/all/modules/form_example/form_example.info",
+		"/var/www/test-site/drupal-7.54/modules/form_example/form_example.info",
+		"/var/www/test-site/drupal-7.54/modules/form_example/form_example.module",
+		"/var/www/test-site/drupal-7.54/modules/learning_mod/learning_mod.info",
+		"/var/www/test-site/drupal-7.54/modules/learning_mod/learning_mod.module",
+		"/var/www/test-site/index.html",
+		"/var/www/test-site/index.css",
+		"/var/www/test-site/drupal-7.54/sites/default/settings.php"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"error_log",
+			"lab_migration_xcos",
+			"code submission",
+			"lab_migration/code",
+			"dependency",
+			"lab_migration_completed_labs_all",
+			"module"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 903,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								744,
+								744
+							]
+						],
+						"settings":
+						{
+							"auto_name": "To Do",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "proposal.inc",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10885,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6765,
+								6765
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 403.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "journal.inc",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2294,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								56,
+								56
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "upload_code.inc",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 28439,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								28198,
+								28198
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 592.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "lab_migration.install",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11763,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "run.inc",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19956,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5458,
+								5458
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 117.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 21.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.xdebug":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "lab_migration.sublime-project",
+	"replace":
+	{
+		"height": 38.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+		"xdebug":
+		{
+			"hide_conflict": false,
+			"restore_index":
+			{
+				"15":
+				{
+					"group": 0,
+					"index": 0
+				},
+				"16":
+				{
+					"group": 0,
+					"index": 1
+				},
+				"17":
+				{
+					"group": 0,
+					"index": 2
+				},
+				"18":
+				{
+					"group": 0,
+					"index": 4
+				},
+				"19":
+				{
+					"group": 0,
+					"index": 5
+				},
+				"20":
+				{
+					"group": 0,
+					"index": 6
+				},
+				"32":
+				{
+					"group": 2,
+					"index": 1
+				},
+				"33":
+				{
+					"group": 1,
+					"index": 0
+				},
+				"34":
+				{
+					"group": 2,
+					"index": 0
+				},
+				"35":
+				{
+					"group": 1,
+					"index": 1
+				},
+				"36":
+				{
+					"group": 0,
+					"index": 3
+				}
+			},
+			"restore_layout":
+			{
+				"cells":
+				[
+					[
+						0,
+						0,
+						2,
+						1
+					],
+					[
+						0,
+						1,
+						1,
+						2
+					],
+					[
+						1,
+						1,
+						2,
+						2
+					]
+				],
+				"cols":
+				[
+					0.0,
+					0.5,
+					1.0
+				],
+				"rows":
+				[
+					0.0,
+					0.722488755622,
+					1.0
+				]
+			}
+		}
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 237.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

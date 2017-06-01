@@ -4,27 +4,38 @@ function lab_migration_upload_dependency_form($form, &$form_state)
 {
 	global $user;
 	$proposal_data = lab_migration_get_proposal();
+	error_log(var_export($proposal_data->lab_title, TRUE));
 	if (!$proposal_data)
 	{
 		drupal_goto('');
 		return;
 	} //!$proposal_data
+	$query = db_query("SELECT * FROM {lab_migration_lock} WHERE proposal_id = (:proposal_id) AND solution_provider_uid = (:spu)", array(':proposal_id' => $proposal_data->id, ':spu' => $user->uid));
+	
+	if($query->rowCount() > 0) {
+		$val = $query->fetchObject();
+		if($val->code_interface == 0) {
+			drupal_set_message(t('The code upload interface is locked for this lab.'), 'status');
+			return $form;
+		}
+	}
+
 	$form['#attributes'] = array(
 		'enctype' => "multipart/form-data"
 	);
 	$form['lab_title'] = array(
 		'#type' => 'item',
-		'#value' => $proposal_data->lab_title,
+		'#markup' => $proposal_data->lab_title,
 		'#title' => t('Title of the Lab')
 	);
 	$form['name'] = array(
 		'#type' => 'item',
-		'#value' => $proposal_data->name_title . ' ' . $proposal_data->name,
+		'#markup' => $proposal_data->name_title . ' ' . $proposal_data->name,
 		'#title' => t('Proposer Name')
 	);
 	$form['existing_depfile'] = array(
 		'#type' => 'item',
-		'#value' => _list_existing_dependency($proposal_data->id),
+		'#markup' => _list_existing_dependency($proposal_data->id),
 		'#title' => t('List of existing dependency files for this book')
 	);
 	$form['depfile'] = array(
@@ -172,6 +183,7 @@ function lab_migration_upload_dependency_form_submit($form, &$form_state)
 	} //$file_upload_counter > 0
 	drupal_goto('lab_migration/code/upload_dep');
 }
+
 function _list_existing_dependency($proposal_id)
 {
 	$return_html = '<ul>';

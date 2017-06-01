@@ -398,12 +398,12 @@ function _list_of_labs()
 	$lab_titles = array(
 		'0' => 'Please select...'
 	);
-	//$lab_titles_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE solution_display = 1 ORDER BY lab_title ASC");
-	$query = db_select('lab_migration_proposal');
-	$query->fields('lab_migration_proposal');
-	$query->condition('solution_display', 1);
-	$query->orderBy('lab_title', 'ASC');
-	$lab_titles_q = $query->execute();
+	$lab_titles_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE solution_status = 2 and solution_display = 1 ORDER BY lab_title ASC");
+	// $query = db_select('lab_migration_proposal');
+	// $query->fields('lab_migration_proposal');
+	// $query->condition('solution_display', 1);
+	// $query->orderBy('lab_title', 'ASC');
+	// $lab_titles_q = $query->execute();
 	while ($lab_titles_data = $lab_titles_q->fetchObject())
 	{
 		$lab_titles[$lab_titles_data->id] = $lab_titles_data->lab_title . ' (Proposed by ' . $lab_titles_data->name . ')';

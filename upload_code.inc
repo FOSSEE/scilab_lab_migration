@@ -9,8 +9,19 @@ function lab_migration_list_experiments()
 		drupal_goto('');
 		return;
 	} //!$proposal_data
+
+	$query = db_query("SELECT * FROM {lab_migration_lock} WHERE proposal_id = (:proposal_id) AND solution_provider_uid = (:spu)", array(':proposal_id' => $proposal_data->id, ':spu' => $user->uid));
+	
+
 	$return_html = '<strong>Title of the Lab:</strong><br />' . $proposal_data->lab_title . '<br /><br />';
 	$return_html .= '<strong>Proposer Name:</strong><br />' . $proposal_data->name_title . ' ' . $proposal_data->name . '<br /><br />';
+	if($query->rowCount() > 0) {
+		$val = $query->fetchObject();
+		if($val->code_interface == 0) {
+			drupal_set_message(t('The code upload interface is locked for this lab.'), 'status');
+			return $return_html;
+		}
+	}
 	$return_html .= l('Upload Solution', 'lab_migration/code/upload') . '<br />';
 	/* get experiment list */
 	$experiment_rows = array();
@@ -146,8 +157,36 @@ function lab_migration_list_experiments()
 		'header' => $experiment_header,
 		'rows' => $experiment_rows
 	));
+
+	$return_html .= "<span> I have submitted all the codes for review.</span>";
+
+	$return_html .= "<br> <button type='submit' id='agree-button'>Agree</button>";
+	//jQuery AJAX request
+	$return_html .= '<script type="text/javascript"> src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" </script>
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+	$("#agree-button").click(function() {
+		if (confirm("Are you sure you have submitted all codes? The interface will be locked now.")){
+			$.ajax({
+				url: "lock_interface",
+				type: "POST",
+			})
+			.done(function() {
+				console.log("success");
+			})
+			.fail(function() {
+				console.log("error");
+			})
+			.always(function() {
+				console.log("complete");
+			});
+		}
+	})
+});
+	</script>';
 	return $return_html;
 }
+
 function lab_migration_upload_code_form($form, &$form_state)
 {
 	global $user;
@@ -157,34 +196,17 @@ function lab_migration_upload_code_form($form, &$form_state)
 		drupal_goto('');
 		return;
 	} //!$proposal_data
-	/* add javascript for dependency selection effects */
-	$dep_selection_js = "(function ($) {
-  //alert('ok');
-    $('#edit-existing-depfile-dep-lab-title').change(function() {
-      var dep_selected = '';   
- 
-      /* showing and hiding relevant files */
-     $('.form-checkboxes .option').hide();
-      $('.form-checkboxes .option').each(function(index) {
-        var activeClass = $('#edit-existing-depfile-dep-lab-title').val();
-        consloe.log(activeClass);
-        if ($(this).children().hasClass(activeClass)) {
-          $(this).show();
-        }
-        if ($(this).children().attr('checked') == true) {
-          dep_selected += $(this).children().next().text() + '<br />';
-        }
-      });
-      /* showing list of already existing dependencies */
-      $('#existing_depfile_selected').html(dep_selected);
-    });
-
-    $('.form-checkboxes .option').change(function() {
-      $('#edit-existing-depfile-dep-lab-title').trigger('change');
-    });
-    $('#edit-existing-depfile-dep-lab-title').trigger('change');
-  }(jQuery));";
-	drupal_add_js($dep_selection_js, 'inline', 'header');
+	
+	$query = db_query("SELECT * FROM {lab_migration_lock} WHERE proposal_id = (:proposal_id) AND solution_provider_uid = (:spu)", array(':proposal_id' => $proposal_data->id, ':spu' => $user->uid));
+	
+	if($query->rowCount() > 0) {
+		$val = $query->fetchObject();
+		if($val->code_interface == 0) {
+			drupal_set_message(t('The code upload interface is locked for this lab.'), 'status');
+			return $form;
+		}
+	}
+	
 	$form['#attributes'] = array(
 		'enctype' => "multipart/form-data"
 	);
@@ -284,47 +306,59 @@ function lab_migration_upload_code_form($form, &$form_state)
 	);
 	/************ START OF EXISTING DEPENDENCIES **************/
 	/* existing dependencies */
-	$form['existing_depfile'] = array(
+
+	$query = db_query('SELECT * FROM lab_migration_proposal WHERE approval_status = 3 ORDER BY lab_title');
+	$proposal_solved = array();
+	while($curr_val = $query->fetchObject()) {
+		$option_list[$curr_val->id] = $curr_val->lab_title . ' - ' . $curr_val->university . ' (' . $curr_val->department . ')';
+	}
+
+	$form['list_completed_labs'] = array(
+		'#type' => 'select',
+		'#title' => t('Completed Labs'),
+		'#empty_value' => 0,
+		'#empty_option' => "-Select-",
+		'#options' => $option_list,
+		'#ajax' => array(
+			'callback' => 'ajax_checkboxes_callback',
+			'wrapper' => 'checkboxes-div',
+			'method' => 'replace',
+			'effect' => 'fade'
+		),
+	);
+
+	$form['checkboxes_fieldset'] = array(
+		'#prefix' => '<div id="checkboxes-div">',
+		'#suffix' => '</div>',
 		'#type' => 'fieldset',
-		'#title' => t('Use Already Existing Dependency Files'),
-		'#collapsible' => FALSE,
-		'#collapsed' => FALSE,
-		'#prefix' => '<div id="existing-depfile-wrapper">',
-		'#suffix' => '</div>',
-		'#tree' => TRUE
+		'#title' => 'Dependency files for selected lab.',
 	);
+
+	$val = !empty($form_state['values']['list_completed_labs']) ? $form_state['values']['list_completed_labs'] : 0;
+	if ($val != 0) {
+		$query = db_query('SELECT * FROM {lab_migration_dependency_files} WHERE proposal_id = (:proposal_id)', array(':proposal_id' => $val));
+	
+		$option_list = array();
+		$row = $query->rowCount();
+	
+		if ($row == 0) {
+			$form['checkboxes_fieldset']['empty'] = array(
+				'#type' => 'item',
+				'#markup' => 'This lab has no dependency files.'
+			);
+		}
+		$cnt = 1;
+		while ($curr_val = $query->fetchObject()) {
+			$form['checkboxes_fieldset']["checkbox$cnt"] = array(
+				'#type' => 'checkbox',
+				'#title' => l($curr_val->filename, 'lab_migration/download/dependency/' . $curr_val->id) . ' - ' . $curr_val->caption,
+				'#return_value' => $curr_val->id,
+			);
+			$cnt++;
+		}
+	}
 	/* existing dependencies */
-	/*$form['existing_depfile']['selected'] = array(
-	'#type' => 'item',
-	'#title' => t('Existing Dependency Files Selected'),
-	'#markup' => '<div id="existing_depfile_selected"></div>',
-	);
-	
-	/*  $form['existing_depfile']['dep_lab_title'] = array(
-	'#type' => 'select',
-	'#title' => t('Title of the Lab'),
-	'#options' => _list_of_lab_titles(),
-	);
-	
-	list($files_options, $files_options_class) = _list_of_dependency_files();
-	$form['existing_depfile']['dep_experiment_files'] = array(
-	'#type' => 'checkboxes',
-	'#title' => t('Dependency Files'),
-	'#options' => $files_options,
-	'#options_class' => $files_options_class,
-	'#multiple' => TRUE,
-	);
-	*/
-	list($files_options, $files_options_class) = _list_of_dependency_files($proposal_data->id);
-	$form['existing_depfile']['dep_experiment_files'] = array(
-		'#type' => 'checkboxes',
-		//'#title' => t('Dependency Files'),
-		'#options' => $files_options,
-		'#options_class' => $files_options_class,
-		'#prefix' => '<div id="ckb" style="height:500px;overflow:auto;">',
-		'#suffix' => '</div>',
-		'#multiple' => TRUE
-	);
+
 	$form['existing_depfile']['dep_upload'] = array(
 		'#type' => 'item',
 		'#markup' => l('Upload New Depedency Files', 'lab_migration/code/upload_dep')
@@ -378,6 +412,7 @@ function lab_migration_upload_code_form($form, &$form_state)
 }
 function lab_migration_upload_code_form_validate($form, &$form_state)
 {
+
 	if (!lab_migration_check_code_number($form_state['values']['code_number']))
 		form_set_error('code_number', t('Invalid Code Number. Code Number can contain only numbers.'));
 	if (!lab_migration_check_name($form_state['values']['code_caption']))
@@ -430,37 +465,8 @@ function lab_migration_upload_code_form_validate($form, &$form_state)
 			} //$file_name
 		} //$_FILES['files']['name'] as $file_form_name => $file_name
 	} //isset($_FILES['files'])
-	/* add javascript dependency selection effects */
-	$dep_selection_js = " (function ($) {
- 
-    $('#edit-existing-depfile-dep-lab-title').change(function() {
-    console.log('ok');
-      var dep_selected = ''; 
-      /* showing and hiding relevant files */
-    $('.form-checkboxes .option').hide();
-      
-      $('.form-checkboxes .option').each(function(index) {
-        var activeClass = $('#edit-existing-depfile-dep-lab-title').val();
-        if ($(this).children().hasClass(activeClass)) {
-          $(this).show();
-        }
-        if ($(this).children().attr('checked') == true) {
-          dep_selected += $(this).children().next().text() + '<br />';
-        }
-      });
-      /* showing list of already existing dependencies */
-     $('#existing_depfile_selected').html(dep_selected);
-    });
-
-    $('.form-checkboxes .option').change(function() {
-      $('#edit-existing-depfile-dep-lab-title').trigger('change');
-    });
-    $('#edit-existing-depfile-dep-lab-title').trigger('change');
-  })(jQuery);";
-	drupal_add_js($dep_selection_js, 'inline', 'header');
-	// drupal_add_js('jQuery(document).ready(function () { alert("Hello!"); });', 'inline');
-	// drupal_static_reset('drupal_add_js') ;
 }
+
 function lab_migration_upload_code_form_submit($form, &$form_state)
 {
 	global $user;
@@ -548,20 +554,22 @@ function lab_migration_upload_code_form_submit($form, &$form_state)
 	//var_dump('solution id= '.$solution_id.  '&&& dep file = '.array_filter($form_state['values']['existing_depfile']['dep_experiment_files']));
 	//die;
 	/* linking existing dependencies */
-	foreach ($form_state['values']['existing_depfile']['dep_experiment_files'] as $row)
-	{
-		if ($row > 0)
-		{
-			/* insterting into database */
-			$query = "INSERT INTO {lab_migration_solution_dependency} (solution_id, dependency_id)
-        VALUES (:solution_id, :dependency_id)";
-			$args = array(
-				":solution_id" => $solution_id,
-				":dependency_id" => $row
-			);
-			db_query($query, $args);
-		} //$row > 0
-	} //$form_state['values']['existing_depfile']['dep_experiment_files'] as $row
+	if ($form_state['values']['list_completed_labs'] != "0") {
+		$query = db_query('SELECT * FROM {lab_migration_dependency_files} WHERE proposal_id = (:proposal_id)', array(':proposal_id' => $form_state['values']['list_completed_labs']));
+		$row = $query->rowCount();
+		for ($cnt = 1; $cnt <= $row; $cnt++) {
+			if ($form_state['values']["checkbox$cnt"] == 0)
+				continue;
+			db_insert('lab_migration_solution_dependency')
+				->fields(array(
+					'solution_id' => $solution_id, 
+					'dependency_id' => $form_state['values']["checkbox$cnt"]
+				))
+				->execute();
+		}	
+	}
+	
+	
 	/* uploading files */
 	foreach ($_FILES['files']['name'] as $file_form_name => $file_name)
 	{
@@ -607,6 +615,9 @@ function lab_migration_upload_code_form_submit($form, &$form_state)
 			}
 		} //$file_name
 	} //$_FILES['files']['name'] as $file_form_name => $file_name
+
+
+
 	drupal_set_message('Solution uploaded successfully.', 'status');
 	/* sending email */
 	$email_to = $user->mail . ', ' . variable_get('lab_migration_emails', '');
@@ -639,6 +650,7 @@ function _list_of_lab_titles()
 	} //$lab_titles_data = $lab_titles_q->fetchObject()
 	return $lab_titles;
 }
+
 function _list_of_dependency_files($proposal_id = NULL)
 {
 	$dependency_files = array();
@@ -672,4 +684,12 @@ function _list_of_dependency_files($proposal_id = NULL)
 		$dependency_files,
 		$dependency_files_class
 	);
+}
+
+function ajax_checkboxes_callback($form, &$form_state) {
+	return $form['checkboxes_fieldset'];
+}
+
+function ajax_agree_button($form, &$form_state) {
+
 }

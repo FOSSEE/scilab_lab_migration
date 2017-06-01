@@ -1,13 +1,16 @@
 <?php
 // $Id$
+/**
+ *@file
+ *Implements lab migration module.
+ */
 require_once('general_deletion.inc');
 require_once('email.inc');
 /**
  * Implementation of hook_menu().
  */
-function lab_migration_menu()
-{
-	$items = array();
+function lab_migration_menu() {
+  $items = array();
 	/* PROPOSAL */
 	$items['lab_migration/proposal'] = array(
 		'title' => 'Lab Migration Proposal',
@@ -325,6 +328,19 @@ function lab_migration_menu()
 		'file' => 'dependency.inc',
 		'weight' => 3
 	);
+
+	$items['lab_migration/code/upload_journal'] = array(
+		'title' => 'Upload Journal',
+		'description' => 'Upload Lab Journal',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('lab_migration_upload_journal_form'),
+		'access arguments' => array('lab migration upload code'),
+		'type' => MENU_LOCAL_TASK,
+		'file' => 'journal.inc',
+		'weight' => 4,
+	);
+
+
 	$items['lab_migration/code/delete'] = array(
 		'title' => 'Delete Solution',
 		'description' => 'Delete Solution',
@@ -512,6 +528,13 @@ function lab_migration_menu()
 		"type" => MENU_CALLBACK,
 		'file' => 'dependency_approval.inc'
 	);
+	$items["lab_migration/lock_interface"] = array(
+		"title" => "Locking interface",
+		"page callback" => "lock_interface",
+		"access arguments" => array("lab migration upload code"),
+		"type" => MENU_CALLBACK,
+		"file" => 'lock.inc',
+	);
 	return $items;
 }
 /**
@@ -631,8 +654,7 @@ function lab_migration_ajax()
 	echo '';
 }
 /*************************** VALIDATION FUNCTIONS *****************************/
-function lab_migration_check_valid_filename($file_name)
-{
+function lab_migration_check_valid_filename($file_name) {
 	if (!preg_match('/^[0-9a-zA-Z_\.]+$/', $file_name))
 		return FALSE;
 	else if (substr_count($file_name, ".") > 1)

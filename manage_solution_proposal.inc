@@ -116,11 +116,11 @@ function lab_migration_solution_proposal_approval_form($form, $form_state)
 		'#markup' => $experiment_list,
 		'#title' => t('Experiments')
 	);
-	$form['solution_display'] = array(
-		'#type' => 'item',
-		'#title' => t('Display the solution on the www.scilab.in website'),
-		'#markup' => ($proposal_data->solution_display == 1) ? "Yes" : "No"
-	);
+	// $form['solution_display'] = array(
+	// 	'#type' => 'item',
+	// 	'#title' => t('Display the solution on the www.scilab.in website'),
+	// 	'#markup' => ($proposal_data->solution_display == 1) ? "Yes" : "No"
+	// );
 	if ($proposal_data->solution_provider_uid == 0)
 	{
 		$solution_provider = "Open";

@@ -157,7 +157,7 @@ function lab_migration_proposal_form($form, &$form_state)
 		'#default_value' => '2',
 		'#description' => 'If you dont want to provide the solution then it will be opened for the community. Anyone may come forward and provide the solution.'
 	);
-	$form['solution_display'] = array(
+	/*$form['solution_display'] = array(
 		'#type' => 'radios',
 		'#title' => t('Do you want to display the solution on the www.scilab.in website'),
 		'#options' => array(
@@ -168,7 +168,7 @@ function lab_migration_proposal_form($form, &$form_state)
 		'#default_value' => '1',
 		'#description' => 'If yes, solutions will be made available to everyone for downloading.',
 		'#disabled' => FALSE
-	);
+	);*/
 	/*$form['solution_display'] = array(
 	'#type' => 'hidden',
 	//  '#title' => t('Do you want to display the solution on the www.scilab.in website'),
@@ -204,7 +204,7 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 		return;
 	} //!$user->uid
 	$form_state['values']['name'] = _lm_sentence_case($form_state['values']['name']);
-	$form_state['values']['lab_title'] = $form_state['values']['lab_title'];
+	$form_state['values']['lab_title'] = _lm_sentence_case($form_state['values']['lab_title']);
 	$form_state['values']['university'] = _lm_sentence_case($form_state['values']['university']);
 	$solution_provider_uid = 0;
 	$solution_status = 0;
@@ -227,11 +227,11 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 	{
 		$solution_provider_uid = 0;
 	}
-	$solution_display = 0;
-	if ($form_state['values']['solution_display'] == "1")
+	$solution_display = 1;
+	/*if ($form_state['values']['solution_display'] == "1")
 		$solution_display = 1;
 	else
-		$solution_display = 0;
+		$solution_display = 0;*/
 	/* inserting the user proposal */
 	$v = $form_state["values"];
 	$result = "INSERT INTO {lab_migration_proposal} 
@@ -279,7 +279,7 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 		$experiment_field_name = 'lab_experiment-' . $counter;
 		if (strlen(trim($form_state['values'][$experiment_field_name])) >= 1)
 		{
-			$form_state['values'][$experiment_field_name] = $form_state['values'][$experiment_field_name];
+			$form_state['values'][$experiment_field_name] = _lm_sentence_case($form_state['values'][$experiment_field_name]);
 			$query = "INSERT INTO {lab_migration_experiment} (proposal_id, number, title) VALUES (:proposal_id, :number, :experiment_field_name)";
 			$args = array(
 				":proposal_id" => $proposal_id,

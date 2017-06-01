@@ -13,6 +13,7 @@ function lab_migration_install()
 	variable_set('lab_migration_dependency_extensions', '');
 	variable_set('lab_migration_result_extensions', '');
 	variable_set('lab_migration_xcos_extensions', '');
+	variable_set('lab_migration_journal_extensions', '');
 	// create uploads folder
 	$upload_path = $_SERVER['DOCUMENT_ROOT'] . base_path() . 'lab_migration_uploads';
 	if (!is_dir($upload_path))
@@ -36,7 +37,9 @@ function lab_migration_uninstall()
 	variable_del('lab_migration_dependency_extensions');
 	variable_del('lab_migration_result_extensions');
 	variable_del('lab_migration_xcos_extensions');
+	variable_del('lab_migration_journal_extensions');
 }
+
 /**
  * Implementation of hook_schema().
  */

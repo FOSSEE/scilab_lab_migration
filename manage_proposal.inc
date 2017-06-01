@@ -888,16 +888,16 @@ function lab_migration_proposal_edit_form($form, $form_state)
 		'#type' => 'checkbox',
 		'#title' => t('Open the solution for everyone')
 	);
-	$form['solution_display'] = array(
-		'#type' => 'radios',
-		'#title' => t('Do you want to display the solution on the www.scilab.in website'),
-		'#options' => array(
-			'1' => 'Yes',
-			'2' => 'No'
-		),
-		'#required' => TRUE,
-		'#default_value' => ($proposal_data->solution_display == 1) ? "1" : "2"
-	);
+	// $form['solution_display'] = array(
+	// 	'#type' => 'radios',
+	// 	'#title' => t('Do you want to display the solution on the www.scilab.in website'),
+	// 	'#options' => array(
+	// 		'1' => 'Yes',
+	// 		'2' => 'No'
+	// 	),
+	// 	'#required' => TRUE,
+	// 	'#default_value' => ($proposal_data->solution_display == 1) ? "1" : "2"
+	// );
 	$form['delete_proposal'] = array(
 		'#type' => 'checkbox',
 		'#title' => t('Delete Proposal')

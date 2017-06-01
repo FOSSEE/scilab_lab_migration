@@ -19,7 +19,7 @@ function lab_migration_bulk_approval_form($form, &$form_state)
 	$form['lab_actions'] = array(
 		'#type' => 'select',
 		'#title' => t('Please select action'),
-		'#options' => _bulk_list_lab_actions(),
+		//'#options' => _bulk_list_lab_actions(),
 		'#default_value' => 0,
 		'#prefix' => '<div id="ajax_selected_lab_action" style="color:red;">',
 		'#suffix' => '</div>',
@@ -317,18 +317,23 @@ function ajax_bulk_solution_files_callback($form, $form_state)
 function lab_migration_bulk_approval_form_validate($form, &$form_state)
 {
 	if (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
-		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
+		//var_dump($form_state['values']);die;
+		drupal_set_message("1Wrong selection of action. Please select any one action", 'error');
 	return;
 	if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
-		drupal_set_message("Wrong selection of action. Please select any one action");
+		var_dump("2");die;
+		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
 	return;
 	if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
+		var_dump("3");die;
 		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
 	return;
 	if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
+		var_dump("4");die;
 		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
 	return;
 	if (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
+		var_dump("5");die;
 		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
 	return;
 }
@@ -336,6 +341,7 @@ function lab_migration_bulk_approval_form_submit($form, &$form_state)
 {
 	global $user;
 	$root_path = lab_migration_path();
+	var_dump($form_state['values']); 
 	if ($form_state['clicked_button']['#value'] == 'Submit')
 	{
 		if ($form_state['values']['lab'])
@@ -358,6 +364,13 @@ function lab_migration_bulk_approval_form_submit($form, &$form_state)
 						':experiment_id' => $experiment_data->id
 					));
 				} //$experiment_data = $experiment_q->fetchObject()
+				db_update('lab_migration_lock')
+					->fields(array(
+						'code_interface' => 0,
+						'journal_interface' => 1,
+					))
+					->condition('proposal_id', $form_state['values']['lab'])
+					->execute();
 				drupal_set_message(t('Approved Entire Lab.'), 'status');
 				/* email */
 				$email_subject = t('Your uploaded solutions have been approved');
@@ -412,7 +425,7 @@ Reason for dis-approval:
 				);
 			} //($form_state['values']['lab_actions'] == 3) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0)
 			elseif (($form_state['values']['lab_actions'] == 4) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
-			{
+			{//var_dump("")
 				if (!user_access('lab migration bulk delete code'))
 				{
 					drupal_set_message(t('You do not have permission to Bulk Delete Entire Lab Including Proposal.'), 'error');
@@ -464,11 +477,23 @@ Reason for dis-approval:
 						0 => t('Your all the uploaded solutions including the Lab proposal have been deleted permanently.')
 					);
 				} //lab_migration_delete_lab($form_state['values']['lab'])
-				else
-				{
-					drupal_set_message(t('Error Dis-Approving and Deleting Entire Lab.'), 'error');
-				}
+			
+			else
+			{
+				drupal_set_message(t('Error Dis-Approving and Deleting Entire Lab.'), 'error');
+			}
 			} //($form_state['values']['lab_actions'] == 4) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0)
+			elseif (($form_state['values']['lab_actions'] == 5) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0)) {
+				//var_dump("Please reach here.");die;	
+				db_update('lab_migration_lock')
+					->fields(array(
+						'code_interface' => 1,
+						'journal_interface' => 0, 
+					))
+					->condition('proposal_id', $form_state['values']['lab'])
+					->execute();
+				drupal_set_message(t("Code submission interface reopened."), 'status');
+			}
 			elseif (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] == 1) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
 			{
 				db_query("UPDATE {lab_migration_solution} SET approval_status = 1, approver_uid = :approver_uid WHERE experiment_id = :experiment_id AND approval_status = 0", array(
@@ -591,7 +616,7 @@ function _bulk_list_of_labs()
 	//$lab_titles_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE solution_display = 1 ORDER BY lab_title ASC");
 	$query = db_select('lab_migration_proposal');
 	$query->fields('lab_migration_proposal');
-	$query->condition('approval_status', 2, '<>');
+	$query->condition('approval_status', 1);
 	$query->orderBy('lab_title', 'ASC');
 	$lab_titles_q = $query->execute();
 	while ($lab_titles_data = $lab_titles_q->fetchObject())
@@ -622,10 +647,11 @@ function _bulk_list_lab_actions()
 	$lab_actions = array(
 		0 => 'Please select...'
 	);
-	$lab_actions[1] = 'Approve Entire Lab';
+	$lab_actions[1] = 'Approve Entire Lab (Opens Journal Upload interface.)';
 	$lab_actions[2] = 'Pending Review Entire Lab';
 	$lab_actions[3] = 'Dis-Approve Entire Lab (This will delete all the solutions in the lab)';
 	$lab_actions[4] = 'Delete Entire Lab Including Proposal';
+	$lab_actions[5] = 'Reopen Code submission interface.';
 	return $lab_actions;
 }
 function _ajax_bulk_get_solution_list($lab_experiment_list = '')
