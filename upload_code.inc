@@ -172,6 +172,7 @@ function lab_migration_list_experiments()
 				type: "POST",
 			})
 			.done(function() {
+				location.reload(true);
 				console.log("success");
 			})
 			.fail(function() {

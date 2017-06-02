@@ -318,7 +318,7 @@ function lab_migration_bulk_approval_form_validate($form, &$form_state)
 {
 	if (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
 		//var_dump($form_state['values']);die;
-		drupal_set_message("1Wrong selection of action. Please select any one action", 'error');
+		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
 	return;
 	if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
 		var_dump("2");die;
