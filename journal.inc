@@ -31,29 +31,36 @@ function lab_migration_upload_journal_form($form, &$form_state) {
     }
   }
 
+  $form['#attributes'] = array(
+    'enctype' => 'multipart/form-data',
+  );
+  
+  $form['lab_title'] = array(
+    '#type' => 'item',
+    '#markup' => $proposal_data->lab_title,
+    '#title' => t('Title of the Lab'),
+  );
+  
+  $form['name'] = array(
+    '#type' => 'item',
+    '#markup' => $proposal_data->name_title . ' ' . $proposal_data->name,
+    '#title' => t('Proposer Name'),
+  );
+
   $query = db_query('SELECT * FROM {lab_migration_journal} WHERE proposal_id = (:proposal_id)', array(':proposal_id' => $proposal_data->id));
 
   if ($query->rowCount() != 0) {
     drupal_set_message(t('Journal already uploaded for this lab.'), 'error');
-    return;
+    $val = $query->fetchObject();
+    $form['journal'] = array(
+      '#type' => 'item',
+      '#title' => t('Journal File'),
+      '#markup' => l($val->filename, 'lab_migration/download/journal/' . $val->id),
+    );
+    return $form;
   }
+  
   else {
-    $form['#attributes'] = array(
-      'enctype' => 'multipart/form-data',
-    );
-  
-    $form['lab_title'] = array(
-      '#type' => 'item',
-      '#markup' => $proposal_data->lab_title,
-      '#title' => t('Title of the Lab'),
-    );
-  
-    $form['name'] = array(
-      '#type' => 'item',
-      '#markup' => $proposal_data->name_title . ' ' . $proposal_data->name,
-      '#title' => t('Proposer Name'),
-    );
-  
     $form['journal'] = array(
       '#type' => 'file',
       '#title' => t('Upload Journal File'),
@@ -131,8 +138,9 @@ function lab_migration_upload_journal_form_submit($form, &$form_state) {
           ->fields(array(
             'proposal_id' => $proposal_id,
             'filename' => $_FILES['files']['name']['journal'],
-            'filepath' => $root_path . $dest_path . $_FILES['files']['name']['journal'],
+            'filepath' => $dest_path . $_FILES['files']['name']['journal'],
             'filesize' => $_FILES['files']['size']['journal'],
+            'filemime' => $_FILES['files']['type']['journal'],
             ))
           ->execute();
 

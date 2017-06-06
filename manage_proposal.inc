@@ -571,14 +571,6 @@ function lab_migration_proposal_status_form($form, $form_state)
 			'#title' => t('Approve')
 		);
 	} //$proposal_data->approval_status == 0
-	if ($proposal_data->approval_status == 1)
-	{
-		$form['completed'] = array(
-			'#type' => 'checkbox',
-			'#title' => t('Completed'),
-			'#description' => t('Check if user has provided all experiment solutions.')
-		);
-	} //$proposal_data->approval_status == 1
 	if ($proposal_data->approval_status == 2)
 	{
 		$form['message'] = array(
@@ -587,13 +579,71 @@ function lab_migration_proposal_status_form($form, $form_state)
 			'#title' => t('Reason for disapproval')
 		);
 	} //$proposal_data->approval_status == 2
+
+	$form['completed'] = array();
+	$query = db_query("SELECT * FROM {lab_migration_journal} WHERE proposal_id = (:pid)", array(':pid' => $proposal_data->id));
+	// var_dump($proposal_data->id); die;
+	if($query->rowCount() != 0) {
+		$val = $query->fetchObject();
+		$form['journal'] = array(
+			'#type' => 'item',
+			'#markup' => l($val->filename, 'lab_migration/download/journal/' . $val->id),
+			'#title' => 'Journal File',
+		);
+	}
+	else {
+		$form['journal'] = array(
+			'#type' => 'item',
+			'#markup' => t("The journal is not uploaded for this lab."),
+			'#title' => 'Journal File',
+		);
+		$form['completed']['#disabled'] = TRUE;
+
+	}
+
+  $flag = TRUE;
+  $exp_query = db_query("SELECT id, number FROM {lab_migration_experiment} WHERE proposal_id = (:pid)", array(':pid' => $proposal_data->id));
+  $val = $exp_query->fetchAllKeyed(1, 0);
+  //var_dump($val); die;
+  foreach ($val as $key => $value) {
+    $sol_query = db_query("SELECT * FROM {lab_migration_solution} WHERE experiment_id = (:eid)", array(':eid' => $value));
+    if ($sol_query->rowCount() == 0) {
+      $flag = FALSE;
+      $form['exp_status'] = array(
+        '#type' => 'item',
+        '#markup' => "Solution for Experiment $key of this lab not submitted."
+      );
+      break;
+    }
+    elseif ($sol_query->fetchObject()->approval_status == 0) {
+      $flag = FALSE;
+      $form['exp_status'] = array(
+        '#type' => 'item',
+        '#markup' => "Solution for Experiment $key of this lab not approved."
+      );
+      break;
+    }
+  }
+
+  if (!$flag)
+    $form['completed']['#disabled'] = TRUE;
+
+	if ($proposal_data->approval_status == 1)
+	{
+		$form['completed']['#type'] = 'checkbox';
+		$form['completed']['#title'] = t('Completed');
+		$form['completed']['#description'] = t('Check if user has provided all experiment solution and uploaded journal.');
+    $form['completed']['#weight'] = 1;
+	} //$proposal_data->approval_status == 1
 	$form['submit'] = array(
 		'#type' => 'submit',
-		'#value' => t('Submit')
+		'#value' => t('Submit'),
+    '#weight' => 2,
 	);
 	$form['cancel'] = array(
 		'#type' => 'item',
-		'#markup' => l(t('Cancel'), 'lab_migration/manage_proposal/all')
+		'#markup' => l(t('Cancel'), 'lab_migration/manage_proposal/all'),
+    '#weight' => 3,
 	);
 	return $form;
 }

@@ -392,6 +392,7 @@ function lab_migration_menu() {
 		'type' => MENU_CALLBACK,
 		'file' => 'download.inc'
 	);
+	
 	$items['lab_migration/download/lab'] = array(
 		'title' => 'Code Download',
 		'description' => 'Code Download',
@@ -401,6 +402,17 @@ function lab_migration_menu() {
 		),
 		'type' => MENU_CALLBACK,
 		'file' => 'download.inc'
+	);
+	
+	$items['lab_migration/download/journal'] = array(
+		'title' => 'Journal Download',
+		'description' => 'Journal Download',
+		'page callback' => 'lab_migration_download_journal',
+		'access arguments' => array(
+			'lab migration download code'
+		),
+		'type' => MENU_CALLBACK,
+		'file' => 'download.inc',
 	);
 	$items['lab_migration/full_download/experiment'] = array(
 		'title' => 'Code Download',

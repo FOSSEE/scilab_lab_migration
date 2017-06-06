@@ -273,3 +273,14 @@ function lab_migration_download_lab()
 		drupal_goto('lab_migration_run');
 	}
 }
+
+function lab_migration_download_journal() {
+	$journal_id = arg(3);
+	$root_path = lab_migration_path();
+	$query = db_query('SELECT * FROM {lab_migration_journal} WHERE id = (:jid)', array(':jid' => $journal_id));
+	$val = $query->fetchObject();
+	header('Content-Type: ' . $val->filemime);
+	header('Content-disposition: attachment; filename="' . $val->filename . '"');
+	header('Content-Length: ' . filesize($root_path . $val->filepath));
+	readfile($root_path . $val->filepath);
+}
