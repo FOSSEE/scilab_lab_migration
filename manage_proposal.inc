@@ -679,11 +679,13 @@ function lab_migration_proposal_status_form_submit($form, &$form_state)
 	/* set the book status to completed */
 	if ($form_state['values']['completed'] == 1)
 	{
-		$query = "UPDATE {lab_migration_proposal} SET approval_status = 3 WHERE id = :proposal_id";
-		$args = array(
-			":proposal_id" => $proposal_id
-		);
-		$result = db_query($query, $args);
+    $result = db_update('lab_migration_proposal')
+      ->fields(array(
+        'approval_status' => 3,
+        'solution_date' => time(),
+      ))
+      ->condition('id', $proposal_id)
+      ->execute();
 		/* sending email */
 		$user_data = user_load($proposal_data->uid);
 		$email_to = $user_data->mail;
