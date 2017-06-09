@@ -273,10 +273,9 @@ function lab_migration_list_experiments() {
  * Form for submitting code and adding dependency files in the solution of an experiment.
  * @param  $form        Associative array containing the form elements.
  * @param  &$form_state Associative array containing the current value of form elements.
- * @return $form
+ * @return Drupal form for uploading solution code.
  */
-function lab_migration_upload_code_form($form, &$form_state)
-{
+function lab_migration_upload_code_form($form, &$form_state) {
 	global $user;
 	$proposal_data = lab_migration_get_proposal();
 	if (!$proposal_data) {
@@ -490,8 +489,16 @@ function lab_migration_upload_code_form($form, &$form_state)
 	);
 	return $form;
 }
-function lab_migration_upload_code_form_validate($form, &$form_state)
-{
+
+/**
+ * Validations for solution code submitted.
+ *
+ * Implements checking for code number and code name to ensure only allowed characters are present.
+ * Checks uploaded files for allowed file extensions.
+ * @param $form        Associative array containing the form elements.
+ * @param &$form_state Associative array containing the current value of form elements.
+ */
+function lab_migration_upload_code_form_validate($form, &$form_state) {
 
 	if (!lab_migration_check_code_number($form_state['values']['code_number']))
 		form_set_error('code_number', t('Invalid Code Number. Code Number can contain only numbers.'));
@@ -503,7 +510,6 @@ function lab_migration_upload_code_form_validate($form, &$form_state)
 		form_set_error('scilab_version', t('Please select the scilab version used.'));
 	if (isset($_FILES['files']))
 	{
-		/* check if atleast one source or result file is uploaded */
 		if (!($_FILES['files']['name']['sourcefile1'] || $_FILES['files']['name']['xcos1']))
 			form_set_error('sourcefile1', t('Please upload atleast one main or source file or xcos file.'));
 		/* check for valid filename extensions */
@@ -520,6 +526,7 @@ function lab_migration_upload_code_form_validate($form, &$form_state)
 					$file_type = 'X';
 				else
 					$file_type = 'U';
+
 				$allowed_extensions_str = '';
 				switch ($file_type)
 				{
@@ -547,6 +554,12 @@ function lab_migration_upload_code_form_validate($form, &$form_state)
 	} //isset($_FILES['files'])
 }
 
+/**
+ * [lab_migration_upload_code_form_submit description]
+ * @param  [type] $form        [description]
+ * @param  [type] &$form_state [description]
+ * @return [type]              [description]
+ */
 function lab_migration_upload_code_form_submit($form, &$form_state)
 {
 	global $user;

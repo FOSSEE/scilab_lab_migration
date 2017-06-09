@@ -145,6 +145,11 @@ function lab_migration_upload_journal_form_submit($form, &$form_state) {
           ->execute();
 
       drupal_set_message(t('File uploaded successfully'), 'status');
+      $user_data = user_load($proposal_data->uid);
+      $email_to = $user_data->mail;
+      $param['journal_uploaded']['journal_name'] = $_FILES['files']['name']['journal'];
+      $param['journal_uploaded']['user_id'] = $user->uid;
+      drupal_mail('lab_migration', 'journal_uploaded', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE);
     }
 
     else

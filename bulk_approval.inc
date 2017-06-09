@@ -316,32 +316,24 @@ function ajax_bulk_solution_files_callback($form, $form_state)
 /************************************************************/
 function lab_migration_bulk_approval_form_validate($form, &$form_state)
 {
-	if (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
-		//var_dump($form_state['values']);die;
-		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
-	return;
-	if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
-		var_dump("2");die;
-		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
-	return;
-	if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
-		var_dump("3");die;
-		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
-	return;
-	if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
-		var_dump("4");die;
-		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
-	return;
-	if (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
-		var_dump("5");die;
-		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
+	if($form_state['clicked_button']['#value'] == 'Submit') {	
+		if (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
+			drupal_set_message("Wrong selection of action. Please select any one action", 'error');
+		elseif (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
+			drupal_set_message("Wrong selection of action. Please select any one action", 'error');
+		elseif (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
+			drupal_set_message("Wrong selection of action. Please select any one action", 'error');
+		elseif (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
+			drupal_set_message("Wrong selection of action. Please select any one action", 'error');
+		elseif (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
+			drupal_set_message("Wrong selection of action. Please select any one action", 'error');
+	}	
 	return;
 }
 function lab_migration_bulk_approval_form_submit($form, &$form_state)
 {
 	global $user;
 	$root_path = lab_migration_path();
-	var_dump($form_state['values']); 
 	if ($form_state['clicked_button']['#value'] == 'Submit')
 	{
 		if ($form_state['values']['lab'])
@@ -375,7 +367,7 @@ function lab_migration_bulk_approval_form_submit($form, &$form_state)
 				/* email */
 				$email_subject = t('Your uploaded solutions have been approved');
 				$email_body = array(
-					0 => t('Your all the uploaded solutions for the Lab have been approved.')
+					0 => t('Your all the uploaded solutions for the Lab have been approved. Code upload interface is locked and journal interface is open.')
 				);
 			} //($form_state['values']['lab_actions'] == 1) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0)
 			elseif (($form_state['values']['lab_actions'] == 2) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
@@ -493,6 +485,11 @@ Reason for dis-approval:
 					->condition('proposal_id', $form_state['values']['lab'])
 					->execute();
 				drupal_set_message(t("Code submission interface reopened."), 'status');
+
+        $email_subject = t('Code submission interface is reopened.');
+        $email_body = array(
+          0 => t('The code submission interface is reopened. You can edit your submission.')
+        );
 			}
 			elseif (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] == 1) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
 			{

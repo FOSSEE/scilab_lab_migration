@@ -653,6 +653,32 @@ Scilab Team', array(
 				))
 			);
 			break;
+		case 'journal_uploaded':
+			$user_data = user_load($params['journal_uploaded']['user_id']);
+			$journal_name = $params['journal_uploaded']['journal_name'];
+			$message['subject'] = t('[!site_name] You have uploaded journal file', array(
+				'!site_name' => variable_get('site_name', ''),
+			), array(
+				'language' => $language->language,
+			));
+			$message['body'] = array(
+				'body' => t('
+Dear !user_name,
+
+You have uploaded following journal file :
+    ' . $journal_name . '
+Please ensure that ALL the codes follow guidelines at http://www.scilab.in/coding-guidelines-lab-migration
+
+Best Wishes,
+
+Scilab Team', array(
+					'!site_name' => variable_get('site_name', ''),
+					'!user_name' => $user_data->name
+				), array(
+					'language' => $language->language
+				))
+			);
+			break;
 		case 'standard':
 			$message['subject'] = $params['standard']['subject'];
 			$message['body'] = $params['standard']['body'];
