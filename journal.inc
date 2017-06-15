@@ -9,7 +9,6 @@
 function lab_migration_upload_journal_form($form, &$form_state) {
   global $user;
   $proposal_data = lab_migration_get_proposal();
-  //error_log(var_export($proposal_data, TRUE));
 
   if (!$proposal_data) {
     drupal_goto('');
@@ -18,14 +17,14 @@ function lab_migration_upload_journal_form($form, &$form_state) {
 
   $query = db_query("SELECT * FROM {lab_migration_lock} WHERE proposal_id = (:proposal_id) AND solution_provider_uid = (:spu)", array(':proposal_id' => $proposal_data->id, ':spu' => $user->uid));
   
-  if($query->rowCount() == 0) {
+  if ($query->rowCount() == 0) {
     drupal_set_message(t('The journal interface is locked for this lab.'), 'status');
      return $form;
   }
 
   else {
     $val = $query->fetchObject();
-    if($val->journal_interface == 0) {
+    if ($val->journal_interface == 0) {
       drupal_set_message(t('The journal interface is locked for this lab.'), 'status');
       return $form;
     }
@@ -64,7 +63,7 @@ function lab_migration_upload_journal_form($form, &$form_state) {
     $form['journal'] = array(
       '#type' => 'file',
       '#title' => t('Upload Journal File'),
-      '#description' => t('No spaces or any special characters allowed in filename.') . '<br/>' . t('Allowed file extensions : ') . variable_get('lab_migration_journal_extensions', ''),
+      '#description' => t('No spaces or any special characters allowed in filename.') . '<br/>' . t('Allowed file extensions :') . variable_get('lab_migration_journal_extensions', ''),
     );
   
     $form['submit'] = array(
@@ -92,9 +91,9 @@ function lab_migration_upload_journal_form_validate($form, &$form_state) {
   if (!in_array($temp_extension, $allowed_extensions))
     form_set_error('journal', t('Only file with ' . $allowed_extensions_str . ' extensions can be uploaded.'));
 
-  if($_FILES['files']['size']['journal'] <= 0)
+  if ($_FILES['files']['size']['journal'] <= 0)
     form_set_error('journal', t('File size cannot be zero.'));
-  if(!lab_migration_check_valid_filename($_FILES['files']['name']['journal']))
+  if (!lab_migration_check_valid_filename($_FILES['files']['name']['journal']))
     form_set_error('journal', t('Invalid file name specified. Only alphabets and numbers are allowed as a valid filename.'));
 }
 
@@ -111,7 +110,7 @@ function lab_migration_upload_journal_form_submit($form, &$form_state) {
   $proposal_id = $proposal_data->id;
   
   $query = db_query('SELECT * FROM {lab_migration_journal} WHERE proposal_id = (:proposal_id)', array(':proposal_id' => $proposal_id));
-  if($query->rowCount() != 0) 
+  if ($query->rowCount() != 0) 
     drupal_set_message(t('Journal already uploaded for this lab'), 'error');
 
   $dest_path = $proposal_id . '/';
@@ -133,7 +132,7 @@ function lab_migration_upload_journal_form_submit($form, &$form_state) {
 
     //var_dump($_FILES); die;
 
-    if(move_uploaded_file($_FILES['files']['tmp_name']['journal'], $root_path . $dest_path . $_FILES['files']['name']['journal'])){
+    if (move_uploaded_file($_FILES['files']['tmp_name']['journal'], $root_path . $dest_path . $_FILES['files']['name']['journal'])) {
         db_insert('lab_migration_journal')
           ->fields(array(
             'proposal_id' => $proposal_id,
