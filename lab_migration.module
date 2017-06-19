@@ -478,6 +478,17 @@ function lab_migration_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'run.inc'
   );
+  $items['lab_migration/form_post'] = array(
+    'title' => 'Form Post Status',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'lab_migration_form_post_form'
+    ),
+    'access arguments' => array(
+      'lab migration form post'
+    ),
+    'file' => 'form_post.inc',
+  );
   /*$items['lab_migration_run'] = array(
   'title' => 'Download Codes',
   'page callback' => 'drupal_get_form',
@@ -616,7 +627,11 @@ function lab_migration_permission() {
     'lab migration generate lab' => array(
       'title' => t('lab migration generate lab'),
       'restrict access' => TRUE
-    )
+    ),
+    'lab migration form post' => array(
+      'title' => t('lab migration form post'),
+      'restrict access' => TRUE,
+    ),
   );
   // return array('lab migration create proposal', 'lab migration manage proposal', 'lab migration edit proposal', 'lab migration approve proposal', 'lab migration propose solution', 'lab migration approve code', 'lab migration bulk manage code', 'lab migration bulk delete code', 'lab migration upload code', 'lab migration download code', 'administer lab migration', 'lab migration generate lab');
 }

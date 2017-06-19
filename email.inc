@@ -70,6 +70,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'solution_proposal_disapproved':
       $user_data = user_load($params['solution_proposal_disapproved']['user_id']);
       $message['subject'] = t('[!site_name] Lab Migration Solution Disapproval', array(
@@ -95,6 +96,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'proposal_received':
       /* initializing data */
       // $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE id = %d LIMIT 1", $params['proposal_received']['proposal_id']);
@@ -170,6 +172,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'proposal_disapproved':
       /* initializing data */
       // $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE id = %d LIMIT 1", $params['proposal_disapproved']['proposal_id']);
@@ -244,6 +247,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'proposal_approved':
       /* initializing data */
       // $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE id = %d LIMIT 1", $params['proposal_approved']['proposal_id']);
@@ -316,6 +320,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'proposal_completed':
       /* initializing data */
       //$proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE id = %d LIMIT 1", $params['proposal_completed']['proposal_id']);
@@ -397,6 +402,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'solution_proposal_received':
       /* initializing data */
       //$proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE id = %d LIMIT 1", $params['solution_proposal_received']['proposal_id']);
@@ -465,6 +471,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'solution_uploaded':
       // $solution_q = db_query("SELECT * FROM {lab_migration_solution} WHERE id = %d LIMIT 1", $params['solution_uploaded']['solution_id']);
       $query = db_select('lab_migration_solution');
@@ -500,6 +507,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'solution_approved':
       //$solution_q = db_query("SELECT * FROM {lab_migration_solution} WHERE id = %d LIMIT 1", $params['solution_approved']['solution_id']);
       $query = db_select('lab_migration_solution');
@@ -535,6 +543,7 @@ Scilab Team', array(
         ))
       );
       break;
+      
     case 'solution_disapproved':
       $user_data = user_load($params['solution_disapproved']['user_id']);
       $message['subject'] = t('[!site_name] Your uploaded solution has been disapproved', array(
@@ -565,6 +574,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'solution_deleted_user':
       $user_data = user_load($params['solution_deleted_user']['user_id']);
       $message['subject'] = t('[!site_name] User has deleted pending solution', array(
@@ -595,6 +605,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'dependency_uploaded':
       $user_data = user_load($params['dependency_uploaded']['user_id']);
       $dependency_files = implode(',', $params['dependency_uploaded']['dependency_names']);
@@ -622,6 +633,7 @@ Scilab Team', array(
         ))
       );
       break;
+
     case 'journal_uploaded':
       $user_data = user_load($params['journal_uploaded']['user_id']);
       $journal_name = $params['journal_uploaded']['journal_name'];
@@ -641,13 +653,55 @@ Please ensure that ALL the codes follow guidelines at http://www.scilab.in/codin
 Best Wishes,
 
 Scilab Team', array(
-          '!site_name' => variable_get('site_name', ''),
           '!user_name' => $user_data->name
         ), array(
           'language' => $language->language
         ))
       );
       break;
+
+    case 'form_post':
+      $user_data = user_load($params['form_post']['uid']);
+      $query = db_query('SELECT * FROM {lab_migration_form_post} WHERE id = (:id)', array(':id' => $params['form_post']['id']));
+      $val = $query->fetchObject();
+      $query = db_query('SELECT * FROM {postal_services} WHERE id = (:id)', array(':id' => $val->post_service));
+      $post_val = $query->fetchObject();
+      $message['subject'] = t('[@site_name] You have posted forms', array(
+        '@site_name' => variable_get('site_name', ''),
+      ), array(
+        'language' => $language->language,
+      ));
+      $message['body'] = array(
+        'body' => t('
+Dear @user_name,
+
+You have posted the following forms :
+  1. Copyright Transfer Form : @copyright
+  2. Receipt : @receipt
+  3. Undertaking - Teacher : @undertaking_teacher
+  4. Undertaking - HOD : @undertaking_hod
+  5. Undertaking - Principal : @undertaking_principal
+  6. Lab Migration Application Form : @application
+
+via @service with Tracking details : @tracking_details.
+
+Best Wishes,
+Scilab Team', array(
+          '@user_name' => $user_data->name,
+          '@copyright' => $val->copyright == 1 ? 'Yes' : 'No',
+          '@receipt' => $val->receipt == 1 ? 'Yes' : 'No',
+          '@undertaking_teacher' => $val->undertaking_teacher == 1 ? 'Yes' : 'No',
+          '@undertaking_hod' => $val->undertaking_hod == 1 ? 'Yes' : 'No',
+          '@undertaking_principal' => $val->undertaking_principal == 1 ? 'Yes' : 'No',
+          '@application' => $val->application == 1 ? 'Yes' : 'No',
+          '@service' => $post_val->service_name,
+          '@tracking_details' => $val->tracking_details,
+        ), array(
+          'language' => $language->language,
+        ))
+      );
+      break;
+
     case 'standard':
       $message['subject'] = $params['standard']['subject'];
       $message['body'] = $params['standard']['body'];
