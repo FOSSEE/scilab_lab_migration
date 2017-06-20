@@ -108,6 +108,7 @@ function lab_migration_form_post_form_submit($form, &$form_state) {
   $query = db_insert('lab_migration_form_post')
             ->fields(array(
               'proposal_id' => $proposal_data->id,
+              'user_id' => $user->uid,
               'copyright' => $form_state['values']['copyright'],
               'receipt' => $form_state['values']['receipt'],
               'undertaking_teacher' => $form_state['values']['undertaking_teacher'],
