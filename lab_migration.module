@@ -487,6 +487,7 @@ function lab_migration_menu() {
     'access arguments' => array(
       'lab migration form post'
     ),
+    'type' => MENU_NORMAL_ITEM,
     'file' => 'form_post.inc',
   );
   /*$items['lab_migration_run'] = array(
@@ -572,6 +573,18 @@ function lab_migration_menu() {
     ),
     "type" => MENU_CALLBACK,
     "file" => 'lock.inc'
+  );
+
+  $items["lab_migration/edit_contact"] = array(
+    "title" => 'Update Contact Details',
+    "page callback" => "drupal_get_form",
+    "page arguments" => array(
+      "lab_migration_edit_contact",
+    ),
+    "access arguments" => array(
+      "lab migration form post"
+    ),
+    "file" => "contact.inc",
   );
   return $items;
 }
