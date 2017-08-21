@@ -261,10 +261,15 @@ function lab_migration_proposal_approval_form($form_state) {
     '#markup' => $proposal_data->department,
     '#title' => t('Department/Branch')
   );
+  $form['institute'] = array(
+    '#type' => 'item',
+    '#markup' => $proposal_data->institute,
+    '#title' => t('Institute')
+  );
   $form['university'] = array(
     '#type' => 'item',
     '#markup' => $proposal_data->university,
-    '#title' => t('University/Institute')
+    '#title' => t('University')
   );
   $form['lab_title'] = array(
     '#type' => 'item',
@@ -454,10 +459,15 @@ function lab_migration_proposal_status_form($form, $form_state) {
     '#markup' => $proposal_data->department,
     '#title' => t('Department/Branch')
   );
+  $form['institute'] = array(
+    '#type' => 'item',
+    '#markup' => $proposal_data->institute,
+    '#title' => t('Institute')
+  );
   $form['university'] = array(
     '#type' => 'item',
     '#markup' => $proposal_data->university,
-    '#title' => t('University/Institute')
+    '#title' => t('University')
   );
   $form['lab_title'] = array(
     '#type' => 'item',
@@ -740,13 +750,21 @@ function lab_migration_proposal_edit_form($form, $form_state) {
     '#required' => TRUE,
     '#default_value' => $proposal_data->department
   );
-  $form['university'] = array(
+  $form['institute'] = array(
     '#type' => 'textfield',
-    '#title' => t('University/Institute'),
+    '#title' => t('Institute'),
     '#size' => 50,
     '#maxlength' => 200,
     '#required' => TRUE,
-    '#default_value' => $proposal_data->university
+    '#default_value' => $proposal_data->institute,
+  );
+  $form['university'] = array(
+    '#type' => 'textfield',
+    '#title' => t('University'),
+    '#size' => 50,
+    '#maxlength' => 200,
+    '#required' => TRUE,
+    '#default_value' => $proposal_data->university,
   );
   $form['city'] = array(
     '#type' => 'textfield',
@@ -1016,6 +1034,7 @@ function lab_migration_proposal_edit_form_submit($form, &$form_state) {
     'name' => $v['name'],
     'contact_ph' => $v['contact_ph'],
     'department' => $v['department'],
+    'institute' => $v['institute'],
     'university' => $v['university'],
     'city' => $v['city'],
     'pincode' => $v['pincode'],
@@ -1132,10 +1151,15 @@ function lab_migration_category_edit_form($form, &$form_state) {
     '#markup' => $proposal_data->department,
     '#title' => t('Department/Branch')
   );
+  $form['institute'] = array(
+    '#type' => 'item',
+    '#markup' => $proposal_data->institute,
+    '#title' => t('Institute')
+  );
   $form['university'] = array(
     '#type' => 'item',
     '#markup' => $proposal_data->university,
-    '#title' => t('University/Institute')
+    '#title' => t('University')
   );
   $form['lab_title'] = array(
     '#type' => 'item',

@@ -13,7 +13,7 @@ function lab_migration_form_post_form($form, &$form_state) {
   }
   $query = db_query('SELECT * FROM {lab_migration_form_post} WHERE proposal_id = (:pid)', array(':pid' => $proposal_data->id))->fetchObject();
   $contact_data = db_query('SELECT * FROM {lab_migration_contact_details} WHERE user_id = (:uid)', array(':uid' => $user->uid))->fetchObject();
-  if(!is_null($query)) {
+  if($query != "") {
     $cheque_data = $cheque_data = db_query("SELECT * FROM {lab_migration_cheque} WHERE form_id = (:fid)", array(':fid' => $query->id))->fetchObject();
 
     drupal_set_message(t('Form post details already uploaded for this proposal.'), 'status');
@@ -210,7 +210,7 @@ function lab_migration_form_post_form_submit($form, &$form_state) {
   if (!drupal_mail('lab_migration', 'form_post', $email_to, user_preferred_language($user), $param, variable_get('lab_migration_from_email', NULL), TRUE));
         drupal_set_message(t('Error sending email message.'), 'error');
   drupal_goto('lab_migration/form_post');
-  drupal_set_message(t('Post details received'), 'status');
+  drupal_set_message(t('Post details receifved'), 'status');
 }
 
 function tracking_details_ajax($form, &$form_state) {

@@ -80,16 +80,27 @@ function lab_migration_proposal_form($form, &$form_state) {
         '#options' => _lm_list_of_departments(),
         '#required' => TRUE
     );
-    $form['university'] = array(
+    $form['institute'] = array(
         '#type' => 'textfield',
-        '#title' => t('University/ Institute'),
+        '#title' => 'Institute',
         '#size' => 80,
         '#maxlength' => 200,
         '#required' => TRUE,
         '#attributes' => array(
-            'placeholder' => 'Insert full name of your institute/ university.... '
+            'placeholder' => 'Insert full name of your institute.... '
         ),
-        '#description' => 'Please insert full name of your institute/ university.'
+        '#description' => 'Please insert full name of your institute.',
+    );
+    $form['university'] = array(
+        '#type' => 'textfield',
+        '#title' => t('University'),
+        '#size' => 80,
+        '#maxlength' => 200,
+        '#required' => TRUE,
+        '#attributes' => array(
+            'placeholder' => 'Insert full name of your university.... '
+        ),
+        '#description' => 'Please insert full name of your university.'
     );
     $form['city'] = array(
         '#type' => 'select',
@@ -200,6 +211,7 @@ function lab_migration_proposal_form_submit($form, &$form_state) {
     $form_state['values']['name'] = _lm_sentence_case($form_state['values']['name']);
     $form_state['values']['lab_title'] = _lm_sentence_case($form_state['values']['lab_title']);
     $form_state['values']['university'] = _lm_sentence_case($form_state['values']['university']);
+    $form_state['values']['institute'] = _lm_sentence_case($form_state['values']['institute']);
     $solution_provider_uid = 0;
     $solution_status = 0;
     $solution_provider_name_title = '';
@@ -227,8 +239,8 @@ function lab_migration_proposal_form_submit($form, &$form_state) {
     /* inserting the user proposal */
     $v = $form_state["values"];
     $result = "INSERT INTO {lab_migration_proposal} 
-    (uid, approver_uid, name_title, name, contact_ph, department, university, city, pincode, state, lab_title, approval_status, solution_status, solution_provider_uid, solution_display, creation_date, approval_date, solution_date, solution_provider_name_title, solution_provider_name, solution_provider_contact_ph, solution_provider_department, solution_provider_university) VALUES
-    (:uid, :approver_uid, :name_title, :name, :contact_ph, :department, :university, :city, :pincode, :state, :lab_title, :approval_status, :solution_status, :solution_provider_uid, :solution_display, :creation_date, :approval_date, :solution_date, :solution_provider_name_title, :solution_provider_name, :solution_provider_contact_ph, :solution_provider_department, :solution_provider_university)";
+    (uid, approver_uid, name_title, name, contact_ph, department, institute, university, city, pincode, state, lab_title, approval_status, solution_status, solution_provider_uid, solution_display, creation_date, approval_date, solution_date, solution_provider_name_title, solution_provider_name, solution_provider_contact_ph, solution_provider_department, solution_provider_university) VALUES
+    (:uid, :approver_uid, :name_title, :name, :contact_ph, :department, :institute, :university, :city, :pincode, :state, :lab_title, :approval_status, :solution_status, :solution_provider_uid, :solution_display, :creation_date, :approval_date, :solution_date, :solution_provider_name_title, :solution_provider_name, :solution_provider_contact_ph, :solution_provider_department, :solution_provider_university)";
     $args = array(
         ":uid" => $user->uid,
         ":approver_uid" => 0,
@@ -236,6 +248,7 @@ function lab_migration_proposal_form_submit($form, &$form_state) {
         ":name" => $v['name'],
         ":contact_ph" => $v['contact_ph'],
         ":department" => $v['department'],
+        ":institute" => $v['institute'],
         ":university" => $v['university'],
         ":city" => $v['city'],
         ":pincode" => $v['pincode'],
