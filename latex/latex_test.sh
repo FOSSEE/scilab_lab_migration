@@ -141,13 +141,14 @@ then
 echo $col6 > $CURDIR/Figure_files
 	if  grep -c ".jpg\|.JPEG\|.png\|.jpeg\|.JPG" $CURDIR/Figure_files 
 	then
-		 
-		 echo \\curlable{Fig~$col3} >> $CURDIR/TEX
-		 echo \\begin{figure} >> $CURDIR/TEX
-		 echo \\includegraphics[scale=0.5]{../$col6}  >> $CURDIR/TEX
-		 echo \\caption{$col4} >> $CURDIR/TEX
-		 echo \\end{figure} >> $CURDIR/TEX
-		 echo >> $CURDIR/TEX
+		 if [[ $(file -b ../$col6) =~ JPEG ]]; then
+		     echo \\curlable{Fig~$col3} >> $CURDIR/TEX
+		     echo \\begin{figure} >> $CURDIR/TEX
+		     echo \\includegraphics[scale=0.5]{../$col6}  >> $CURDIR/TEX
+		     echo \\caption{$col4} >> $CURDIR/TEX
+		     echo \\end{figure} >> $CURDIR/TEX
+		     echo >> $CURDIR/TEX
+		fi
 	fi
 
 fi
