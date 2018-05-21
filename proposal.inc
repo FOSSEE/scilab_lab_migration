@@ -157,7 +157,7 @@ function lab_migration_proposal_form($form, &$form_state)
 		'#default_value' => '2',
 		'#description' => 'If you dont want to provide the solution then it will be opened for the community. Anyone may come forward and provide the solution.'
 	);
-	$form['solution_display'] = array(
+	/*$form['solution_display'] = array(
 		'#type' => 'radios',
 		'#title' => t('Do you want to display the solution on the www.scilab.in website'),
 		'#options' => array(
@@ -168,16 +168,16 @@ function lab_migration_proposal_form($form, &$form_state)
 		'#default_value' => '1',
 		'#description' => 'If yes, solutions will be made available to everyone for downloading.',
 		'#disabled' => FALSE
-	);
-	/*$form['solution_display'] = array(
+	);*/
+	$form['solution_display'] = array(
 	'#type' => 'hidden',
 	//  '#title' => t('Do you want to display the solution on the www.scilab.in website'),
 	// '#options' => array('1' => 'Yes', '2' => 'No'),
 	// '#required' => TRUE,
-	'#default_value' => '1'
+	'#default_value' => '2'
 	//  '#description' => 'If yes, solutions will be made available to everyone for downloading.',
 	//   '#disabled' => FALSE,
-	);*/
+	);
 	$form['submit'] = array(
 		'#type' => 'submit',
 		'#value' => t('Submit')

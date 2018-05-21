@@ -41,7 +41,7 @@
 \makeatletter \newcommand\listofcode
      {\chapter*{List of Experiments\markboth%
                         {\bf List of Scilab Codes}{}}%
-\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{5em}}%
+\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{7em}}%
 \addcontentsline{toc}{chapter}{\protect\numberline{List of Scilab Solutions}}
 \@starttoc{cod}}
 \newcommand\l@matlab[3]

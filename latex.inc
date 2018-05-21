@@ -231,10 +231,22 @@ function _latex_generate_files($lab_id, $full_lab = FALSE)
 	if (_latex_run_script($lab_filename, $solution_provider_filename, $latex_filename, $latex_dep_filename, $pdf_filename))
 	{
 		/* download zip file */
+		ob_clean();
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
 		header('Content-Type: application/pdf');
-		header('Content-disposition: attachment; filename="' . $proposal_data->lab_title . '_' . $proposal_data->name_title . '_' . $proposal_data->name . '.pdf"');
+		header('Content-Disposition: attachment; filename="' . $proposal_data->lab_title . '_' . $proposal_data->name_title . '_' . $proposal_data->name . '.pdf"');
 		header('Content-Length: ' . filesize($dir_path . $pdf_filename));
-		readfile($dir_path . $pdf_filename);
+		header("Content-Transfer-Encoding: binary");
+		header('Expires: 0');
+		header('Pragma: no-cache');
+		@readfile($dir_path . $pdf_filename);
+		ob_end_flush();
+		ob_clean();
+		flush();
 	} //_latex_run_script($lab_filename, $solution_provider_filename, $latex_filename, $latex_dep_filename, $pdf_filename)
 	else
 	{
@@ -257,7 +269,8 @@ function _latex_run_script($lab_filename, $solution_provider_filename, $latex_fi
 	chdir("lab_migration_uploads");
 	chdir("latex");
 	$sh_command = "./pdf_creator.sh " . $lab_filename . " " . $solution_provider_filename . " " . $latex_filename . " " . $latex_dep_filename;
-	exec($sh_command);
+	#exec($sh_command);
+        exec("/bin/bash " . $sh_command);
 	exec("mv TEX_final.pdf " . $pdf_filename);
 	if ($ret == 0)
 		return TRUE;
