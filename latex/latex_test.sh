@@ -141,7 +141,7 @@ then
 echo $col6 > $CURDIR/Figure_files
 	if  grep -c ".jpg\|.JPEG\|.png\|.jpeg\|.JPG" $CURDIR/Figure_files 
 	then
-		 if [[ $(file -b ../$col6) =~ JPEG ]]; then
+		 if [[ $(file -b ../$col6) =~ JPEG || $(file -b ../$col6) =~ PNG || $(file -b ../$col6) =~ JPG  ]]; then
 		     echo \\curlable{Fig~$col3} >> $CURDIR/TEX
 		     echo \\begin{figure} >> $CURDIR/TEX
 		     echo \\includegraphics[scale=0.5]{../$col6}  >> $CURDIR/TEX
@@ -176,7 +176,6 @@ echo $col2 > $CURDIR/image_files
                  echo \\tcaption {$col3}{$col3} >> $CURDIR/TEX          
                  echo \\end{figure} >> $CURDIR/TEX
                  echo >> $CURDIR/TEX
-        
 
 	else
 		echo \\begin{code} >> $CURDIR/TEX;
@@ -186,9 +185,7 @@ echo $col2 > $CURDIR/image_files
                 echo \\end{code} >> $CURDIR/TEX
                 echo >> $CURDIR/TEX
 
-	
 	fi
-
 
 
 let "i+=1"
