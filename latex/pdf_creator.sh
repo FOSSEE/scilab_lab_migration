@@ -1,5 +1,5 @@
 #!/bin/bash
-export PATH=$PATH:/usr/local/texlive/2015/bin/x86_64-linux
+export PATH=$PATH:/usr/local/texlive/2018/bin/x86_64-linux
 
 if [ -f TEX_final.tex ]
 then
