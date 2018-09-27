@@ -636,9 +636,22 @@ function lab_migration_proposal_status_form_submit($form, &$form_state)
 		$result = db_query($query, $args);
 		/* sending email */
 		$user_data = user_load($proposal_data->uid);
-		$email_to = $user_data->mail;
+
 		$param['proposal_completed']['proposal_id'] = $proposal_id;
 		$param['proposal_completed']['user_id'] = $proposal_data->uid;
+		$email_to = $user_data->mail;
+		$from = variable_get('lab_migration_from_email', '');
+		$bcc = variable_get('lab_migration_email', '');
+		$cc = variable_get('lab_migration_from_email', '');
+		$param['proposal_disapproved']['headers'] = array(
+			'From' => $from,
+			'MIME-Version' => '1.0',
+			'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+			'Content-Transfer-Encoding' => '8Bit',
+			'X-Mailer' => 'Drupal',
+			'Cc' => $cc,
+			'Bcc' => $bcc
+		);
 		if (!drupal_mail('lab_migration', 'proposal_completed', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
 			drupal_set_message('Error sending email message.', 'error');
 		$email_to = $user->mail . ', ' . variable_get('lab_migration_emails', '');
