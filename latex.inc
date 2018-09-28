@@ -270,7 +270,7 @@ function _latex_run_script($lab_filename, $solution_provider_filename, $latex_fi
 	chdir("latex");
 	$sh_command = "./pdf_creator.sh " . $lab_filename . " " . $solution_provider_filename . " " . $latex_filename . " " . $latex_dep_filename;
 	#exec($sh_command);
-        exec("/bin/bash " . $sh_command);
+	exec("/bin/bash " . $sh_command);
 	exec("mv TEX_final.pdf " . $pdf_filename);
 	if ($ret == 0)
 		return TRUE;
@@ -279,7 +279,7 @@ function _latex_run_script($lab_filename, $solution_provider_filename, $latex_fi
 }
 function lab_migration_delete_lab_pdf()
 {
-	$lab_id = arg(3);
+	$lab_id = arg(2);
 	lab_migration_del_lab_pdf($lab_id);
 	drupal_set_message(t('Lab schedule for regeneration.'), 'status');
 	drupal_goto('lab_migration/code_approval/bulk');

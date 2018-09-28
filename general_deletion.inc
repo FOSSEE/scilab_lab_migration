@@ -53,14 +53,28 @@ function lab_migration_delete_solution($solution_id)
 				'!file' => $solution_files_data->filepath
 			)), 'error');
 			/* sending email to admins */
-			$email_to = variable_get('lab_migration_emails', '');
-			$param['standard']['subject'] = "[ERROR] Error deleting example file";
-			$param['standard']['body'] = "Error deleting solution files by " . $user->uid . " at " . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . " :
+			$params['standard']['subject'] = "[ERROR] Error deleting example file";
+			$params['standard']['body'] = "Error deleting solution files by " . $user->uid . " at " . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . " :
         solution id : " . $solution_id . "
         file id : " . $solution_files_data->id . "
         file path : " . $solution_files_data->filepath;
-			if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
-				drupal_set_message('Error sending email message.', 'error');
+
+		$email_to = $user_data->mail;
+		$from = variable_get('lab_migration_from_email', '');
+		$bcc = variable_get('lab_migration_bcc_email', '');
+		$cc = variable_get('lab_migration_from_email', '');
+		$params['standard']['headers'] = array(
+			'From' => $from,
+			'MIME-Version' => '1.0',
+			'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+			'Content-Transfer-Encoding' => '8Bit',
+			'X-Mailer' => 'Drupal',
+			'Cc' => $cc,
+			'Bcc' => $bcc
+		);
+		if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $params, $from, TRUE))
+			drupal_set_message('Error sending email message.', 'error');
+
 		} //!unlink($root_path . $solution_files_data->filepath)
 		else
 		{
@@ -81,11 +95,25 @@ function lab_migration_delete_solution($solution_id)
 				'!folder' => $dir_path
 			)), 'error');
 			/* sending email to admins */
-			$email_to = variable_get('lab_migration_emails', '');
-			$param['standard']['subject'] = "[ERROR] Error deleting folder";
-			$param['standard']['body'] = "Error deleting folder " . $dir_path . " by " . $user->uid . " at " . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-			if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
-				drupal_set_message('Error sending email message.', 'error');
+			$params['standard']['subject'] = "[ERROR] Error deleting folder";
+			$params['standard']['body'] = "Error deleting folder " . $dir_path . " by " . $user->uid . " at " . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+		$email_to = $user_data->mail;
+		$from = variable_get('lab_migration_from_email', '');
+		$bcc = variable_get('lab_migration_bcc_email', '');
+		$cc = variable_get('lab_migration_from_email', '');
+		$params['standard']['headers'] = array(
+			'From' => $from,
+			'MIME-Version' => '1.0',
+			'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+			'Content-Transfer-Encoding' => '8Bit',
+			'X-Mailer' => 'Drupal',
+			'Cc' => $cc,
+			'Bcc' => $bcc
+		);
+		if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $params, $from, TRUE))
+			drupal_set_message('Error sending email message.', 'error');
+
 			return FALSE;
 		} //!rmdir($dir_path)
 	} //is_dir($dir_path)
@@ -145,11 +173,25 @@ function lab_migration_delete_experiment($experiment_id)
 					'!folder' => $dir_path
 				)), 'error');
 				/* sending email to admins */
-				$email_to = variable_get('lab_migration_emails', '');
-				$param['standard']['subject'] = "[ERROR] Error deleting experiment folder";
-				$param['standard']['body'] = "Error deleting folder " . $dir_path;
-				if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+				$params['standard']['subject'] = "[ERROR] Error deleting experiment folder";
+				$params['standard']['body'] = "Error deleting folder " . $dir_path;
+
+				$email_to = $user_data->mail;
+				$from = variable_get('lab_migration_from_email', '');
+				$bcc = variable_get('lab_migration_bcc_email', '');
+				$cc = variable_get('lab_migration_from_email', '');
+				$params['standard']['headers'] = array(
+					'From' => $from,
+					'MIME-Version' => '1.0',
+					'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+					'Content-Transfer-Encoding' => '8Bit',
+					'X-Mailer' => 'Drupal',
+					'Cc' => $cc,
+					'Bcc' => $bcc
+				);
+				if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $params, $from, TRUE))
 					drupal_set_message('Error sending email message.', 'error');
+
 				return FALSE;
 			} //!$res
 			else
@@ -236,13 +278,25 @@ function lab_migration_delete_dependency($dependency_id)
 			'!file' => $dependency_files_data->filepath
 		)), 'error');
 		/* sending email to admins */
-		$email_to = variable_get('lab_migration_emails', '');
-		$param['standard']['subject'] = "[ERROR] Error deleting dependency file";
-		$param['standard']['body'] = "Error deleting dependency files by " . $user->uid . " at " . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . " :
+		$params['standard']['subject'] = "[ERROR] Error deleting dependency file";
+		$params['standard']['body'] = "Error deleting dependency files by " . $user->uid . " at " . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . " :
 			dependency id : " . $dependency_id . "
 			file id : " . $dependency_files_data->id . "
 			file path : " . $dependency_files_data->filepath;
-		if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+		$email_to = $user_data->mail;
+		$from = variable_get('lab_migration_from_email', '');
+		$bcc = variable_get('lab_migration_bcc_email', '');
+		$cc = variable_get('lab_migration_from_email', '');
+		$params['standard']['headers'] = array(
+			'From' => $from,
+			'MIME-Version' => '1.0',
+			'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+			'Content-Transfer-Encoding' => '8Bit',
+			'X-Mailer' => 'Drupal',
+			'Cc' => $cc,
+			'Bcc' => $bcc
+		);
+		if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $params, $from, TRUE))
 			drupal_set_message('Error sending email message.', 'error');
 	} //!unlink($root_path . $dependency_files_data->filepath)
 	else

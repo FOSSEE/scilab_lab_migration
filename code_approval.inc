@@ -278,9 +278,9 @@ function lab_migration_code_approval_form_submit($form, &$form_state)
 		db_query($query, $args);
 		/* sending email */
 		$email_to = $user_data->mail . ', ' . variable_get('lab_migration_emails', '');
-		$param['solution_pending']['solution_id'] = $solution_id;
-		$param['solution_pending']['user_id'] = $user_data->uid;
-		if (!drupal_mail('lab_migration', 'solution_pending', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+		$params['solution_pending']['solution_id'] = $solution_id;
+		$params['solution_pending']['user_id'] = $user_data->uid;
+		if (!drupal_mail('lab_migration', 'solution_pending', $email_to, language_default(), $params, variable_get('lab_migration_from_email', NULL), TRUE))
 			drupal_set_message('Error sending email message.', 'error');
 	} //$form_state['values']['approved'] == "0"
 	else if ($form_state['values']['approved'] == "1")
@@ -293,26 +293,51 @@ function lab_migration_code_approval_form_submit($form, &$form_state)
 		);
 		db_query($query, $args);
 		/* sending email */
-		$email_to = $user_data->mail . ', ' . variable_get('lab_migration_emails', '');
-		$param['solution_approved']['solution_id'] = $solution_id;
-		$param['solution_approved']['user_id'] = $user_data->uid;
-		if (!drupal_mail('lab_migration', 'solution_approved', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+		$email_to = $user_data->mail;
+		$from = variable_get('lab_migration_from_email', '');
+		$bcc = variable_get('lab_migration_bcc_email', '');
+		$cc = variable_get('lab_migration_from_email', '');
+		$params['solution_approved']['headers'] = array(
+			'From' => $from,
+			'MIME-Version' => '1.0',
+			'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+			'Content-Transfer-Encoding' => '8Bit',
+			'X-Mailer' => 'Drupal',
+			'Cc' => $cc,
+			'Bcc' => $bcc
+		);
+		if (!drupal_mail('lab_migration', 'solution_approved', $email_to, language_default(), $params, $from, TRUE))
 			drupal_set_message('Error sending email message.', 'error');
+
+
 	} //$form_state['values']['approved'] == "1"
 	else if ($form_state['values']['approved'] == "2")
 	{
 		if (lab_migration_delete_solution($solution_id))
 		{
+			$params['solution_disapproved']['experiment_number'] = $experiment_data->number;
+			$params['solution_disapproved']['experiment_title'] = $experiment_data->title;
+			$params['solution_disapproved']['solution_number'] = $solution_data->code_number;
+			$params['solution_disapproved']['solution_caption'] = $solution_data->caption;
+			$params['solution_disapproved']['user_id'] = $user_data->uid;
+			$params['solution_disapproved']['message'] = $form_state['values']['message'];
 			/* sending email */
-			$email_to = $user_data->mail . ', ' . variable_get('lab_migration_emails', '');
-			$param['solution_disapproved']['experiment_number'] = $experiment_data->number;
-			$param['solution_disapproved']['experiment_title'] = $experiment_data->title;
-			$param['solution_disapproved']['solution_number'] = $solution_data->code_number;
-			$param['solution_disapproved']['solution_caption'] = $solution_data->caption;
-			$param['solution_disapproved']['user_id'] = $user_data->uid;
-			$param['solution_disapproved']['message'] = $form_state['values']['message'];
-			if (!drupal_mail('lab_migration', 'solution_disapproved', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+			$email_to = $user_data->mail;
+			$from = variable_get('lab_migration_from_email', '');
+			$bcc = variable_get('lab_migration_bcc_email', '');
+			$cc = variable_get('lab_migration_from_email', '');
+			$params['solution_approved']['headers'] = array(
+				'From' => $from,
+				'MIME-Version' => '1.0',
+				'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+				'Content-Transfer-Encoding' => '8Bit',
+				'X-Mailer' => 'Drupal',
+				'Cc' => $cc,
+				'Bcc' => $bcc
+			);
+			if (!drupal_mail('lab_migration', 'solution_disapproved', $email_to, language_default(), $params, $from, TRUE))
 				drupal_set_message('Error sending email message.', 'error');
+
 		} //lab_migration_delete_solution($solution_id)
 		else
 		{

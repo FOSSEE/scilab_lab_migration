@@ -610,10 +610,23 @@ function lab_migration_upload_code_form_submit($form, &$form_state)
 	drupal_set_message('Solution uploaded successfully.', 'status');
 	/* sending email */
 	$email_to = $user->mail . ', ' . variable_get('lab_migration_emails', '');
-	$param['solution_uploaded']['solution_id'] = $solution_id;
-	$param['solution_uploaded']['user_id'] = $user->uid;
-	if (!drupal_mail('lab_migration', 'solution_uploaded', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
-		drupal_set_message('Error sending email message.', 'error');
+	$params['solution_uploaded']['solution_id'] = $solution_id;
+	$params['solution_uploaded']['user_id'] = $user->uid;
+		$email_to = $user->mail;
+		$from = variable_get('lab_migration_from_email', '');
+		$bcc = variable_get('lab_migration_bcc_email', '');
+		$cc = variable_get('lab_migration_from_email', '');
+		$params['solution_uploaded']['headers'] = array(
+			'From' => $from,
+			'MIME-Version' => '1.0',
+			'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+			'Content-Transfer-Encoding' => '8Bit',
+			'X-Mailer' => 'Drupal',
+			'Cc' => $cc,
+			'Bcc' => $bcc
+		);
+		if (!drupal_mail('lab_migration', 'solution_uploaded', $email_to, language_default(), $params, $from, TRUE))
+			drupal_set_message('Error sending email message.', 'error');
 	drupal_goto('lab_migration/code');
 }
 /******************************************************************************/
