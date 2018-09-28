@@ -14,7 +14,8 @@ function lab_migration_bulk_approval_form($form, &$form_state)
 		'#ajax' => array(
 			'callback' => 'ajax_bulk_experiment_list_callback'
 		),
-		'#suffix' => '<div id="ajax_selected_lab"></div><div id="ajax_selected_lab_pdf"></div>'
+		'#suffix' => '<div id="ajax_selected_lab"></div><div id="ajax_selected_lab_pdf"></div>
+		<div id="ajax_selected_lab_regenerate_pdf"></div>'
 	);
 	$form['lab_actions'] = array(
 		'#type' => 'select',
@@ -158,6 +159,7 @@ function ajax_bulk_experiment_list_callback($form, $form_state)
 	{
 		$commands[] = ajax_command_html('#ajax_selected_lab', l('Download', 'lab_migration/full_download/lab/' . $lab_default_value) . ' ' . t('(Download all the approved and unapproved solutions of the entire lab)'));
 		$commands[] = ajax_command_html('#ajax_selected_lab_pdf', l('Download PDF', 'lab_migration/generate_lab/' . $lab_default_value . '/1') . ' ' . t('(Download PDF of all the approved and unapproved solution of the entire lab)'));
+		$commands[] = ajax_command_html('#ajax_selected_lab_regenerate_pdf', l('Regenerate PDF', 'lab_migration/delete_lab/' . $lab_default_value) . ' ' . t('(Manually Regenerate PDF of the entire lab)'));
 		$form['lab_actions']['#options'] = _bulk_list_lab_actions();
 		$form['lab_experiment_list']['#options'] = _ajax_bulk_get_experiment_list($lab_default_value);
 		$commands[] = ajax_command_data('#ajax_selected_lab', 'form_state_value_select', $form_state['values']['lab_experiment_list']);
@@ -174,6 +176,7 @@ function ajax_bulk_experiment_list_callback($form, $form_state)
 	{
 		$commands[] = ajax_command_html('#ajax_selected_lab', '');
 		$commands[] = ajax_command_html('#ajax_selected_lab_pdf', '');
+		$commands[] = ajax_command_html('#ajax_selected_lab_regenerate_pdf', '');
 		$commands[] = ajax_command_data('#ajax_selected_lab', 'form_state_value_select', $form_state['values']['lab']);
 		$commands[] = ajax_command_html('#ajax_selected_experiment', '');
 		$commands[] = ajax_command_html('#ajax_selected_lab_action', '');
@@ -567,13 +570,25 @@ Reason for dis-approval:
 			/****** sending email when everything done ******/
 			if ($email_subject)
 			{
-				/*$email_to = variable_get('lab_migration_emails', '') . ', ' . $user->mail; */
-				// $email_to = "contact@scilab.in" . ', ' . $user->mail;
-				$email_to = "prashantsinalkar@gmail.com";
-				$param['standard']['subject'] = $email_subject;
-				$param['standard']['body'] = $email_body;
-				if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
-					drupal_set_message('Error sending email message.', 'error');
+		/* sending email */
+		$user_data = user_load($proposal_data->uid);
+		$email_to = $user_data->mail;
+		$from = variable_get('lab_migration_from_email', '');
+		$bcc = variable_get('lab_migration_bcc_email', '');
+		$cc = variable_get('lab_migration_from_email', '');
+		$params['standard']['subject'] = $email_subject;
+		$params['standard']['body'] = $email_body;
+		$params['standard']['headers'] = array(
+			'From' => $from,
+			'MIME-Version' => '1.0',
+			'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+			'Content-Transfer-Encoding' => '8Bit',
+			'X-Mailer' => 'Drupal',
+			'Cc' => $cc,
+			'Bcc' => $bcc
+		);
+		if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $params, $from, TRUE))
+			drupal_set_message('Error sending email message.', 'error');
 			} //$email_subject
 		} //user_access('lab migration bulk manage code')
 		else
