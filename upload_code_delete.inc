@@ -59,14 +59,28 @@ function lab_migration_upload_code_delete()
 	{
 		drupal_set_message('Solution deleted.', 'status');
 		/* sending email */
-		$email_to = $user->mail . ', ' . variable_get('lab_migration_emails', '');
 		$param['solution_deleted_user']['lab_title'] = $proposal_data->lab_title;
 		$param['solution_deleted_user']['experiment_title'] = $experiment_data->title;
 		$param['solution_deleted_user']['solution_number'] = $solution_data->code_number;
 		$param['solution_deleted_user']['solution_caption'] = $solution_data->caption;
 		$param['solution_deleted_user']['user_id'] = $user->uid;
-		if (!drupal_mail('lab_migration', 'solution_deleted_user', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+
+		$email_to = $user->mail;
+		$from = variable_get('lab_migration_from_email', '');
+		$bcc = variable_get('lab_migration_bcc_email', '');
+		$cc = variable_get('lab_migration_from_email', '');
+		$params['solution_deleted_user']['headers'] = array(
+			'From' => $from,
+			'MIME-Version' => '1.0',
+			'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+			'Content-Transfer-Encoding' => '8Bit',
+			'X-Mailer' => 'Drupal',
+			'Cc' => $cc,
+			'Bcc' => $bcc
+		);
+		if (!drupal_mail('lab_migration', 'solution_deleted_user', $email_to, language_default(), $params, $from, TRUE))
 			drupal_set_message('Error sending email message.', 'error');
+
 	} //lab_migration_delete_solution($solution_data->id)
 	else
 	{

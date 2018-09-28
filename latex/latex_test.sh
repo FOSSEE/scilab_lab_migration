@@ -144,7 +144,7 @@ echo $col6 > $CURDIR/Figure_files
 		 if [[ $(file -b ../$col6) =~ JPEG || $(file -b ../$col6) =~ PNG || $(file -b ../$col6) =~ JPG  ]]; then
 		     echo \\curlable{Fig~$col3} >> $CURDIR/TEX
 		     echo \\begin{figure} >> $CURDIR/TEX
-		     echo \\includegraphics[scale=0.5]{../$col6}  >> $CURDIR/TEX
+		     echo \\includegraphics[scale=0.3]{../$col6}  >> $CURDIR/TEX
 		     echo \\caption{$col4} >> $CURDIR/TEX
 		     echo \\end{figure} >> $CURDIR/TEX
 		     echo >> $CURDIR/TEX

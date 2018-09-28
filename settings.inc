@@ -13,7 +13,7 @@ function lab_migration_settings_form($form, &$form_state)
 	);
 	$form['emails'] = array(
 		'#type' => 'textfield',
-		'#title' => t('Notification emails'),
+		'#title' => t('Notification emails CC'),
 		'#description' => t('A comma separated list of email addresses to receive notifications emails'),
 		'#size' => 50,
 		'#maxlength' => 255,
@@ -22,13 +22,23 @@ function lab_migration_settings_form($form, &$form_state)
 	);
 	$form['from_email'] = array(
 		'#type' => 'textfield',
-		'#title' => t('Outgoing from email address'),
+		'#title' => t('Outgoing from email address From mail'),
 		'#description' => t('Email address to be display in the from field of all outgoing messages'),
 		'#size' => 50,
 		'#maxlength' => 255,
 		'#required' => TRUE,
 		'#default_value' => variable_get('lab_migration_from_email', '')
 	);
+	$form['bcc_email'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Notification emails of BCC'),
+		'#description' => t('A comma separated list of email addresses to receive notifications emails'),
+		'#size' => 50,
+		'#maxlength' => 255,
+		'#required' => TRUE,
+		'#default_value' => variable_get('lab_migration_bcc_email', '')
+	);
+
 	$form['extensions']['source'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Allowed source file extensions'),
@@ -80,6 +90,7 @@ function lab_migration_settings_form_submit($form, &$form_state)
 	variable_set('lab_migration_minimum_exp_limit', $form_state['values']['minimum_exp_limit']);
 	variable_set('lab_migration_emails', $form_state['values']['emails']);
 	variable_set('lab_migration_from_email', $form_state['values']['from_email']);
+	variable_set('lab_migration_bcc_email', $form_state['values']['bcc_email']);
 	variable_set('lab_migration_source_extensions', $form_state['values']['source']);
 	variable_set('lab_migration_dependency_extensions', $form_state['values']['dependency']);
 	variable_set('lab_migration_result_extensions', $form_state['values']['result']);

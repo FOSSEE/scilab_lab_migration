@@ -127,11 +127,26 @@ function lab_migration_dependency_approval_form_submit($form, &$form_state)
 						/* email */
 						$email_subject = t('Dependency deleted');
 						$email_body = t('Dependency deleted : .') . $form_state['values']['dependency'];
-						$email_to = variable_get('lab_migration_emails', '') . ', ' . $user->mail;
-						$param['standard']['subject'] = $email_subject;
-						$param['standard']['body'] = $email_body;
-						if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+						$params['standard']['subject'] = $email_subject;
+						$params['standard']['body'] = $email_body;
+						$email_to = $user_data->mail;
+						$from = variable_get('lab_migration_from_email', '');
+						$bcc = variable_get('lab_migration_bcc_email', '');
+						$cc = variable_get('lab_migration_from_email', '');
+						$params['standard']['proposal_id'] = $proposal_id;
+						$params['standard']['user_id'] = $proposal_data->uid;
+						$params['standard']['headers'] = array(
+							'From' => $from,
+							'MIME-Version' => '1.0',
+							'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+							'Content-Transfer-Encoding' => '8Bit',
+							'X-Mailer' => 'Drupal',
+							'Cc' => $cc,
+							'Bcc' => $bcc
+						);
+						if (!drupal_mail('lab_migration', 'standard', $email_to, language_default(), $params, $from, TRUE))
 							drupal_set_message('Error sending email message.', 'error');
+
 					} //lab_migration_delete_dependency($form_state['values']['dependency'])
 				}
 			} //$form_state['values']['delete_dependency'] == "1"

@@ -164,10 +164,22 @@ function lab_migration_upload_dependency_form_submit($form, &$form_state)
 	{
 		drupal_set_message('Dependencies uploaded successfully.', 'status');
 		/* sending email */
-		$param['dependency_uploaded']['user_id'] = $user->uid;
-		$param['dependency_uploaded']['dependency_names'] = $dependency_names;
-		$email_to = $user->mail . ', ' . variable_get('lab_migration_emails', '');
-		if (!drupal_mail('lab_migration', 'dependency_uploaded', $email_to, language_default(), $param, variable_get('lab_migration_from_email', NULL), TRUE))
+		$params['dependency_uploaded']['user_id'] = $user->uid;
+		$params['dependency_uploaded']['dependency_names'] = $dependency_names;
+		$email_to = $user_data->mail;
+		$from = variable_get('lab_migration_from_email', '');
+		$bcc = variable_get('lab_migration_bcc_email', '');
+		$cc = variable_get('lab_migration_from_email', '');
+		$params['dependency_uploaded']['headers'] = array(
+			'From' => $from,
+			'MIME-Version' => '1.0',
+			'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+			'Content-Transfer-Encoding' => '8Bit',
+			'X-Mailer' => 'Drupal',
+			'Cc' => $cc,
+			'Bcc' => $bcc
+		);
+		if (!drupal_mail('lab_migration', 'dependency_uploaded', $email_to, language_default(), $params, $from, TRUE))
 			drupal_set_message('Error sending email message.', 'error');
 	} //$file_upload_counter > 0
 	drupal_goto('lab_migration/code/upload_dep');
