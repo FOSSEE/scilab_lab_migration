@@ -306,7 +306,7 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 		$from = variable_get('lab_migration_from_email', '');
 		$bcc = variable_get('lab_migration_bcc_email', '');
 		$cc = variable_get('lab_migration_from_email', '');
-		$params['proposal_approved']['headers'] = array(
+		$params['proposal_received']['headers'] = array(
 			'From' => $from,
 			'MIME-Version' => '1.0',
 			'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
