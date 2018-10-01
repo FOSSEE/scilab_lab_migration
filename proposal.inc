@@ -305,7 +305,7 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 		$email_to = $user->mail;
 		$from = variable_get('lab_migration_from_email', '');
 		$bcc = variable_get('lab_migration_bcc_email', '');
-		$cc = variable_get('lab_migration_from_email', '');
+		$cc = variable_get('lab_migration_emails', '');
 		$params['proposal_received']['headers'] = array(
 			'From' => $from,
 			'MIME-Version' => '1.0',
@@ -313,7 +313,7 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 			'Content-Transfer-Encoding' => '8Bit',
 			'X-Mailer' => 'Drupal',
 			'Cc' => $cc,
-			'Bcc' => $bcc
+			'Bcc' => $bcc,
 		);
 		if (!drupal_mail('lab_migration', 'proposal_received', $email_to, language_default(), $params, $from, TRUE))
 			drupal_set_message('Error sending email message.', 'error');

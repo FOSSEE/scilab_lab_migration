@@ -40,6 +40,7 @@ function lab_migration_mail($key, &$message, $params)
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['solution_proposal_approved']['user_id']);
+			$message['headers'] = $params['solution_proposal_approved']['headers'];
 			$message['subject'] = t('[!site_name] Lab Migration Solution Proposal Approval', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -75,6 +76,7 @@ Scilab Team', array(
 			break;
 		case 'solution_proposal_disapproved':
 			$user_data = user_load($params['solution_proposal_disapproved']['user_id']);
+			$message['headers'] = $params['solution_proposal_disapproved']['headers'];
 			$message['subject'] = t('[!site_name] Lab Migration Solution Disapproval', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -142,6 +144,7 @@ Scilab Team', array(
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_received']['user_id']);
+			$message['headers'] = $params['proposal_received']['headers'];
 			$message['subject'] = t('[!site_name] Your Lab migration proposal has been received', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -222,6 +225,7 @@ Scilab Team', array(
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_disapproved']['user_id']);
+			$message['headers'] = $params['proposal_disapproved']['headers'];
 			$message['subject'] = t('[!site_name] Your Lab migration proposal has been disapproved', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -302,6 +306,7 @@ Scilab Team', array(
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_approved']['user_id']);
+			$message['headers'] = $params['proposal_approved']['headers'];
 			$message['subject'] = t('[!site_name] Your Lab migration proposal has been approved', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -384,6 +389,7 @@ Scilab Team', array(
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['proposal_completed']['user_id']);
+			$message['headers'] = $params['proposal_completed']['headers'];
 			$message['subject'] = t('[!site_name] Congratulations for completion of the Lab migration', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -456,6 +462,7 @@ Scilab Team', array(
       	';
 			} //$experiment_data = $experiment_q->fetchObject()
 			$user_data = user_load($params['solution_proposal_received']['user_id']);
+			$message['headers'] = $params['solution_proposal_received']['headers'];
 			$message['subject'] = t('[!site_name] Your Lab migration solution proposal has been received', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -505,6 +512,7 @@ Scilab Team', array(
 			$solution_q = $query->execute();
 			$solution_data = $solution_q->fetchObject();
 			$user_data = user_load($params['solution_uploaded']['user_id']);
+			$message['headers'] = $params['solution_uploaded']['headers'];
 			$message['subject'] = t('[!site_name] You have uploaded solution', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -540,6 +548,7 @@ Scilab Team', array(
 			$solution_q = $query->execute();
 			$solution_data = $solution_q->fetchObject();
 			$user_data = user_load($params['solution_approved']['user_id']);
+			$message['headers'] = $params['solution_approved']['headers'];
 			$message['subject'] = t('[!site_name] Your uploaded solution has been approved', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -568,6 +577,7 @@ Scilab Team', array(
 			break;
 		case 'solution_disapproved':
 			$user_data = user_load($params['solution_disapproved']['user_id']);
+			$message['headers'] = $params['solution_disapproved']['headers'];
 			$message['subject'] = t('[!site_name] Your uploaded solution has been disapproved', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -598,6 +608,7 @@ Scilab Team', array(
 			break;
 		case 'solution_deleted_user':
 			$user_data = user_load($params['solution_deleted_user']['user_id']);
+			$message['headers'] = $params['solution_deleted_user']['headers'];
 			$message['subject'] = t('[!site_name] User has deleted pending solution', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -629,6 +640,7 @@ Scilab Team', array(
 		case 'dependency_uploaded':
 			$user_data = user_load($params['dependency_uploaded']['user_id']);
 			$dependency_files = implode(',', $params['dependency_uploaded']['dependency_names']);
+			$message['headers'] = $params['dependency_uploaded']['headers'];
 			$message['subject'] = t('[!site_name] You have uploaded dependency file', array(
 				'!site_name' => variable_get('site_name', '')
 			), array(
@@ -655,6 +667,7 @@ Scilab Team', array(
 			break;
 		case 'standard':
 			$message['subject'] = $params['standard']['subject'];
+			$message['headers'] = $params['standard']['headers'];
 			$message['body'] = $params['standard']['body'];
 			break;
 	} //$key
