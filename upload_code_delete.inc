@@ -55,16 +55,16 @@ function lab_migration_upload_code_delete()
 		return;
 	} //!$proposal_data
 	/* deleting solution files */
+		$params['solution_deleted_user']['lab_title'] = $proposal_data->lab_title;
+		$params['solution_deleted_user']['experiment_title'] = $experiment_data->title;
+		$params['solution_deleted_user']['solution_number'] = $solution_data->code_number;
+		$params['solution_deleted_user']['solution_caption'] = $solution_data->caption;
+		$params['solution_deleted_user']['user_id'] = $user->uid;
+		//var_dump($param['solution_deleted_user']);die;
 	if (lab_migration_delete_solution($solution_data->id))
 	{
 		drupal_set_message('Solution deleted.', 'status');
 		/* sending email */
-		$param['solution_deleted_user']['lab_title'] = $proposal_data->lab_title;
-		$param['solution_deleted_user']['experiment_title'] = $experiment_data->title;
-		$param['solution_deleted_user']['solution_number'] = $solution_data->code_number;
-		$param['solution_deleted_user']['solution_caption'] = $solution_data->caption;
-		$param['solution_deleted_user']['user_id'] = $user->uid;
-
 		$email_to = $user->mail;
 		$from = variable_get('lab_migration_from_email', '');
 		$bcc = variable_get('lab_migration_bcc_email', '');
