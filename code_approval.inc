@@ -293,8 +293,8 @@ function lab_migration_code_approval_form_submit($form, &$form_state)
 		);
 		db_query($query, $args);
 		/* sending email */
-		$param['solution_approved']['solution_id'] = $solution_id;
-		$param['solution_approved']['user_id'] = $user_data->uid;
+		$params['solution_approved']['solution_id'] = $solution_id;
+		$params['solution_approved']['user_id'] = $user_data->uid;
 		$email_to = $user_data->mail;
 		$from = variable_get('lab_migration_from_email', '');
 		$bcc = variable_get('lab_migration_bcc_email', '');
