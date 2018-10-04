@@ -250,6 +250,11 @@ function lab_migration_upload_code_form($form, &$form_state)
 		'#title' => t('Scilab version used'),
 		'#options' => array(
 			0 => '--- Please select ---',
+			'6.0.1' => '6.0.1',
+			'6.0.0' => '6.0.0',
+			'5.5.2' => '5.5.2',
+			'5.5.1' => '5.5.1',
+			'5.5.0' => '5.5.0',
 			'5.4.1' => '5.4.1',
 			'5.3.3' => '5.3.3',
 			'Older' => 'Older Version'
