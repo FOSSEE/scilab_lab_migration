@@ -9,17 +9,17 @@ CURDIR=$PWD;
 
 if [ -a /$CURDIR/TEX ]
 then 
-rm TEX
+  rm TEX
 fi
 
 if [ -a /$CURDIR/TEX_dep ]
 then 
-rm TEX_dep
+  rm TEX_dep
 fi
 
 if [ -a /$CURDIR/TEX_new ]
 then 
-rm TEX_new
+  rm TEX_new
 fi
 
 
@@ -72,10 +72,10 @@ echo \\vspace*{3cm}>>$CURDIR/TEX
 
 echo \\tableofcontents >>$CURDIR/TEX
 echo \\listofcode >>$CURDIR/TEX
-	if  grep -c ".jpg\|.JPEG\|.png\|.jpeg\|.JPG" $Data_all
-	then
-		echo \\listoffigures >>$CURDIR/TEX
-	fi
+    if  grep -c ".jpg\|.JPEG\|.png\|.jpeg\|.JPG" $Data_all
+    then
+        echo \\listoffigures >>$CURDIR/TEX
+    fi
 echo>> $CURDIR/TEX
 j=0;
 k=1;
@@ -83,73 +83,72 @@ k=1;
 sort -t '.' -k 1,1n -k 2,2n -k 3,3n  -k 4,4n $Data_all > database_sort
 
 while IFS=# read col1 col2 col3 col4 col5 col6 col7 col8 col9; do
-col2=${col2/&/\\&};
-col3=${col3/&/\\&};
-col4=${col4/&/\\&};
-col8=${col8/&/\\&};
-##################
-col7=${col7/&/\\&};
-col8=${col8/&/\\&};
-col9=${col9/&/\\&};
-#################
+  col2=${col2/&/\\&};
+  col3=${col3/&/\\&};
+  col4=${col4/&/\\&};
+  col8=${col8/&/\\&};
+  ##################
+  col7=${col7/&/\\&};
+  col8=${col8/&/\\&};
+  col9=${col9/&/\\&};
+  #################
 
-chap_diff=$(($col1 - $j))
+  chap_diff=$(($col1 - $j))
 if [ $chap_diff -eq 1 ]; then
-	echo \\chapter{$col2}>>$CURDIR/TEX
-	echo >>$CURDIR/TEX
+  echo \\chapter{$col2}>>$CURDIR/TEX
+  echo >>$CURDIR/TEX
 fi
 
 if [ $chap_diff -gt 1 ]; then
-        echo >>$CURDIR/TEX
-	echo \\setcounter{chapter}{$(($col1-1))}>>$CURDIR/TEX
-	echo \\chapter{$col2}>>$CURDIR/TEX
-	echo >>$CURDIR/TEX
-
+  echo >>$CURDIR/TEX
+  echo \\setcounter{chapter}{$(($col1-1))}>>$CURDIR/TEX
+  echo \\chapter{$col2}>>$CURDIR/TEX
+  echo >>$CURDIR/TEX
 fi
 
 if [ $col7 != D ]
 then
-echo \\vspace*{10mm}>>$CURDIR/TEX
+  echo \\vspace*{10mm}>>$CURDIR/TEX
 fi
 
   
 if [ $col7 = S ]
 then
- echo \\curlable{Solution~$col3} >> $CURDIR/TEX
- echo \\begin{code} >> $CURDIR/TEX
- echo \\tcaption{$col4}{$col4} >> $CURDIR/TEX
- echo \\lstinputlisting{../$col6}  >> $CURDIR/TEX
- echo \\end{code} >> $CURDIR/TEX
- echo >>$CURDIR/TEX
+  echo \\curlable{Solution~$col3} >> $CURDIR/TEX
+  echo \\begin{code} >> $CURDIR/TEX
+  echo \\tcaption{$col4}{$col4} >> $CURDIR/TEX
+  echo \\lstinputlisting{../$col6}  >> $CURDIR/TEX
+  echo \\end{code} >> $CURDIR/TEX
+  echo >>$CURDIR/TEX
 fi
 
 if [ $col7 =  D ]
 then
 #echo check Appendix \\ref{AP:$col9} for dependency \$$col5\$ >> $CURDIR/TEX
-echo check Appendix \\ref{AP:$col9} for dependency:  {\\begin{alltt} \\hspace{2mm}  $col5 \\end{alltt}} >> $CURDIR/TEX
-echo  >> $CURDIR/TEX
+  echo check Appendix \\ref{AP:$col9} for dependency:  {\\begin{alltt} \\hspace{2mm}  $col5 \\end{alltt}} >> $CURDIR/TEX
+  echo  >> $CURDIR/TEX
 fi
 
 
 if [ $col7 = X ]
 then
-echo This code can be downloaded from the website wwww.scilab.in >> $CURDIR/TEX
+  echo This code can be downloaded from the website wwww.scilab.in >> $CURDIR/TEX
 fi
 
 if [ $col7 =  R  ]
 then 
 echo $col6 > $CURDIR/Figure_files
-	if  grep -c ".jpg\|.JPEG\|.png\|.jpeg\|.JPG" $CURDIR/Figure_files 
-	then
-		 if [[ $(file -b ../$col6) =~ JPEG || $(file -b ../$col6) =~ PNG || $(file -b ../$col6) =~ JPG  ]]; then
-		     echo \\curlable{Fig~$col3} >> $CURDIR/TEX
-		     echo \\begin{figure} >> $CURDIR/TEX
-		     echo \\includegraphics[width=5in]{../$col6}  >> $CURDIR/TEX
-		     echo \\caption{$col4} >> $CURDIR/TEX
-		     echo \\end{figure} >> $CURDIR/TEX
-		     echo >> $CURDIR/TEX
-		fi
-	fi
+    if  grep -c ".jpg\|.JPEG\|.png\|.jpeg\|.JPG" $CURDIR/Figure_files 
+    then
+         if [[ $(file -b ../$col6) =~ JPEG || $(file -b ../$col6) =~ PNG || $(file -b ../$col6) =~ JPG  ]]; then
+             echo \\curlable{Fig~$col3} >> $CURDIR/TEX
+             echo \\begin{figure} >> $CURDIR/TEX
+             echo \\includegraphics[width=5in]{../$col6}  >> $CURDIR/TEX
+             echo \\caption{$col4} >> $CURDIR/TEX
+             echo \\end{figure} >> $CURDIR/TEX
+             echo >> $CURDIR/TEX
+        fi
+    fi
 
 fi
 
@@ -161,36 +160,60 @@ rm -f Figure_files
 if [  -s $Dep_dat ]
 then
 
-i=1;
-echo \\chapter*{Appendix} >>$CURDIR/TEX
+  i=1;
+  echo \\chapter*{Appendix} >>$CURDIR/TEX
 
-while IFS=# read col1 col2 col3 col4; do
-col3=${col3/&/\\&};
-echo \\curlable{AP~$i}>> $CURDIR/TEX;
-echo $col2 > $CURDIR/image_files
-	if grep -c ".jpg\|.JPEG\|.png\|.jpeg\|.JPG" $CURDIR/image_files
-	then
-	       	 echo \\begin{figure} >> $CURDIR/TEX
-                 echo \\label{AP:$col4} >> $CURDIR/TEX           
-                 echo \\includegraphics[width=5in]{../$col2}  >> $CURDIR/TEX
-                 echo \\tcaption {$col3}{$col3} >> $CURDIR/TEX          
-                 echo \\end{figure} >> $CURDIR/TEX
-                 echo >> $CURDIR/TEX
+  while IFS=# read col1 col2 col3 col4; do
+    col3=${col3/&/\\&};
+    echo \\curlable{AP~$i}>> $CURDIR/TEX;
+    echo $col2 > $CURDIR/image_files
+    if grep -c ".jpg\|.JPEG\|.png\|.jpeg\|.JPG" $CURDIR/image_files
+      then
+        echo \\begin{figure} >> $CURDIR/TEX
+        echo \\label{AP:$col4} >> $CURDIR/TEX
+        echo \\includegraphics[width=5in]{../$col2}  >> $CURDIR/TEX
+        echo \\tcaption {$col3}{$col3} >> $CURDIR/TEX
+        echo \\end{figure} >> $CURDIR/TEX
+        echo >> $CURDIR/TEX
+    elif grep -c ".tiff\|.TIFF\|.tif\|.TIF" $CURDIR/image_files
+      then
+        if [ ! -d $CURDIR/tmptif ]
+        then
+            mkdir -p $CURDIR/tmptif
+        fi
 
-	else
-		echo \\begin{code} >> $CURDIR/TEX;
-                echo \\label{AP:$col4} >> $CURDIR/TEX
-                echo \\lstinputlisting{../$col2}  >> $CURDIR/TEX
-                echo \\tcaption {$col3}{$col3} >> $CURDIR/TEX
-                echo \\end{code} >> $CURDIR/TEX
-                echo >> $CURDIR/TEX
+        if  grep -c ".tif\|.TIF" $CURDIR/Dependency_files
+        then
+          filename=$(basename "../$col4")
+          filename=${filename%.*}
+          echo `convert ../$col4 $CURDIR/tmptif/$filename.png`
 
-	fi
+          echo \\curlable{AP~$i} >> $CURDIR/TEX;
+          echo \\begin{code} >> $CURDIR/TEX;
+          echo \\includegraphics[width=5in]{$CURDIR/tmptif/$filename.png}  >> $CURDIR/TEX
+          echo \\tcaption {$col4}{$col4} >> $CURDIR/TEX
+          echo \\end{code} >> $CURDIR/TEX
+          echo >> $CURDIR/TEX
+          if $CURDIR/tmptif/$filename.png
+          then
+            rm -f $CURDIR/tmptif/$filename.png
+          fi
+        fi
+
+      else
+        echo \\begin{code} >> $CURDIR/TEX;
+        echo \\label{AP:$col4} >> $CURDIR/TEX
+        echo \\lstinputlisting{../$col2}  >> $CURDIR/TEX
+        echo \\tcaption {$col3}{$col3} >> $CURDIR/TEX
+        echo \\end{code} >> $CURDIR/TEX
+        echo >> $CURDIR/TEX
+
+      fi
 
 
-let "i+=1"
-done < $Dep_dat
-rm -f image_files
+    let "i+=1"
+  done < $Dep_dat
+  rm -f image_files
 fi
 
 cat Initial_body  TEX  > TEX_final.tex
