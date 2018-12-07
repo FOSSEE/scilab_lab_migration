@@ -744,19 +744,7 @@ function lab_migration_proposal_edit_form($form, &$form_state)
 	$form['department'] = array(
 		'#type' => 'select',
 		'#title' => t('Department/Branch'),
-		'#options' => array(
-			'' => 'Please select...',
-			'Computer Engineering' => 'Computer Engineering',
-			'Electrical Engineering' => 'Electrical Engineering',
-			'Electronics Engineering' => 'Electronics Engineering',
-			'Chemical Engineering' => 'Chemical Engineering',
-			'Instrumentation Engineering' => 'Instrumentation Engineering',
-			'Mechanical Engineering' => 'Mechanical Engineering',
-			'Civil Engineering' => 'Civil Engineering',
-			'Physics' => 'Physics',
-			'Mathematics' => 'Mathematics',
-			'Others' => 'Others'
-		),
+		'#options' => _lm_list_of_departments(),
 		'#required' => TRUE,
 		'#default_value' => $proposal_data->department
 	);
