@@ -64,9 +64,11 @@ function lab_migration_solution_proposal_form($form,&$form_state)
 	$query->fields('lab_migration_experiment');
 	$query->condition('proposal_id', $proposal_id);
 	$experiment_q = $query->execute();
+	$i=1;
 	while ($experiment_data = $experiment_q->fetchObject())
 	{
-		$experiment_html .= $experiment_data->title . "<br/>";
+		$experiment_html .= $i.") ".$experiment_data->title . "<br/>";
+		$i++;
 	} //$experiment_data = $experiment_q->fetchObject()
 	$form['experiment'] = array(
 		'#type' => 'item',
@@ -156,7 +158,7 @@ function lab_migration_solution_proposal_form_validate($form, &$form_state)
 		drupal_goto('lab_migration/open_proposal');
 	} //$solution_provider_q->fetchObject()
 }
-function lab_migration_solution_proposal_form_submit($form_state, &$form_state)
+function lab_migration_solution_proposal_form_submit($form, &$form_state)
 {
 	global $user;
 	$proposal_id = (int) arg(2);
