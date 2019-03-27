@@ -156,7 +156,7 @@ function lab_migration_solution_proposal_form_validate($form, &$form_state)
 		drupal_goto('lab_migration/open_proposal');
 	} //$solution_provider_q->fetchObject()
 }
-function lab_migration_solution_proposal_form_submit($form_state, &$form_state)
+function lab_migration_solution_proposal_form_submit($form, &$form_state)
 {
 	global $user;
 	$proposal_id = (int) arg(2);
