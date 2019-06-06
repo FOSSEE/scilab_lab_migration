@@ -11,6 +11,24 @@ function lab_migration_settings_form($form, &$form_state)
 		'#required' => TRUE,
 		'#default_value' => variable_get('lab_migration_minimum_exp_limit', '')
 	);
+	$form['max_result_file_upload_limit'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Lab migration code result file upload limit'),
+		'#description' => t('insert only number not more than 15'),
+		'#size' => 2,
+		'#maxlength' => 5,
+		'#required' => TRUE,
+		'#default_value' => variable_get('result_max_no_file_upload', '')
+	);
+	$form['max_xcos_file_upload_limit'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Lab migration code xcos file limit'),
+		'#description' => t('insert only number not more than 15'),
+		'#size' => 2,
+		'#maxlength' => 5,
+		'#required' => TRUE,
+		'#default_value' => variable_get('xcos_max_no_file_upload', '')
+	);
 	$form['emails'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Notification emails CC'),
@@ -95,5 +113,7 @@ function lab_migration_settings_form_submit($form, &$form_state)
 	variable_set('lab_migration_dependency_extensions', $form_state['values']['dependency']);
 	variable_set('lab_migration_result_extensions', $form_state['values']['result']);
 	variable_set('lab_migration_xcos_extensions', $form_state['values']['xcos']);
+	variable_set('result_max_no_file_upload', $form_state['values']['max_result_file_upload_limit']);
+	variable_set('xcos_max_no_file_upload', $form_state['values']['max_xcos_file_upload_limit']);
 	drupal_set_message(t('Settings updated'), 'status');
 }
