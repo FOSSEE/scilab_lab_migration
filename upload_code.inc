@@ -285,15 +285,17 @@ function lab_migration_upload_code_form($form, &$form_state)
 	);
 	$form['dep_files'] = array(
 		'#type' => 'item',
-		'#title' => t('Dependency Files')
+		'#title' => t('Dependency Files'),
+		'#collapsible' => true,
+		'#collapsed' => true
 	);
 	/************ START OF EXISTING DEPENDENCIES **************/
 	/* existing dependencies */
 	$form['existing_depfile'] = array(
 		'#type' => 'fieldset',
 		'#title' => t('Use Already Existing Dependency Files'),
-		'#collapsible' => FALSE,
-		'#collapsed' => FALSE,
+		'#collapsible' => true,
+		'#collapsed' => true,
 		'#prefix' => '<div id="existing-depfile-wrapper">',
 		'#suffix' => '</div>',
 		'#tree' => TRUE
@@ -338,70 +340,34 @@ function lab_migration_upload_code_form($form, &$form_state)
 	$form['result'] = array(
 		'#type' => 'fieldset',
 		'#title' => t('Result Files'),
-		'#collapsible' => FALSE,
-		'#collapsed' => FALSE
+		'#collapsible' => true,
+		'#collapsed' => true
 	);
-	$form['result']['result1'] = array(
-		'#type' => 'file',
-		'#title' => t('Upload result file'),
-		'#size' => 48,
-		'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_result_extensions', '')
-	);
-	$form['result']['result2'] = array(
-		'#type' => 'file',
-		'#title' => t('Upload result file'),
-		'#size' => 48,
-		'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_result_extensions', '')
-	);
-	$form['result']['result3'] = array(
-		'#type' => 'file',
-		'#title' => t('Upload result file'),
-		'#size' => 48,
-		'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_result_extensions', '')
-	);
-	$form['result']['result4'] = array(
-		'#type' => 'file',
-		'#title' => t('Upload result file'),
-		'#size' => 48,
-		'#attributes' => array('multiple' => 'multiple'),
-		'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_result_extensions', '')
-	);
-	$form['result']['result5'] = array(
-		'#type' => 'file',
-		'#title' => t('Upload result file'),
-		'#size' => 48,
-		'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_result_extensions', '')
-	);
-	$form['result']['result6'] = array(
-		'#type' => 'file',
-		'#title' => t('Upload result file'),
-		'#size' => 48,
-		'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_result_extensions', '')
-	);
-	$form['result']['result7'] = array(
-		'#type' => 'file',
-		'#title' => t('Upload result file'),
-		'#size' => 48,
-		'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_result_extensions', '')
-	);
+	$result_max_upload = variable_get('result_max_no_file_upload', '');
+
+  for ($rcounter = 1; $rcounter <= $result_max_upload; $rcounter++){
+    $form['result']['result'. $rcounter] = array(
+			'#type' => 'file',
+			'#title' => t('Upload result file ' .$rcounter),
+			'#size' => 48,
+			'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_result_extensions', '')
+		);
+  }
 	$form['xcos'] = array(
 		'#type' => 'fieldset',
 		'#title' => t('XCOS Files'),
-		'#collapsible' => FALSE,
-		'#collapsed' => FALSE
+		'#collapsible' => true,
+		'#collapsed' => true
 	);
-	$form['xcos']['xcos1'] = array(
-		'#type' => 'file',
-		'#title' => t('Upload xcos file'),
-		'#size' => 48,
-		'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_xcos_extensions', '')
-	);
-	$form['xcos']['xcos2'] = array(
-		'#type' => 'file',
-		'#title' => t('Upload xcos file'),
-		'#size' => 48,
-		'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_xcos_extensions', '')
-	);
+	$xcos_max_upload = variable_get('xcos_max_no_file_upload', '');
+	for ($xcounter = 1; $xcounter <= $xcos_max_upload; $xcounter++){
+		$form['xcos']['xcos'.$xcounter] = array(
+			'#type' => 'file',
+			'#title' => t('Upload xcos file '.$xcounter),
+			'#size' => 48,
+			'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_xcos_extensions', '')
+		);
+	}
 	$form['submit'] = array(
 		'#type' => 'submit',
 		'#value' => t('Submit')
