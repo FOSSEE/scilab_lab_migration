@@ -282,7 +282,7 @@ function ajax_bulk_solution_files_callback($form, $form_state)
 				$dependency_files_data = $dependency_files_q->fetchObject();
 				$solution_file_type = 'Dependency file';
 				$solution_files_rows[] = array(
-					l($dependency_files_data->filename, 'lab_migration/download/dependency/' . $dependency_files_data->dependency_id),
+					l($dependency_files_data->filename, 'lab_migration/download/dependency/' . $dependency_files_data->id),
 					$solution_file_type
 				);
 			} //$dependency_data = $dependency_q->fetchObject()
