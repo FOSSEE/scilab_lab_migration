@@ -175,14 +175,14 @@ then
         echo \\tcaption {$col3}{$col3} >> $CURDIR/TEX
         echo \\end{figure} >> $CURDIR/TEX
         echo >> $CURDIR/TEX
-    elif grep -c ".tiff\|.TIFF\|.tif\|.TIF\|.bmp|.BMP" $CURDIR/image_files
+    elif grep -c ".tiff\|.TIFF\|.tif\|.TIF\|.bmp\|.BMP" $CURDIR/image_files
       then
         if [ ! -d $CURDIR/tmptif ]
         then
             mkdir -p $CURDIR/tmptif
         fi
 
-        if  grep -c ".tif\|.TIF\|.bmp|.BMP" $CURDIR/Dependency_files
+        if  grep -c ".tif\|.TIF\|.bmp\|.BMP" $CURDIR/Dependency_files
         then
           filename=$(basename "../$col4")
           filename=${filename%.*}
