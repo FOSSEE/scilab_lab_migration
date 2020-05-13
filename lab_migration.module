@@ -512,6 +512,26 @@ function lab_migration_menu()
 		"type" => MENU_CALLBACK,
 		'file' => 'dependency_approval.inc'
 	);
+	$items['lab_migration/lab_title/autocomplete'] = array(
+		'page callback' => '_module_lab_name_autocomplete',
+		'access arguments' => array('lab migration create proposal'),
+		'type' => MENU_CALLBACK
+	);
+	$items['lab_migration/lab_exp/autocomplete'] = array(
+		'page callback' => '_module_lab_experiment_autocomplete',
+		'access arguments' => array('lab migration create proposal'),
+		'type' => MENU_CALLBACK
+	);
+	$items['download/syllabus_copy_file'] = array(
+		'title' => 'Syllabus Copy Download',
+		'description' => 'Syllabus Copy Download',
+		'page callback' => 'lab_migration_download_syllabus_copy',
+		'access arguments' => array(
+			'lab migration bulk manage code'
+		),
+		'type' => MENU_CALLBACK,
+		'file' => 'download.inc'
+	);
 	return $items;
 }
 /**
@@ -820,6 +840,39 @@ function _lm_list_of_states()
 		$states[$states_list_data->state] = $states_list_data->state;
 	} //$states_list_data = $states_list->fetchObject()
 	return $states;
+}
+
+function _module_lab_name_autocomplete($string) {
+	$matches = array();
+
+	// Select rows that match the string
+	$query = "SELECT lab_title FROM {lab_migration_proposal} WHERE lab_title LIKE :string AND approval_status = 3 ORDER BY
+	approval_date ASC";
+	$result = db_query($query, array(':string'=> '%%' . trim($string) . '%%'));
+
+	// add matches to $matches
+	foreach ($result as $row) {
+	$matches[$row->lab_title] = check_plain($row->lab_title);
+	}
+
+	// return for JS
+	drupal_json_output($matches);
+}
+
+function _module_lab_experiment_autocomplete($string) {
+	$matches = array();
+
+	// Select rows that match the string
+	$query = "SELECT title FROM {lab_migration_experiment} WHERE title LIKE :string ORDER BY title ASC";
+	$result = db_query($query, array(':string'=> '%%' . trim($string) . '%%'));
+
+	// add matches to $matches
+	foreach ($result as $row) {
+	$matches[$row->title] = check_plain($row->title);
+	}
+
+	// return for JS
+	drupal_json_output($matches);
 }
 
 /*function lab_migration_init() {
