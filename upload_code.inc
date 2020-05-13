@@ -403,6 +403,9 @@ function lab_migration_upload_code_form_validate($form, &$form_state)
 		form_set_error('os_used', t('Please select the operating system used.'));
 	if (!$form_state['values']['scilab_version'])
 		form_set_error('scilab_version', t('Please select the scilab version used.'));
+	if (strlen($form_state['values']['code_caption']) > 30){
+		form_set_error('code_caption', t('Caption can not be more than 30 charaters'));
+	}
 	if (isset($_FILES['files']))
 	{
 		/* check if atleast one source or result file is uploaded */
