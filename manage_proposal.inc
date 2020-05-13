@@ -280,6 +280,16 @@ function lab_migration_proposal_approval_form($form, &$form_state)
 		'#markup' => $proposal_data->university,
 		'#title' => t('University/Institute')
 	);
+	$form['semester_year'] = array(
+		'#type' => 'item',
+		'#title' => t('Year'),
+		'#markup' => $proposal_data->semester_year,
+	);
+	$form['semester_details'] = array(
+		'#type' => 'item',
+		'#title' => t('Semester details'),
+		'#markup' => $proposal_data->semester_details,
+	);
 	$form['lab_title'] = array(
 		'#type' => 'item',
 		'#markup' => $proposal_data->lab_title,
@@ -303,6 +313,13 @@ function lab_migration_proposal_approval_form($form, &$form_state)
 		'#markup' => $experiment_list,
 		'#title' => t('Experiments')
 	);
+	if ($proposal_data->syllabus_copy_file_path != "None")
+	{
+		$form['syllabus_copy_file_path'] = array(
+			'#type' => 'markup',
+			'#markup' => l('Click here to download uploaded syllabus copy', 'download/syllabus_copy_file/' . $proposal_id) . "<br><br>"
+		);
+	} //$row->samplefilepath != "None"
 	if ($proposal_data->solution_provider_uid == 0)
 	{
 		$solution_provider = "User will not provide solution, we will have to provide solution";
@@ -340,7 +357,12 @@ function lab_migration_proposal_approval_form($form, &$form_state)
 	);
 	$form['message'] = array(
 		'#type' => 'textarea',
-		'#title' => t('Reason for disapproval')
+		'#title' => t('Reason for disapproval'),
+		'#states' => array(
+			'visible' => array(
+			 ':input[name="approval"]' => array('value' => '2'),
+				)
+			)
 	);
 	$form['submit'] = array(
 		'#type' => 'submit',

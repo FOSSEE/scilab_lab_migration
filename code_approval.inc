@@ -148,6 +148,22 @@ function lab_migration_code_approval_form($form, &$form_state)
 		'#markup' => $solution_data->code_number,
 		'#title' => t('Code No')
 	);
+	$form['exp_solution_reference'] = array(
+		'#type' => 'item',
+		'#markup' => $solution_data->exp_solution_reference,
+		'#title' => t('Submiited reference link for experiment, which can be used to cross check the output of experiment'),
+	);
+	if($solution_data->declaration == 1){
+		$declaration = t("This experiment is not copied from anywhere");
+	}
+	else {
+		$declaration = "Not available";
+	}
+	$form['declaration'] = array(
+		'#type' => 'item',
+		'#markup' => $declaration,
+		'#title' => t('Declaration')
+	);
 	$form['code_caption'] = array(
 		'#type' => 'item',
 		'#markup' => $solution_data->caption,
