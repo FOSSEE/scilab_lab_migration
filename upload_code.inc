@@ -250,6 +250,8 @@ function lab_migration_upload_code_form($form, &$form_state)
 		'#title' => t('Scilab version used'),
 		'#options' => array(
 			0 => '--- Please select ---',
+			'6.1.0' => '6.1.0',
+			'6.0.2' => '6.0.2',
 			'6.0.1' => '6.0.1',
 			'6.0.0' => '6.0.0',
 			'5.5.2' => '5.5.2',
@@ -264,6 +266,19 @@ function lab_migration_upload_code_form($form, &$form_state)
 	$form['toolbox_used'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Toolbox used (If any)')
+	);
+	$form['exp_solution_reference'] = array(
+		'#type' => 'textarea',
+		'#title' => t('Provide a reference link for experiment, which can be used to cross check the output of experiment'),
+		'#required' => TRUE
+	);
+	$form['declaration'] = array(
+		'#type' => 'checkboxes',
+		'#title' => t('Declaration'),
+		'#options' => array(
+			'1' => t('This experiment is not copied from anywhere')
+		),
+		'#required' => TRUE
 	);
 	$form['code_warning'] = array(
 		'#type' => 'item',
@@ -345,14 +360,14 @@ function lab_migration_upload_code_form($form, &$form_state)
 	);
 	$result_max_upload = variable_get('result_max_no_file_upload', '');
 
-  for ($rcounter = 1; $rcounter <= $result_max_upload; $rcounter++){
-    $form['result']['result'. $rcounter] = array(
+	for ($rcounter = 1; $rcounter <= $result_max_upload; $rcounter++){
+		$form['result']['result'. $rcounter] = array(
 			'#type' => 'file',
 			'#title' => t('Upload result file ' .$rcounter),
 			'#size' => 48,
 			'#description' => t('Separate filenames with underscore. No spaces or any special characters allowed in filename.') . '<br />' . t('Allowed file extensions : ') . variable_get('lab_migration_result_extensions', '')
 		);
-  }
+	}
 	$form['xcos'] = array(
 		'#type' => 'fieldset',
 		'#title' => t('XCOS Files'),
@@ -421,7 +436,8 @@ function lab_migration_upload_code_form_validate($form, &$form_state)
 						break;
 				} //$file_type
 				$allowed_extensions = explode(',', $allowed_extensions_str);
-				$temp_extension = end(explode('.', strtolower($_FILES['files']['name'][$file_form_name])));
+				$temp_extension_1 = explode('.', strtolower($_FILES['files']['name'][$file_form_name]));
+				$temp_extension = end($temp_extension_1);
 				if (!in_array($temp_extension, $allowed_extensions))
 					form_set_error($file_form_name, t('Only file with ' . $allowed_extensions_str . ' extensions can be uploaded.'));
 				if ($_FILES['files']['size'][$file_form_name] <= 0)
@@ -531,7 +547,12 @@ function lab_migration_upload_code_form_submit($form, &$form_state)
 	if (!is_dir($root_path . $dest_path))
 		mkdir($root_path . $dest_path);
 	/* creating solution database entry */
-	$query = "INSERT INTO {lab_migration_solution} (experiment_id, approver_uid, code_number, caption, approval_date, approval_status, timestamp, os_used, scilab_version, toolbox_used) VALUES (:experiment_id, :approver_uid, :code_number, :caption, :approval_date, :approval_status, :timestamp, :os_used, :scilab_version, :toolbox_used)";
+	$query = "INSERT INTO {lab_migration_solution} (experiment_id, approver_uid,
+	code_number, caption, approval_date, approval_status, timestamp, os_used,
+	scilab_version, toolbox_used, exp_solution_reference, declaration) VALUES
+	(:experiment_id, :approver_uid, :code_number, :caption, :approval_date,
+	:approval_status, :timestamp, :os_used, :scilab_version, :toolbox_used,
+	:exp_solution_reference, :declaration)";
 	$args = array(
 		":experiment_id" => $experiment_id,
 		":approver_uid" => 0,
@@ -542,7 +563,9 @@ function lab_migration_upload_code_form_submit($form, &$form_state)
 		":timestamp" => time(),
 		":os_used" => $form_state['values']['os_used'],
 		":scilab_version" => $form_state['values']['scilab_version'],
-		":toolbox_used" => $form_state['values']['toolbox_used']
+		":toolbox_used" => $form_state['values']['toolbox_used'],
+		":exp_solution_reference" => $form_state['values']['exp_solution_reference'],
+		":declaration" => $form_state['values']['declaration']
 	);
 	$solution_id = db_query($query, $args, array(
 		'return' => Database::RETURN_INSERT_ID
@@ -555,8 +578,8 @@ function lab_migration_upload_code_form_submit($form, &$form_state)
 		if ($row > 0)
 		{
 			/* insterting into database */
-			$query = "INSERT INTO {lab_migration_solution_dependency} (solution_id, dependency_id)
-        VALUES (:solution_id, :dependency_id)";
+			$query = "INSERT INTO {lab_migration_solution_dependency}
+			(solution_id, dependency_id) VALUES (:solution_id, :dependency_id)";
 			$args = array(
 				":solution_id" => $solution_id,
 				":dependency_id" => $row
@@ -589,8 +612,10 @@ function lab_migration_upload_code_form_submit($form, &$form_state)
 			if (move_uploaded_file($_FILES['files']['tmp_name'][$file_form_name], $root_path . $dest_path . $_FILES['files']['name'][$file_form_name]))
 			{
 				/* for uploaded files making an entry in the database */
-				$query = "INSERT INTO {lab_migration_solution_files} (solution_id, filename, filepath, filemime, filesize, filetype, timestamp)
-          VALUES (:solution_id, :filename, :filepath, :filemime, :filesize, :filetype, :timestamp)";
+				$query = "INSERT INTO {lab_migration_solution_files}
+				(solution_id, filename, filepath, filemime, filesize, filetype,
+				timestamp) VALUES (:solution_id, :filename, :filepath,
+				:filemime, :filesize, :filetype, :timestamp)";
 				$args = array(
 					":solution_id" => $solution_id,
 					":filename" => $_FILES['files']['name'][$file_form_name],
