@@ -296,18 +296,18 @@ function lab_migration_proposal_approval_form($form, &$form_state)
 		'#title' => t('Title of the Lab')
 	);
 	/* get experiment details */
-	$experiment_list = '<ul>';
+	$experiment_list = '<ol>';
 	//$experiment_q = db_query("SELECT * FROM {lab_migration_experiment} WHERE proposal_id = %d ORDER BY id ASC", $proposal_id);
 	$query = db_select('lab_migration_experiment');
 	$query->fields('lab_migration_experiment');
 	$query->condition('proposal_id', $proposal_id);
-	$query->orderBy('id', 'ASC');
+	$query->orderBy('number', 'ASC');
 	$experiment_q = $query->execute();
 	while ($experiment_data = $experiment_q->fetchObject())
 	{
 		$experiment_list .= '<li>' . $experiment_data->title . '</li>';
 	} //$experiment_data = $experiment_q->fetchObject()
-	$experiment_list .= '</ul>';
+	$experiment_list .= '</ol>';
 	$form['experiment'] = array(
 		'#type' => 'item',
 		'#markup' => $experiment_list,
@@ -533,18 +533,18 @@ function lab_migration_proposal_status_form($form, &$form_state)
 		'#title' => t('Title of the Lab')
 	);
 	/* get experiment details */
-	$experiment_list = '<ul>';
+	$experiment_list = '<ol>';
 	//$experiment_q = db_query("SELECT * FROM {lab_migration_experiment} WHERE proposal_id = %d ORDER BY id ASC", $proposal_id);
 	$query = db_select('lab_migration_experiment');
 	$query->fields('lab_migration_experiment');
 	$query->condition('proposal_id', $proposal_id);
-	$query->orderBy('id', 'ASC');
+	$query->orderBy('number', 'ASC');
 	$experiment_q = $query->execute();
 	while ($experiment_data = $experiment_q->fetchObject())
 	{
 		$experiment_list .= '<li>' . $experiment_data->title . '</li>';
 	} //$experiment_data = $experiment_q->fetchObject()
-	$experiment_list .= '</ul>';
+	$experiment_list .= '</ol>';
 	$form['experiment'] = array(
 		'#type' => 'item',
 		'#markup' => $experiment_list,
@@ -861,7 +861,7 @@ function lab_migration_proposal_edit_form($form, &$form_state)
 	$query = db_select('lab_migration_experiment');
 	$query->fields('lab_migration_experiment');
 	$query->condition('proposal_id', $proposal_id);
-	$query->orderBy('id', 'ASC');
+	$query->orderBy('number', 'ASC');
 	$experiment_q = $query->execute();
 	$form['lab_experiment'] = array(
 		'#type' => 'fieldset',

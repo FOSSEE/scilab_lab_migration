@@ -3,7 +3,7 @@
 function lab_migration_completed_labs_all()
 {
 	$page_content = "";
-	$query = "SELECT * FROM {lab_migration_proposal} WHERE approval_status = 3 ORDER BY approval_date ASC";
+	$query = "SELECT * FROM {lab_migration_proposal} WHERE approval_status = 3 ORDER BY approval_date DESC";
 	$result = db_query($query);
 	$proposal_rows = array();
 	$i = 1;

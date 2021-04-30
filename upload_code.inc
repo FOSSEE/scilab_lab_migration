@@ -204,7 +204,7 @@ function lab_migration_upload_code_form($form, &$form_state)
 	$query = db_select('lab_migration_experiment');
 	$query->fields('lab_migration_experiment');
 	$query->condition('proposal_id', $proposal_data->id);
-	$query->orderBy('id', 'ASC');
+	$query->orderBy('number', 'ASC');
 	$experiment_q = $query->execute();
 	while ($experiment_data = $experiment_q->fetchObject())
 	{
