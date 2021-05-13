@@ -319,21 +319,17 @@ function ajax_bulk_solution_files_callback($form, $form_state)
 /************************************************************/
 function lab_migration_bulk_approval_form_validate($form, &$form_state)
 {
-	if (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
+	/*if (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
 		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
-	return;
-	if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
+	else if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
 		drupal_set_message("Wrong selection of action. Please select any one action");
-	return;
-	if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
+	else if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
 		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
-	return;
-	if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
+	else if (($form_state['values']['lab_actions'] != 0) && ($form_state['values']['lab_experiment_actions'] == 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
 		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
-	return;
-	if (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
+	else if (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] != 0) && ($form_state['values']['lab_experiment_solution_actions'] != 0))
 		drupal_set_message("Wrong selection of action. Please select any one action", 'error');
-	return;
+	return;*/
 }
 function lab_migration_bulk_approval_form_submit($form, &$form_state)
 {
@@ -497,7 +493,7 @@ Reason for dis-approval:
 					0 => t('Your all the uploaded solutions for the experiment have been marked as pending to be review.')
 				);
 			} //($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] == 2) && ($form_state['values']['lab_experiment_solution_actions'] == 0)
-			elseif (($form_state['values']['lab_actions'] == 1) && ($form_state['values']['lab_experiment_actions'] == 3) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
+			elseif (($form_state['values']['lab_actions'] == 0) && ($form_state['values']['lab_experiment_actions'] == 3) && ($form_state['values']['lab_experiment_solution_actions'] == 0))
 			{
 				if (!user_access('lab migration bulk delete code'))
 				{
