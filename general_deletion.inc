@@ -239,14 +239,14 @@ function lab_migration_delete_lab($lab_id)
 	} //$experiment_data = $experiment_q->fetchObject()
 	return $status;
 }
-function lab_migration_del_lab_pdf($lab_id)
+/*function lab_migration_del_lab_pdf($lab_id)
 {
 	$root_path = lab_migration_path();
 	$dir_path = $root_path . "latex/";
 	$pdf_filename = "lab_" . $lab_id . ".pdf";
 	if (file_exists($dir_path . $pdf_filename))
 		unlink($dir_path . $pdf_filename);
-}
+}*/
 function lab_migration_delete_dependency($dependency_id)
 {
 	global $user;

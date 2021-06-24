@@ -879,3 +879,14 @@ function _module_lab_experiment_autocomplete($string) {
 
 drupal_add_js(drupal_get_path('module', 'lab_migration') . '/js/lab_migration_ajax.js', array ('scope' => 'footer'));
 }*/
+
+
+function lab_migration_del_lab_pdf($lab_id)
+{
+	$root_path = lab_migration_path();
+	$dir_path = $root_path . "latex/";
+	$pdf_filename = "lab_" . $lab_id . ".pdf";
+	//var_dump($pdf_filename);die;
+	if (file_exists($dir_path . $pdf_filename))
+		unlink($dir_path . $pdf_filename);
+}
