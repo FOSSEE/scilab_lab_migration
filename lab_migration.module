@@ -92,6 +92,18 @@ function lab_migration_menu()
 		'weight' => 5,
 		'file' => 'manage_proposal.inc'
 	);
+	$items['lab_migration/manage_proposal/manage-experiment-title'] = array(
+		'title' => 'Manage Experiment Title',
+		'description' => 'Manage Experiment Title',
+		'page callback' => 'lab_migration_manage_proposal',
+		'access callback' => 'user_access',
+		'access arguments' => array(
+			'lab migration manage proposal'
+		),
+		'type' => MENU_LOCAL_TASK,
+		'weight' => 5,
+		'file' => 'manage_proposal.inc'
+	);
 	$items['lab_migration/manage_proposal/category/edit'] = array(
 		'title' => 'Edit Category',
 		'description' => 'Edit category',
