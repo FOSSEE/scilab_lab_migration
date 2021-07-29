@@ -92,6 +92,7 @@ function lab_migration_menu()
 		'weight' => 5,
 		'file' => 'manage_proposal.inc'
 	);
+	//Added Manage experiment title under manage proposal
 	$items['lab_migration/manage_proposal/manage-experiment-title'] = array(
 		'title' => 'Manage Experiment Title',
 		'description' => 'Manage Experiment Title',

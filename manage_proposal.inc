@@ -221,7 +221,6 @@ function lab_migration_category_all()
 	));
 	return $output;
 }
-
 function lab_migration_manage_proposal()
 {
 	/* get pending proposals to be approved */
