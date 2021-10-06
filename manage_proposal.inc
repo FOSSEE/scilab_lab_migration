@@ -232,23 +232,29 @@ function lab_migration_manage_proposal()
 	$query->orderBy('id', 'DESC');
 	$proposal_q = $query->execute()->fetchAll();
 	foreach($proposal_q as $value) {
-	    
+		//echo "<pre>"; print_r($value); die;
+	    $data = [];
 	  	$query1 = db_select('lab_migration_proposal', 'mp');
+	  	//$query1->distinct('me.id');
 	  	$query1->Join('lab_migration_experiment', 'me', 'me.proposal_id = mp.id');
 	  	$query1->Join('lab_migration_solution', 'ms', 'ms.experiment_id = me.id');
 	  	$query1->Join('lab_migration_solution_files', 'sf', 'sf.solution_id = ms.id');
-		$query1->condition('mp.uid', $value->uid);
+		$query1->condition('mp.id', $value->id);
 		$query1->fields('sf', ['solution_id']);
+		$query1->fields('me', ['id']);
 		$proposal_q1 = $query1->execute()->fetchAll();
 		$result = $query1->execute()->rowCount();
-
+		foreach($proposal_q1 as $val) {
+			$data[$val->id] = $val->solution_id;
+		}
+		$count = count($data);
 		$proposal_rows[] = array(
-			l($value->name, 'user/' . $value->uid),
+			l($value->name, 'user/' . $value->id),
 			$value->lab_title,
-			$result,
+			$count,
+			l('View', 'lab_migration/admin/code-list/'.$value->id ),
 		);
 	}
-
 	/* check if there are any pending proposals */
 	if (!$proposal_rows)
 	{

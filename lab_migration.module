@@ -22,6 +22,32 @@ function lab_migration_menu()
 		'type' => MENU_NORMAL_ITEM,
 		'file' => 'proposal.inc'
 	);
+	$items['lab_migration/add_experiment'] = array(
+		'title' => 'Lab Migration Add Experiment',
+		'description' => 'Lab Migration add experiment',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array(
+			'lab_migration_add_experiment_form'
+		),
+		'access arguments' => array(
+			'lab migration create experiment'
+		),
+		'type' => MENU_NORMAL_ITEM,
+		'file' => 'proposal.inc'
+	);
+	$items['lab_migration/add_experiment/one'] = array(
+		'title' => 'Lab Migration Add Experiment',
+		'description' => 'Lab Migration Add experiment',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array(
+			'lab_migration_add_experiment_one_form'
+		),
+		'access arguments' => array(
+			'lab migration create experiment'
+		),
+		'type' => MENU_NORMAL_ITEM,
+		'file' => 'proposal.inc'
+	);
 	$items['lab_migration/manage_proposal'] = array(
 		'title' => 'LM Manage Lab Proposals',
 		'description' => 'Manage Lab Migration Proposals',
@@ -299,6 +325,16 @@ function lab_migration_menu()
 		),
 		'file' => 'upload_code.inc'
 	);
+	$items['lab_migration/admin/code-list/%'] = array(
+		'title' => 'Admin code editor',
+		'description' => 'Admin code editor',
+		'page callback' => 'lab_migration_list_experiments_users',
+		'access callback' => 'user_access',
+		'access arguments' => array(
+			'lab migration upload code'
+		),
+		'file' => 'upload_code.inc'
+	);
 	$items['lab_migration/code/list_experiments'] = array(
 		'title' => 'List Experiments',
 		'description' => 'List Experiments',
@@ -342,6 +378,16 @@ function lab_migration_menu()
 		'title' => 'Delete Solution',
 		'description' => 'Delete Solution',
 		'page callback' => 'lab_migration_upload_code_delete',
+		'access arguments' => array(
+			'lab migration upload code'
+		),
+		'type' => MENU_CALLBACK,
+		'file' => 'upload_code_delete.inc'
+	);
+	$items['lab_migration/experiment/delete/%'] = array(
+		'title' => 'Delete Solution',
+		'description' => 'Delete Solution',
+		'page callback' => 'lab_migration_experiment_delete',
 		'access arguments' => array(
 			'lab migration upload code'
 		),
@@ -557,6 +603,10 @@ function lab_migration_permission()
 			'title' => t('lab migration create proposal'),
 			'restrict access' => TRUE
 		),
+		'lab migration create experiment' => array(
+			'title' => t('lab migration create experiment'),
+			'restrict access' => TRUE
+		),
 		'lab migration manage proposal' => array(
 			'title' => t('lab migration manage proposal'),
 			'restrict access' => TRUE
@@ -695,17 +745,69 @@ function lab_migration_path()
 function lab_migration_get_proposal()
 {
 	global $user;
+	$uid = $user->uid;
+
+	
 	/* $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE solution_provider_uid = :user_id AND solution_status = 2",array(":user_id"=> $user->uid));*/
 	$query = db_select('lab_migration_proposal');
 	$query->fields('lab_migration_proposal');
-	$query->condition('solution_provider_uid', $user->uid);
+	$query->condition('solution_provider_uid', $uid);
 	$query->condition('solution_status', 2);
 	$query->orderBy('id', 'DESC');
 	$query->range(0, 1);
 	$proposal_q = $query->execute();
 	$proposal_data = $proposal_q->fetchObject();
 	//  var_dump($user->uid);die;
-	if (!$proposal_data)
+
+	global $user;
+
+	if (!$proposal_data && !in_array('administrator', $user->roles))
+	{
+		drupal_set_message("You do not have any approved Lab Migration solution proposal. Please check the " . l('available', 'lab_migration/open_proposal') . " Lab migration proposal.", 'error');
+		drupal_goto('');
+	} //!$proposal_data
+	
+	switch ($proposal_data->approval_status)
+	{
+		case 0:
+			drupal_set_message(t('Proposal is awaiting approval.'), 'status');
+			return FALSE;
+		case 1:
+			return $proposal_data;
+		case 2:
+			drupal_set_message(t('Proposal has been dis-approved.'), 'error');
+			return FALSE;
+		case 3:
+			drupal_set_message(t('Proposal has been marked as completed.'), 'status');
+			return FALSE;
+		default:
+			drupal_set_message(t('Invalid proposal state. Please contact site administrator for further information.'), 'error');
+			return FALSE;
+	} //$proposal_data->approval_status
+	
+	return FALSE;
+}
+
+// for users
+function lab_migration_get_proposal_user($id)
+{
+	// global $user;
+	// $uid = $user->uid;
+
+	
+	/* $proposal_q = db_query("SELECT * FROM {lab_migration_proposal} WHERE solution_provider_uid = :user_id AND solution_status = 2",array(":user_id"=> $user->uid));*/
+	$query = db_select('lab_migration_proposal');
+	$query->fields('lab_migration_proposal');
+	$query->condition('id', $id);
+	$query->condition('solution_status', 2);
+	$query->orderBy('id', 'DESC');
+	$query->range(0, 1);
+	$proposal_q = $query->execute();
+	$proposal_data = $proposal_q->fetchObject();
+	//  var_dump($user->uid);die;
+	global $user;
+
+	if (!$proposal_data && !in_array('administrator', $user->roles))
 	{
 		drupal_set_message("You do not have any approved Lab Migration solution proposal. Please check the " . l('available', 'lab_migration/open_proposal') . " Lab migration proposal.", 'error');
 		drupal_goto('');
@@ -727,6 +829,7 @@ function lab_migration_get_proposal()
 			drupal_set_message(t('Invalid proposal state. Please contact site administrator for further information.'), 'error');
 			return FALSE;
 	} //$proposal_data->approval_status
+	
 	return FALSE;
 }
 /***************************** GENERAL FUNCTIONS ******************************/

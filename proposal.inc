@@ -510,3 +510,144 @@ function lab_migration_proposal_form_submit($form, &$form_state)
 	drupal_set_message(t('We have received you Lab migration proposal. We will get back to you soon.'), 'status');
 	drupal_goto('');
 }
+
+
+function lab_migration_add_experiment_form($form, &$form_state)
+{
+	global $user;
+	/************************ start approve book details ************************/
+	$query = db_select('lab_migration_proposal');
+	$query->fields('lab_migration_proposal');
+	$query->condition('uid', $user->uid);
+	$query->orderBy('id', 'DESC');
+	$query->range(0, 1);
+	$proposal_q = $query->execute();
+	$proposal_data = $proposal_q->fetchObject();
+	
+	$form['#attributes'] = array(
+		'enctype' => "multipart/form-data"
+	);
+
+	
+	$first_experiemnt = TRUE;
+	for ($counter = 1; $counter <= 15; $counter++)
+	{
+		if($counter<= variable_get('lab_migration_minimum_exp_limit', '')){
+			$form['lab_experiment-' . $counter] = array(
+				'#type' => 'textfield',
+				'#title' => t('Title of the Experiment ') . $counter,
+				'#size' => 50,
+				'#required' => TRUE,
+				'#autocomplete_path' => 'lab_migration/lab_exp/autocomplete',
+			);
+		}else
+		{
+			$form['lab_experiment-' . $counter] = array(
+				'#type' => 'textfield',
+				'#title' => t('Title of the Experiment ') . $counter,
+				'#size' => 50,
+				'#required' => False,
+				'#autocomplete_path' => 'lab_migration/lab_exp/autocomplete',
+			);
+		}
+		$first_experiemnt = FALSE;
+	} //$counter = 1; $counter <= 15; $counter++
+
+	$form['submit'] = array(
+		'#type' => 'submit',
+		'#value' => t('Submit')
+	);
+	return $form;
+}
+
+
+function lab_migration_add_experiment_form_submit($form, &$form_state)
+{
+	global $user;
+	$proposal_id = $_GET['pid'];
+	$number = 1;
+	for ($counter = 1; $counter <= 15; $counter++)
+	{
+		$experiment_field_name = 'lab_experiment-' . $counter;
+		if (strlen(trim($form_state['values'][$experiment_field_name])) >= 1)
+		{
+			$form_state['values'][$experiment_field_name] = $form_state['values'][$experiment_field_name];
+			$query = "INSERT INTO {lab_migration_experiment} (proposal_id, number, title) VALUES (:proposal_id, :number, :experiment_field_name)";
+			$args = array(
+				":proposal_id" => $proposal_id,
+				":number" => $number,
+				":experiment_field_name" => trim($form_state['values'][$experiment_field_name])
+			);
+			$result = db_query($query, $args);
+			if (!$result)
+			{
+				drupal_set_message(t('Could not insert Title of the Experiment : ') . trim($form_state['values'][$experiment_field_name]), 'error');
+			} //!$result
+			else
+			{
+				$number++;
+			}
+		} //strlen(trim($form_state['values'][$experiment_field_name])) >= 1
+	} //$counter = 1; $counter <= 15; $counter++
+	
+	drupal_set_message(t('Experiments added successfully.'), 'status');
+	drupal_goto('/lab_migration/admin/code-list/'.$proposal_id);
+}
+
+function lab_migration_add_experiment_one_form($form, &$form_state)
+{
+	global $user;
+	/************************ start approve book details ************************/
+	$form['lab_experiment'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Title of the Experiment ') . $counter,
+		'#size' => 50,
+		'#required' => TRUE,
+		'#autocomplete_path' => 'lab_migration/lab_exp/autocomplete',
+	);
+	$form['submit'] = array(
+		'#type' => 'submit',
+		'#value' => t('Submit')
+	);
+	return $form;
+}
+
+
+function lab_migration_add_experiment_one_form_submit($form, &$form_state)
+{
+	global $user;
+	$proposal_id = $_GET['pid'];
+	$number = $_GET['number'];
+
+	$query = db_select('lab_migration_experiment','l');
+	$query->fields('l',['number', 'id']);
+	$query->condition('l.proposal_id', $proposal_id);
+	$proposal_q = $query->execute();
+	$proposal_data = $proposal_q->fetchAll();
+
+	foreach($proposal_data as $value) {
+
+		if($value->number > $number) {
+			$num_updated = db_update('lab_migration_experiment') // Table name no longer needs {}
+			  ->fields(array(
+			    'number' => $value->number + 1,
+			  ))
+			  ->condition('id', $value->id, '=')
+			  ->execute();
+		}
+		
+	}
+
+	$number = $number + 1;
+	
+	$query = "INSERT INTO {lab_migration_experiment} (proposal_id, number, title) VALUES (:proposal_id, :number, :experiment_field_name)";
+	$args = array(
+		":proposal_id" => $proposal_id,
+		":number" => $number,
+		":experiment_field_name" => trim($form_state['values']['lab_experiment'])
+	);
+	$result = db_query($query, $args);
+			
+	drupal_set_message(t('Experiment added successfully.'), 'status');
+	drupal_goto('/lab_migration/admin/code-list/'.$proposal_id);
+}

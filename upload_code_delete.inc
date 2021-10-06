@@ -34,7 +34,7 @@ function lab_migration_upload_code_delete()
 	$query->range(0, 1);
 	$experiment_q = $query->execute();
 	$experiment_data = $experiment_q->fetchObject();
-	if (!$experiment_data)
+	if (!$experiment_data && !in_array('administrator', $user->roles))
 	{
 		drupal_set_message('You do not have permission to delete this solution.', 'error');
 		drupal_goto('lab_migration/code');
@@ -48,7 +48,7 @@ function lab_migration_upload_code_delete()
 	$query->range(0, 1);
 	$proposal_q = $query->execute();
 	$proposal_data = $proposal_q->fetchObject();
-	if (!$proposal_data)
+	if (!$proposal_data && !in_array('administrator', $user->roles))
 	{
 		drupal_set_message('You do not have permission to delete this solution.', 'error');
 		drupal_goto('lab_migration/code');
@@ -86,7 +86,32 @@ function lab_migration_upload_code_delete()
 	{
 		drupal_set_message('Error deleting example.', 'status');
 	}
-	drupal_goto('lab_migration/code');
+	$id = $_GET['id'];
+	drupal_goto('lab_migration/admin/code-list/'.$id);
 	return;
+}
+
+function lab_migration_experiment_delete() {
+	global $base_url;
+	$id = $_GET['id'];
+	$exp_id = arg(3);
+	$query = db_select('lab_migration_solution', 'l');
+	$query->fields('l', ['id']);
+	$query->condition('experiment_id', $exp_id);
+	$solution_q = $query->execute()->fetchAll();
+	
+	$num_deleted = db_delete('lab_migration_experiment')
+	  ->condition('id', $exp_id)
+	  ->execute();
+
+	$num_deleted = db_delete('lab_migration_solution')
+	  ->condition('experiment_id', $exp_id)
+	  ->execute();
+
+	$num_deleted = db_delete('lab_migration_solution_files')
+	  ->condition('solution_id', $solution_q[0]->id)
+	  ->execute();
+	drupal_set_message('Experiment successfully deleted.');
+	drupal_goto($base_url . '/lab_migration/admin/code-list/'.$id);
 }
 ?>
