@@ -3,6 +3,7 @@
 function lab_migration_list_experiments()
 {
 	global $user;
+	global $base_url;
 	$proposal_data = lab_migration_get_proposal();
 	if (!$proposal_data)
 	{
@@ -11,6 +12,7 @@ function lab_migration_list_experiments()
 	} //!$proposal_data
 	$return_html = '<strong>Title of the Lab:</strong><br />' . $proposal_data->lab_title . '<br /><br />';
 	$return_html .= '<strong>Proposer Name:</strong><br />' . $proposal_data->name_title . ' ' . $proposal_data->name . '<br /><br />';
+
 	$return_html .= l('Upload Solution', 'lab_migration/code/upload') . '<br />';
 	/* get experiment list */
 	$experiment_rows = array();
@@ -60,7 +62,7 @@ function lab_migration_list_experiments()
 						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $solution_data->code_number . "   " . $solution_data->caption,
 						'',
 						$solution_status,
-						l('Delete', 'lab_migration/code/delete/' . $solution_data->id)
+						l('Delete', 'lab_migration/code/delete/' . $solution_data->id, array('query'=>array('id'=>$proposal_data->id) ))
 					);
 				} //$solution_data->approval_status == 0
 				else
@@ -148,6 +150,176 @@ function lab_migration_list_experiments()
 	));
 	return $return_html;
 }
+
+function lab_migration_list_experiments_users()
+{
+	global $user;
+	global $base_url;
+	$id = arg(3);
+	$proposal_data = lab_migration_get_proposal_user($id);
+	if (!$proposal_data)
+	{
+		drupal_goto('');
+		return;
+	} //!$proposal_data
+	$return_html = '<strong>Title of the Lab:</strong><br />' . $proposal_data->lab_title . '<br /><br />';
+	$return_html .= '<strong>Proposer Name:</strong><br />' . $proposal_data->name_title . ' ' . $proposal_data->name . '<br /><br />';
+
+	/* get experiment list */
+	$experiment_rows = array();
+	//$experiment_q = db_query("SELECT * FROM {lab_migration_experiment} WHERE proposal_id = %d ORDER BY number ASC", $proposal_data->id);
+	$query = db_select('lab_migration_experiment');
+	$query->fields('lab_migration_experiment');
+	$query->condition('proposal_id', $proposal_data->id);
+	$query->orderBy('number', 'ASC');
+	$experiment_q = $query->execute();
+	$experiment_q_condition = $query->execute()->fetchAll();
+	//var_dump($experiment_q->fetchObject());
+	//die;
+
+	if(empty($experiment_q_condition)) {
+		$return_html .= '<a href="'.$base_url.'/lab_migration/add_experiment?pid='.$proposal_data->id.'">Add Experiment</a><br><br>'; 
+		$experiment_rows[] = array(
+				'',
+				'',
+				'',
+				''
+			);
+ 	}
+	else {
+		$i = 1;
+		while ($experiment_data = $experiment_q->fetchObject())
+		{
+
+			$experiment_rows[] = array(
+				$i . ')&nbsp;&nbsp;&nbsp;&nbsp;' . $experiment_data->title,
+				'',
+				'',
+				'<a href="'.$base_url.'/lab_migration/add_experiment/one?pid='.$proposal_data->id.'&number='.$experiment_data->number.'">Add Experiment</a> | <a href="'.$base_url.'/lab_migration/experiment/delete/'.$experiment_data->id.'?id='.$id.'">Delete Experiment</a>'
+			);
+			/* get solution list */
+			//$solution_q = db_query("SELECT * FROM {lab_migration_solution} WHERE experiment_id = %d ORDER BY id ASC", $experiment_data->id);
+			$query = db_select('lab_migration_solution');
+			$query->fields('lab_migration_solution');
+			$query->condition('experiment_id', $experiment_data->id);
+			$query->orderBy('id', 'ASC');
+			$solution_q = $query->execute();
+			if ($solution_q)
+			{
+				$j = 1;
+				while ($solution_data = $solution_q->fetchObject())
+				{
+					$solution_status = '';
+					switch ($solution_data->approval_status)
+					{
+						case 0:
+							$solution_status = "Pending";
+							break;
+						case 1:
+							$solution_status = "Approved";
+							break;
+						default:
+							$solution_status = "Unknown";
+							break;
+					} //$solution_data->approval_status
+					if ($solution_data->approval_status == 0)
+					{
+						$experiment_rows[] = array(
+							"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $i . "." .$j."   " . $solution_data->caption,
+							'',
+							$solution_status,
+							l('Delete', 'lab_migration/code/delete/' . $solution_data->id, array('query'=>array('id'=>$proposal_data->id) ))
+						);
+					} //$solution_data->approval_status == 0
+					else
+					{
+						$experiment_rows[] = array(
+							"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $i . "." .$j."   " . $solution_data->caption,
+							'',
+							$solution_status,
+							''
+						);
+					}
+					/* get solution files */
+					//$solution_files_q = db_query("SELECT * FROM {lab_migration_solution_files} WHERE solution_id = %d ORDER BY id ASC", $solution_data->id);
+					$query = db_select('lab_migration_solution_files');
+					$query->fields('lab_migration_solution_files');
+					$query->condition('solution_id', $solution_data->id);
+					$query->orderBy('id', 'ASC');
+					$solution_files_q = $query->execute();
+					if ($solution_files_q)
+					{
+						while ($solution_files_data = $solution_files_q->fetchObject())
+						{
+							$code_file_type = '';
+							switch ($solution_files_data->filetype)
+							{
+								case 'S':
+									$code_file_type = 'Source';
+									break;
+								case 'R':
+									$code_file_type = 'Result';
+									break;
+								case 'X':
+									$code_file_type = 'Xcox';
+									break;
+								case 'U':
+									$code_file_type = 'Unknown';
+									break;
+								default:
+									$code_file_type = 'Unknown';
+									break;
+							} //$solution_files_data->filetype
+							$experiment_rows[] = array(
+								"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . l($solution_files_data->filename, 'lab_migration/download/file/' . $solution_files_data->id),
+								$code_file_type,
+								'',
+								''
+							);
+						} //$solution_files_data = $solution_files_q->fetchObject()
+					} //$solution_files_q
+					/* get dependencies files */
+					//$dependency_q = db_query("SELECT * FROM {lab_migration_solution_dependency} WHERE solution_id = %d ORDER BY id ASC", $solution_data->id);
+					$query = db_select('lab_migration_solution_dependency');
+					$query->fields('lab_migration_solution_dependency');
+					$query->condition('solution_id', $solution_data->id);
+					$query->orderBy('id', 'ASC');
+					$dependency_q = $query->execute();
+					while ($dependency_data = $dependency_q->fetchObject())
+					{
+						//$dependency_files_q = db_query("SELECT * FROM {lab_migration_dependency_files} WHERE id = %d", $dependency_data->dependency_id);
+						$query = db_select('lab_migration_dependency_files');
+						$query->fields('lab_migration_dependency_files');
+						$query->condition('id', $dependency_data->dependency_id);
+						$dependency_files_q = $query->execute();
+						$dependency_files_data = $dependency_files_q->fetchObject();
+						$experiment_rows[] = array(
+							"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . l($dependency_files_data->filename, 'lab_migration/download/dependency/' . $dependency_files_data->id),
+							'Dependency',
+							'',
+							''
+						);
+					} //$dependency_data = $dependency_q->fetchObject()
+					$j++;
+				} //$solution_data = $solution_q->fetchObject()
+			} //$solution_q
+			$i++;
+		} //$experiment_data = $experiment_q->fetchObject()
+	}
+	$experiment_header = array(
+		'No. Title of the Experiment',
+		'Type',
+		'Status',
+		'Actions'
+	);
+	// $return_html .= theme_table($experiment_header, $experiment_rows);
+	$return_html .= theme('table', array(
+		'header' => $experiment_header,
+		'rows' => $experiment_rows
+	));
+	return $return_html;
+}
+
 function lab_migration_upload_code_form($form, &$form_state)
 {
 	global $user;

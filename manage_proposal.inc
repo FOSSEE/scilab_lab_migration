@@ -221,6 +221,58 @@ function lab_migration_category_all()
 	));
 	return $output;
 }
+function lab_migration_manage_proposal()
+{
+	/* get pending proposals to be approved */
+	$proposal_rows = array();
+	//$proposal_q = db_query("SELECT * FROM {lab_migration_proposal} ORDER BY id DESC");
+	$query = db_select('lab_migration_proposal');
+	$query->condition('approval_status', '1');
+	$query->fields('lab_migration_proposal');
+	$query->orderBy('id', 'DESC');
+	$proposal_q = $query->execute()->fetchAll();
+	foreach($proposal_q as $value) {
+		//echo "<pre>"; print_r($value); die;
+	    $data = [];
+	  	$query1 = db_select('lab_migration_proposal', 'mp');
+	  	//$query1->distinct('me.id');
+	  	$query1->Join('lab_migration_experiment', 'me', 'me.proposal_id = mp.id');
+	  	$query1->Join('lab_migration_solution', 'ms', 'ms.experiment_id = me.id');
+	  	$query1->Join('lab_migration_solution_files', 'sf', 'sf.solution_id = ms.id');
+		$query1->condition('mp.id', $value->id);
+		$query1->fields('sf', ['solution_id']);
+		$query1->fields('me', ['id']);
+		$proposal_q1 = $query1->execute()->fetchAll();
+		$result = $query1->execute()->rowCount();
+		foreach($proposal_q1 as $val) {
+			$data[$val->id] = $val->solution_id;
+		}
+		$count = count($data);
+		$proposal_rows[] = array(
+			l($value->name, 'user/' . $value->id),
+			$value->lab_title,
+			$count,
+			l('View', 'lab_migration/admin/code-list/'.$value->id ),
+		);
+	}
+	/* check if there are any pending proposals */
+	if (!$proposal_rows)
+	{
+		drupal_set_message(t('There are no proposals.'), 'status');
+		return '';
+	} //!$proposal_rows
+	$proposal_header = array(
+		'Name of the contributor',
+		'Title of the Lab',
+		'No. of experiments uploaded',
+		'Action'
+	);
+	$output = theme('table', array(
+		'header' => $proposal_header,
+		'rows' => $proposal_rows
+	));
+	return $output;
+}
 /******************************************************************************/
 /************************** PROPOSAL APPROVAL FORM ****************************/
 /******************************************************************************/
@@ -974,6 +1026,8 @@ function lab_migration_proposal_edit_form_validate($form, &$form_state)
 }
 function lab_migration_proposal_edit_form_submit($form, &$form_state)
 {
+
+    //echo "<pre>";print_r($form_state);echo "</pre>";exit;
 	global $user;
 	/* get current proposal */
 	$proposal_id = (int) arg(3);
@@ -1147,6 +1201,7 @@ function lab_migration_proposal_edit_form_submit($form, &$form_state)
 		} //$lab_experimentinsert as $insertvalue
 	} //is_array($lab_experimentinsert) || is_object($lab_experimentinsert)
 	drupal_set_message(t('Proposal Updated'), 'status');
+
 }
 /******************************************************************************/
 /**************************** CATEGORY EDIT FORM ******************************/
