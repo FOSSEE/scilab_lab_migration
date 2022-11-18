@@ -6,7 +6,7 @@ function lab_migration_completed_labs_all()
 	$query = "SELECT * FROM {lab_migration_proposal} WHERE approval_status = 3 ORDER BY approval_date DESC";
 	$result = db_query($query);
 	$proposal_rows = array();
-	$i = 1;
+	$i = $result->rowCount();
 	while ($row = $result->fetchObject())
 	{
 		$approval_date = date("Y", $row->approval_date);
@@ -16,7 +16,7 @@ function lab_migration_completed_labs_all()
 			l($row->lab_title, "lab_migration_run/" . $row->id),
 			$approval_date
 		);
-		$i++;
+		$i--;
 	} //$row = $result->fetchObject()
 	$preference_header = array(
 		'No',
