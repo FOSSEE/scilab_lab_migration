@@ -37,7 +37,7 @@ $page_content = "";
 	$query = "SELECT * FROM {lab_migration_proposal} WHERE approval_status = 1 and solution_status = 2 ORDER BY approval_date ASC";
 	$result = db_query($query);
 	$proposal_rows = array();
-	$i = 1;
+	$i = $result->rowCount();
 	while ($row = $result->fetchObject())
 	{
 		//$approval_date = date("Y", $row->approval_date); // remove comment to display year
@@ -47,7 +47,7 @@ $page_content = "";
 			$row->lab_title,
 			//$approval_date // remove comment to display year
 		);
-		$i++;
+		$i--;
 	} //$row = $result->fetchObject()
 	$preference_header = array(
 		'No',
